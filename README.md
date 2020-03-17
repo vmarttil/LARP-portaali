@@ -1,2 +1,2 @@
-# larp-portaali
+# LARP-portaali
 Järjestelmä larppi-ilmoittautumisten hallinnointiin ja hahmojakojen tekemiseen.
