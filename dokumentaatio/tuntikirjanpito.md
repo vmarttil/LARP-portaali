@@ -2,5 +2,6 @@
 
 | Päivämäärä | Tunteja | Kuvaus |
 | ---------- | ------- | ------ |
-| 09052020 | 2,5 | Sovelluksen rakenteen suunnittelu |
+| 08052020 | 2,5 | Sovelluksen rakenteen suunnittelu |
+| 09052020 | 1,5 | Sovelluksen dokumentaation kirjoittamista |
 
