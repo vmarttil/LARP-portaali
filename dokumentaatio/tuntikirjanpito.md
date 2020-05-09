@@ -2,5 +2,5 @@
 
 | Päivämäärä | Tunteja | Kuvaus |
 | ---------- | ------- | ------ |
-| 17032020 | 2,5 | Sovelluksen rakenteen suunnittelu |
+| 09052020 | 2,5 | Sovelluksen rakenteen suunnittelu |
 
