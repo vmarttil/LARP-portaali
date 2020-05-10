@@ -8,4 +8,5 @@
 | 10052020 | 0,75 | Projektin luonti ja tehtävien määrittelyä |
 | 10052020 | 3,0 | Sovelluksen rungon luominen: Express Node.js projektin luominen |
 
+| Yhteensä | 9,0 | |
 
