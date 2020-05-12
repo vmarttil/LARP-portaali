@@ -1,8 +1,8 @@
 module.exports = {
   HOST: "localhost",
   USER: "root",
-  PASSWORD: "123456",
-  DB: "testdb",
+  PASSWORD: "8M5Vki3qL^1e",
+  DB: "larp_portal",
   dialect: "mysql",
   pool: {
     max: 5,

@@ -38,7 +38,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
-// Roolien automaattinen määritys kehistysvaiheessa
+// Roolien automaattinen määritys kehitysvaiheessa
 function initial() {
   Role.create({
     id: 1,
