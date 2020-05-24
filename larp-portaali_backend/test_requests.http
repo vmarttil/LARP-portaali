@@ -1,0 +1,22 @@
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "vmarttil",
+    "email": "ville.marttila@iki.fi",
+    "password": "test"
+}
+
+###
+
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+    "username": "vmarttil",
+    "password": "test"
+}
+
+####
+
+GET http://www.localhost:8080/api/test/player HTTP/1.1

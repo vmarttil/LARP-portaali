@@ -23,11 +23,6 @@ const Role = db.role;
    initial();
  });
 
-// testireititys
-app.get("*", (req, res) => {
-  res.json({ message: "Tervetuloa LARP-portaaliin." });
-});
-
 // reititykset
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
