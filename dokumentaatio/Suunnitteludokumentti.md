@@ -10,10 +10,10 @@ Ohjelmisto koostuu erillisestä palvelimella ajettavasta backend-osasta, joka va
 
 
 ## Backend
-
+Sovelluksen backend on toteutettu käyttäen Node.js-ympäristöä ja tietojen tallennus käyttäen MySQL-relaatiotietokantaa.
 
 
 
 ## Frontend
-
+Sovelluksen frontendin toiminnallisuus on toteutettu JavaScript React-kirjastolla ja sen käyttöliittymä Material-UI-kirjastolla. 
 
