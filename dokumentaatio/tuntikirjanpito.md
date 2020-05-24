@@ -8,5 +8,6 @@
 | 10052020 | 0,75 | Projektin luonti ja tehtävien määrittelyä |
 | 10052020 | 3,0 | Sovelluksen rungon luominen: Express Node.js projektin luominen |
 | 12052020 | 1,5 | Käyttäjien luonti ja sisäänkirjautuminen backedissa |
-| **Yhteensä** | **10,5** | |
+| 24052020 | 3,0 | Material UI:n käyttöönotto, frontend-sovelluksen luonti, sisäänkirjaussivun luonnos |
+| **Yhteensä** | **13,5** | |
 
