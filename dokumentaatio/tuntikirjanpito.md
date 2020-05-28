@@ -9,5 +9,7 @@
 | 10052020 | 3,0 | Sovelluksen rungon luominen: Express Node.js projektin luominen |
 | 12052020 | 1,5 | Käyttäjien luonti ja sisäänkirjautuminen backedissa |
 | 24052020 | 3,0 | Material UI:n käyttöönotto, frontend-sovelluksen luonti, sisäänkirjaussivun luonnos |
-| **Yhteensä** | **13,5** | |
+| 28052020 | 3,0 | Material UI:n vaihto Bootstrapiin, uuden frontend-sovelluksen luonti, rekisteröitymisen ja sisäänkirjautumisen toteutus frontendissa |
+
+| **Yhteensä** | **16,5** | |
 
