@@ -20,3 +20,5 @@ content-type: application/json
 ####
 
 GET http://www.localhost:8080/api/test/player HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkwNjEwMjk3LCJleHAiOjE1OTA2OTY2OTd9.Fs8-4JbMWVl692uSYZBEU0vMyKjwh8vRLMR-l6PmsVM

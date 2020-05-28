@@ -1,58 +1,120 @@
-import React from 'react';
-import './App.css';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-const Main = () => {
+import AuthService from "./services/auth.service";
+
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import PlayerPortal from "./components/PlayerPortal";
+import OrganiserPortal from "./components/OrganiserPortal";
+import AdminPortal from "./components/AdminPortal";
+
+const App = () => {
+  const [showOrganiserPortal, setShowOrganiserPortal] = useState(false);
+  const [showAdminPortal, setShowAdminPortal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(undefined);
+
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      setCurrentUser(user);
+      setShowOrganiserPortal(user.roles.includes("ROLE_ORGANISER"));
+      setShowAdminPortal(user.roles.includes("ROLE_ADMIN"));
+    }
+  }, []);
+
+  const logOut = () => {
+    AuthService.logout();
+  };
+
   return (
-    <div className="Main">
-      <h1>LARP-portaali</h1>
-      <p>LARP-portaali on verkkosovellus, joka tarjoaa liveroolipelien (LARP) järjestäjille ja osallistujille 
-        helppokäyttöisen ja tarkoitusta varten suunnitellun ympäristön pelien ilmoittautumisten ja hahmojakojen 
-        tekemiseen, tarkasteluun ja hallintaan.</p>
-      <h2>Pelaajille</h2>
-      <p>Sovellukseen pelaajina kirjautuneet käyttäjät voivat tarkastella avoinna olevia peli-ilmoituksia, 
-        ilmoittautua peleihin, tarkastella omia ilmoittautumisiaan ja tallentaa profiiliinsa usein käytettyjä 
-        ilmoittautumistietoja ilmoittautumislomakkeiden automaattista täyttämistä varten. </p>
-      <h2>Pelinjärjestäjille</h2>
-      <p>Pelinjärjestäjät voivat luoda pelilleen peli-ilmoituksen ja ilmoittautumislomakkeen käyttäen valmiita 
-        mallipohjia ja apuvälineitä ja hallinnoida niitä sekä tarkastella pelin ilmoittautumisia ja niihin liittyviä 
-        tilatotietoja. Lisäksi pelinjärjestäjät voivat syöttää sovellukseen ilmoittautumislomakkeen kysymyksiä 
-        vastaavat profiilit pelin hahmoista ja käyttää sovelluksen hahmojakotyökaluja hahmojen ja ilmoittautumisten 
-        yhteensopivuuden ja yhteensopivuudeltaan optimoitujen hahmojakojen laskemiseen määrittelemiensä parametrien 
-        mukaisesti.</p>
-        <Login />
-        <Register />
-    </div>
+    <Router>
+      <div>
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <Link to={"/"} className="navbar-brand">
+            LARP-portaali
+          </Link>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/home"} className="nav-link">
+                Pääsivu
+              </Link>
+            </li>
+
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/player"} className="nav-link">
+                  Pelaajaportaali
+                </Link>
+              </li>
+            )}
+
+            {showOrganiserPortal && (
+              <li className="nav-item">
+                <Link to={"/organiser"} className="nav-link">
+                  Pelinjärjestäjäportaali
+                </Link>
+              </li>
+            )}
+
+            {showAdminPortal && (
+              <li className="nav-item">
+                <Link to={"/admin"} className="nav-link">
+                  Hallintaportaali
+                </Link>
+              </li>
+            )}
+          </div>
+
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/profile"} className="nav-link">
+                  {currentUser.username}
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="/login" className="nav-link" onClick={logOut}>
+                  Kirjaudu ulos
+                </a>
+              </li>
+            </div>
+          ) : (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link">
+                  Kirjaudu sisään
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link">
+                  Rekisteröidy
+                </Link>
+              </li>
+            </div>
+          )}
+        </nav>
+
+        <div className="container mt-3">
+          <Switch>
+            <Route exact path={["/", "/home"]} component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/profile" component={Profile} />
+            <Route path="/player" component={PlayerPortal} />
+            <Route path="/organiser" component={OrganiserPortal} />
+            <Route path="/admin" component={AdminPortal} />
+          </Switch>
+        </div>
+      </div>
+    </Router>
   );
-}
+};
 
-const Login = () => {
-  return (
-      <Grid container direction="column" justify="flex-start" alignItems="center" spacing={2}>
-        <Grid item>
-          <TextField id="username" label="Käyttäjätunnus"/>
-        </Grid>
-        <Grid item>
-          <TextField id="password" label="Salasana"/>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" color="primary">Kirjaudu sisään</Button>
-        </Grid>
-      </Grid>
-  );
-}
-
-const Register = () => {
-  return (
-      <Grid container direction="column" justify="flex-start" alignItems="center" spacing={2}>
-        <Grid item>
-          <Button variant="contained" color="primary">Luo käyttäjätunnus</Button>
-        </Grid>
-      </Grid>
-  );
-}
-
-
-export default Main;
+export default App;

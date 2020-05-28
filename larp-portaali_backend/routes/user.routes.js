@@ -15,18 +15,18 @@ module.exports = function(app) {
   app.get(
     "/api/test/player",
     [authJwt.verifyToken],
-    controller.playerBoard
+    controller.playerPortal
   );
 
   app.get(
     "/api/test/organiser",
     [authJwt.verifyToken, authJwt.isOrganiser],
-    controller.organiserBoard
+    controller.organiserPortal
   );
 
   app.get(
     "/api/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
+    controller.adminPortal
   );
 };
