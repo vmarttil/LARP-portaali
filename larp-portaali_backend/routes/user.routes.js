@@ -29,4 +29,11 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminPortal
   );
+
+  app.put(
+    "/api/user/profile",
+    [authJwt.verifyToken],
+    controller.updateProfile
+  );
+
 };

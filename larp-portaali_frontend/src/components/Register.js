@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
+
 
 import AuthService from "../services/auth.service";
 
@@ -11,16 +11,6 @@ const required = (value) => {
     return (
       <div className="alert alert-danger" role="alert">
         Tämä kenttä on pakollinen.
-      </div>
-    );
-  }
-};
-
-const validEmail = (value) => {
-  if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Sähköpostiosoite on virheellinen.
       </div>
     );
   }
@@ -37,10 +27,10 @@ const vusername = (value) => {
 };
 
 const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
+  if (value.length < 8 || value.length > 40) {
     return (
       <div className="alert alert-danger" role="alert">
-        Salasanan tulee olla 6–40 merkin mittainen.
+        Salasanan tulee olla 8–40 merkin mittainen.
       </div>
     );
   }
@@ -51,19 +41,15 @@ const Register = (props) => {
   const checkBtn = useRef();
 
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
+  const [login, setLogin] = useState(false);
 
   const onChangeUsername = (e) => {
     const username = e.target.value;
     setUsername(username);
-  };
-
-  const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
   };
 
   const onChangePassword = (e) => {
@@ -71,7 +57,7 @@ const Register = (props) => {
     setPassword(password);
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     setMessage("");
@@ -80,23 +66,22 @@ const Register = (props) => {
     form.current.validateAll();
 
     if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(username, email, password).then(
-        (response) => {
-          setMessage(response.data.message);
-          setSuccessful(true);
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+      try {
+        let response = await AuthService.register(username, password)
+        setMessage(response.data.message);
+        setSuccessful(true);
+        setTimeout(() => setLogin(true), 2000)
+      } catch(error) {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-          setMessage(resMessage);
-          setSuccessful(false);
-        }
-      );
+        setMessage(resMessage);
+        setSuccessful(false);
+      }
     }
   };
 
@@ -124,17 +109,6 @@ const Register = (props) => {
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="email">Sähköpostiosoite</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="email"
-                  value={email}
-                  onChange={onChangeEmail}
-                  validations={[required, validEmail]}
-                />
-              </div>
 
               <div className="form-group">
                 <label htmlFor="password">Salasana</label>
@@ -164,6 +138,16 @@ const Register = (props) => {
               </div>
             </div>
           )}
+
+          {login && (
+            AuthService.login(username, password).then(
+              () => {
+                props.history.push("/profile");
+                window.location.reload();
+              }
+            )
+          )}
+
           <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </div>

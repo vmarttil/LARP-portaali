@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AuthService from "./services/auth.service";
+import UserService from "./services/user.service";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -19,7 +20,7 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
+    const user = UserService.getCurrentUser();
 
     if (user) {
       setCurrentUser(user);

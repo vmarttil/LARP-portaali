@@ -2,7 +2,7 @@ const db = require("../models");
 const ROLES = db.ROLES;
 const User = db.user;
 
-checkDuplicateUsernameOrEmail = (req, res, next) => {
+checkDuplicateUsername = (req, res, next) => {
   // Tarkista käyttäjätunnus
   User.findOne({
     where: {
@@ -15,7 +15,9 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
       });
       return;
     }
-
+    next();
+    
+    /*
     // Tarkista sähköposti
     User.findOne({
       where: {
@@ -28,9 +30,9 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
         });
         return;
       }
-
       next();
     });
+    */
   });
 };
 
@@ -50,7 +52,7 @@ checkRolesExisted = (req, res, next) => {
 };
 
 const verifySignUp = {
-  checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
+  checkDuplicateUsername: checkDuplicateUsername,
   checkRolesExisted: checkRolesExisted
 };
 

@@ -1,9 +1,17 @@
 module.exports = {
   HOST: "localhost",
-  USER: "root",
-  PASSWORD: "8M5Vki3qL^1e",
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
   DB: "larp_portal",
+
   dialect: "mysql",
+  /* If needed, here we can enable SSL connections to the db */
+  // dialectOptions: {
+  //  ssl: {
+  //      rejectUnauthorized: true,
+  //      ca: /* certificate authority here*/ 
+  //  }
+  //},
   pool: {
     max: 5,
     min: 0,

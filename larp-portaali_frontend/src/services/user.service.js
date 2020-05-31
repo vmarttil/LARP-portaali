@@ -19,9 +19,14 @@ const getAdminPortal = () => {
   return axios.get(API_URL + "admin", { headers: authHeader() });
 };
 
+const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem("user"));
+};
+
 export default {
   getPublicContent,
   getPlayerPortal,
   getOrganiserPortal,
   getAdminPortal,
+  getCurrentUser
 };
