@@ -10,6 +10,7 @@
 | 12052020 | 1,5 | Käyttäjien luonti ja sisäänkirjautuminen backedissa |
 | 24052020 | 3,0 | Material UI:n käyttöönotto, frontend-sovelluksen luonti, sisäänkirjaussivun luonnos |
 | 28052020 | 3,0 | Material UI:n vaihto Bootstrapiin, uuden frontend-sovelluksen luonti, rekisteröitymisen ja sisäänkirjautumisen toteutus frontendissa |
+| 31052020 | 6,0 | Toteutettu käyttäjän profiilitietojen tallennus kryptattuna backendissa, refaktoroitu koodia (mm. .then -> async/await) |
 
-| **Yhteensä** | **16,5** | |
+| **Yhteensä** | **22,5** | |
 
