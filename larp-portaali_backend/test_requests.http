@@ -2,9 +2,9 @@ POST http://localhost:8080/api/auth/signup HTTP/1.1
 content-type: application/json
 
 {
-    "username": "vmarttil",
     "email": "ville.marttila@iki.fi",
-    "password": "test"
+    "password": "test",
+    "admin": false
 }
 
 ###
@@ -13,12 +13,25 @@ POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-    "username": "vmarttil",
+    "email": "ville.marttila@iki.fi",
     "password": "test"
 }
 
 ####
 
-GET http://www.localhost:8080/api/test/player HTTP/1.1
+GET http://www.localhost:8080/api/test/user HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTkwNjEwMjk3LCJleHAiOjE1OTA2OTY2OTd9.Fs8-4JbMWVl692uSYZBEU0vMyKjwh8vRLMR-l6PmsVM
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEwMzE2MTkwLCJleHAiOjE2MTA0MDI1OTB9.Zqk0BqA_WWgUx-YAyO9WMZTu28nW2LLZ6nDw1t6a-Fo
+
+####
+
+GET http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEwMzE2MTkwLCJleHAiOjE2MTA0MDI1OTB9.Zqk0BqA_WWgUx-YAyO9WMZTu28nW2LLZ6nDw1t6a-Fo
+
+{
+    "email": "ville.marttila@iki.fi"
+}
+
+
+

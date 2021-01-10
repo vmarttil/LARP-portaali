@@ -1,59 +1,28 @@
 const db = require("../models");
-const ROLES = db.ROLES;
 const User = db.user;
 
-checkDuplicateUsername = (req, res, next) => {
-  // Tarkista käyttäjätunnus
-  User.findOne({
-    where: {
-      username: req.body.username
-    }
-  }).then(user => {
-    if (user) {
-      res.status(400).send({
-        message: "Virhe! Käyttäjätunnus on jo käytössä."
-      });
-      return;
-    }
-    next();
-    
-    /*
-    // Tarkista sähköposti
-    User.findOne({
+checkDuplicateUsername = async (req, res, next) => {
+  // Check whether username/email is unique
+  try {
+    let user = await User.findOne({
       where: {
         email: req.body.email
       }
-    }).then(user => {
-      if (user) {
-        res.status(400).send({
-          message: "Virhe! Sähköpostiosoite on jo käytössä."
-        });
-        return;
-      }
-      next();
-    });
-    */
-  });
-};
-
-checkRolesExisted = (req, res, next) => {
-  if (req.body.roles) {
-    for (let i = 0; i < req.body.roles.length; i++) {
-      if (!ROLES.includes(req.body.roles[i])) {
-        res.status(400).send({
-          message: "Virhe! Käyttäjäroolia ei ole olemassa = " + req.body.roles[i]
-        });
-        return;
-      }
-    }
+    })
+    if (user) {
+      res.status(400).send({
+        message: "Virhe! Sähköpostiosoite on jo käytössä."
+      });
+      return;
+    }  
+    next();
+  } catch(err) {
+    res.status(500).send({ message: err.message });
   }
-  
-  next();
 };
 
 const verifySignUp = {
   checkDuplicateUsername: checkDuplicateUsername,
-  checkRolesExisted: checkRolesExisted
 };
 
 module.exports = verifySignUp;

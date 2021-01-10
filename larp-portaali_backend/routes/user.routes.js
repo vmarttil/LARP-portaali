@@ -13,15 +13,9 @@ module.exports = function(app) {
   app.get("/api/test/all", controller.allAccess);
 
   app.get(
-    "/api/test/player",
+    "/api/test/user",
     [authJwt.verifyToken],
-    controller.playerPortal
-  );
-
-  app.get(
-    "/api/test/organiser",
-    [authJwt.verifyToken, authJwt.isOrganiser],
-    controller.organiserPortal
+    controller.userPortal
   );
 
   app.get(
@@ -30,10 +24,22 @@ module.exports = function(app) {
     controller.adminPortal
   );
 
+  app.get(
+    "/api/user/profile",
+    [authJwt.verifyToken],
+    controller.userProfile
+  );
+
   app.put(
     "/api/user/profile",
     [authJwt.verifyToken],
-    controller.updateProfile
+    controller.updateProfileData
+  );
+
+  app.put(
+    "/api/user/personal",
+    [authJwt.verifyToken],
+    controller.updatePersonalData
   );
 
 };

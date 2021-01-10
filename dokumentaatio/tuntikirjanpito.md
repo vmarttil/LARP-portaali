@@ -11,6 +11,8 @@
 | 24052020 | 3,0 | Material UI:n käyttöönotto, frontend-sovelluksen luonti, sisäänkirjaussivun luonnos |
 | 28052020 | 3,0 | Material UI:n vaihto Bootstrapiin, uuden frontend-sovelluksen luonti, rekisteröitymisen ja sisäänkirjautumisen toteutus frontendissa |
 | 31052020 | 6,0 | Toteutettu käyttäjän profiilitietojen tallennus kryptattuna backendissa, refaktoroitu koodia (mm. .then -> async/await) |
+| 09012021 | 5,5 | Vaihdettu tietokanta MySQL:stä PostgreSQL:ään, määritelty tietokantarakenne uusiksi ja refaktoroitu backendin koodia yksinkertaisemmaksi |
+| 10012021 | 3,0 | Toteutettu käyttäjien henkilökohtaisten tietojen salaus tietokantaan tallennettaessa ja niiden purku luettaessa PostgreSQLn ja Sequelizen avulla |
 
-| **Yhteensä** | **22,5** | |
+| **Yhteensä** | **31,0** | |
 

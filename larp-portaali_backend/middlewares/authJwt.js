@@ -25,65 +25,19 @@ verifyToken = (req, res, next) => {
 
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Vaatii ylläpitäjän käyttöoikeudet."
-      });
+    if (user.admin) {
+      next();
       return;
-    });
+    }
   });
-};
-
-isOrganiser = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "organiser") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Vaatii järjestäjän käyttöoikeudet."
-      });
-    });
+  res.status(403).send({
+    message: "Vaatii ylläpitäjän käyttöoikeudet."
   });
-};
-
-isOrganiserOrAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        if (roles[i].name === "organiser") {
-          next();
-          return;
-        }
-
-        if (roles[i].name === "admin") {
-          next();
-          return;
-        }
-      }
-
-      res.status(403).send({
-        message: "Vaatii ylläpitäjän tai järjestäjän käyttöoikeudet."
-      });
-    });
-  });
+  return;
 };
 
 const authJwt = {
   verifyToken: verifyToken,
-  isAdmin: isAdmin,
-  isOrganiser: isOrganiser,
-  isOrganiserOrAdmin: isOrganiserOrAdmin
+  isAdmin: isAdmin
 };
 module.exports = authJwt;

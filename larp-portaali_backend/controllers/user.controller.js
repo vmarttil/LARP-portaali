@@ -1,48 +1,59 @@
 const db = require("../models");
+const User = db.user;
+const database = require("../middlewares/database");
+
+var jwt = require("jsonwebtoken");
+
 
 // Portaalien sisällöt
 exports.allAccess = (req, res) => {
   res.status(200).send("Kaikille avoin sisältö.");
 };
 
-exports.playerPortal = (req, res) => {
-  res.status(200).send("Pelaajille avoin sisältö.");
-};
-
 exports.adminPortal = (req, res) => {
   res.status(200).send("Ylläpitäjille avoin sisältö.");
 };
 
-exports.organiserPortal = (req, res) => {
-  res.status(200).send("Järjestäjille avoin sisältö.");
+exports.userPortal = (req, res) => {
+  res.status(200).send("Käyttäjille avoin sisältö.");
 };
 
 // Profiilien hallinta
-exports.updateProfile = async (req, res) => {
+
+exports.userProfile = async (req, res) => {
   try {
-    let user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    })
-    if (!user) {
-      return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
+    console.log("Vastaanotettu token: ", req.headers["x-access-token"]);
+    console.log(req.body)
+    let user = await database.getUser(req.body.email);
+    if (user.id) {
+      res.status(200).send(user);
+    } else {
+      res.status(500).send("Käyttäjää ei löydy.");
     }
+  } catch(err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+exports.updatePersonalData = async (req, res) => {
+  try {
+    let user = await database.getUser(req.body.email);
     await user.update({
-      // profileData: req.body.profileData
-      profileData: db.Sequelize.fn('AES_ENCRYPT', req.body.profileData, process.env.DB_ENC_KEY)
+      personalData: JSON.stringify(db.Sequelize.fn('AES_ENCRYPT', req.body.personalData, process.env.DB_ENC_KEY))
     })
-    if (req.body.roles) {
-      let roles = await Role.findAll({
-        where: {
-          name: {
-            [Op.or]: req.body.roles
-          }
-        }
-      });
-      await user.setRoles(roles);
-    }
-    res.status(200).send({ message: "Profiili päivitetty." });
+    res.status(200).send({ message: "Henkilötiedot päivitetty." });
+  } catch(err) {
+    res.status(500).send({ message: err.message });
+  };
+};
+
+exports.updateProfileData = async (req, res) => {
+  try {
+    let user = await database.getUser(req.body.email);
+    await user.update({
+      profileData: JSON.stringify(db.Sequelize.fn('AES_ENCRYPT', req.body.profileData, process.env.DB_ENC_KEY))
+    })
+    res.status(200).send({ message: "Profiilitiedot päivitetty." });
   } catch(err) {
     res.status(500).send({ message: err.message });
   };

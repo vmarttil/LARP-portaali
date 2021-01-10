@@ -1,5 +1,6 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+const database = require("../middlewares/database");
 const User = db.user;
 const Role = db.role;
 
@@ -9,28 +10,20 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = async (req, res) => {
-  // Tallennetaan käyttäjä tietokantaan
+  // Save the user to the database
   try {
-    let user = await User.create({
-      username: req.body.username,
-      password: bcrypt.hashSync(req.body.password, 8),
-      profileData: {}
+    let personalData = JSON.stringify({
     });
-    if (req.body.roles) {
-      let roles = await Role.findAll({
-        where: {
-          name: {
-            [Op.or]: req.body.roles
-          }
-        }
-      });
-      await user.setRoles(roles);
-      res.send({ message: "Käyttäjätunnuksen luominen onnistui." });
-    } else {
-      // käyttäjän rooli = 1
-      await user.setRoles([1]); 
-      res.send({ message: "Käyttäjätunnuksen luominen onnistui." });  
-    }
+    let profileData = JSON.stringify({
+    });
+    let user = await User.create({
+      email: req.body.email,
+      password: bcrypt.hashSync(req.body.password, 8),
+      personalData: db.Sequelize.fn('PGP_SYM_ENCRYPT', personalData, process.env.DB_ENC_KEY),
+      profileData: db.Sequelize.fn('PGP_SYM_ENCRYPT', profileData, process.env.DB_ENC_KEY),
+      admin: req.body.admin
+    });
+    res.send({ message: "Käyttäjätunnuksen luominen onnistui." });  
   } catch(err) {
       res.status(500).send({ message: err.message });
   };
@@ -38,12 +31,8 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    })
-    if (!user) {
+    let user = await database.getUser(req.body.email)
+    if (!user.id) {
       return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
     }
     let passwordIsValid = bcrypt.compareSync(
@@ -62,20 +51,23 @@ exports.signin = async (req, res) => {
       expiresIn: 86400 // 24 tuntia
     });
 
-    let authorities = [];
-    user.getRoles().then(roles => {
-      for (let i = 0; i < roles.length; i++) {
-        authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    // If the user has a name defined, use it instead of the email
+    let name = user.email;
+    if (user.personalData.name) {
+      if (user.personalData.name.nick) {
+        name = user.personalData.name.first.concat(" '", user.personalData.name.nick, "' ", user.personal.name.last);
+      } else {
+        name = user.personalData.name.first.concat(" ", user.personalData.name.last);
       }
-      console.log(user.profileData)
-      res.status(200).send({
-        id: user.id,
-        username: user.username,
-        profileData: db.Sequelize.fn('AES_DECRYPT', user.profileData, process.env.DB_ENC_KEY),
-        //profileData: user.profileData,
-        roles: authorities,
-        accessToken: token
-      });
+    }
+    // Return the user's data to the frontend
+    res.status(200).send({
+      id: user.id,
+      email: user.email,
+      name: name,
+      personalData: user.personalData,
+      profileData: user.profileData,
+      accessToken: token
     });
   } catch(err) {
       res.status(500).send({ message: err.message });

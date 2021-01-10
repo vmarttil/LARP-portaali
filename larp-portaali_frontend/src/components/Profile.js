@@ -1,10 +1,35 @@
 import React, { useState, useRef } from "react";
 import UserService from "../services/user.service";
+import AuthService from "../services/auth.service";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
+import produce from "immer";
+import { set, has } from "lodash";
 
+function enhancedReducer(state, updateArg) {
+  // tarkista onko updateArg callback-funktio
+  if (updateArg.constructor === Function) {
+    return { ...state, ...updateArg(state) };
+  }
+  // jos updateArg on objekti
+  if (updateArg.constructor === Object) {
+    // jos objektilla on _path- ja _value-avaimet,
+    // käytä niitä objektin syvempien tasojen päivittämiseen
+    if (has(updateArg, "_path") && has(updateArg, "_value")) {
+      const { _path, _value } = updateArg;
+
+      return produce(state, draft => {
+        set(draft, _path, _value);
+      });
+    } else {
+      return { ...state, ...updateArg };
+    }
+  }
+}
+
+/*
 const required = (value) => {
   if (!value) {
     return (
@@ -67,31 +92,88 @@ const Profile = () => {
   );
 };
 
+*/
 
 
-/*
+
 const Profile = (props) => {
   const form = useRef();
   const checkBtn = useRef();
 
-  const [username, setUsername] = useState("");
+  const currentUser = UserService.getCurrentUser();
+  const username = currentUser.username;
+  
+  let initialProfileData = {};
+  
+  if (currentUser.profileData) {
+    initialProfileData = {
+      name: {
+        first: currentUser.profileData.name.first,
+        last: currentUser.profileData.name.last,
+        nick: currentUser.profileData.name.nick
+      },
+      email: currentUser.profileData.email,
+      phone: currentUser.profileData.phone,
+      hometown: currentUser.profileData.hometown,
+      gender: currentUser.profileData.gender,
+      birthDate: currentUser.profileData.birthDate,
+      playerPreferences: currentUser.profileData.playerPreferences,
+      dietaryRestrictions: currentUser.profileData.dietaryRestrictions,
+      healthInformation: currentUser.profileData.healthInformation,
+      isPlayer: currentUser.roles.includes('ROLE_PLAYER'),
+      isOrganiser: currentUser.roles.includes('ROLE_ORGANISER'),
+    };
+  } else {
+    initialProfileData = {
+      name: {
+        first: "",
+        last: "",
+        nick: ""
+      },
+      email: "",
+      phone: "",
+      hometown: "",
+      gender: "",
+      birthDate: "",
+      playerPreferences: "",
+      dietaryRestrictions: "",
+      healthInformation: "",
+      isPlayer: currentUser.roles.includes('ROLE_PLAYER'),
+      isOrganiser: currentUser.roles.includes('ROLE_ORGANISER'),
+    }
+  }
+
+  const [password, setPassword] = useState(currentUser.password);
+  const [name, setName] = useState(initialProfileData.profileData.name); 
   const [email, setEmail] = useState("");
-  const [name, setName] = useState({first: '', last: '', nick: ''})
   
-  useEffect(() => {
-    user = `You clicked ${count} times`;
-  });
+  const [phone, setPhone] = useState(initialProfileData.profileData.phone);
+  const [hometown, setHometown] = useState(initialProfileData.profileData.hometown);
+  const [gender, setGender] = useState(initialProfileData.profileData.gender);
+  const [birthDate,setBirthDate] = useState(initialProfileData.profileData.birthDate);
+  const [playerProfile,setPlayerProfile] = useState(initialProfileData.profileData.playerProfile);
+  const [dietaryRestrictions,setDietaryRestrictions] = useState(initialProfileData.profileData.dietaryRestrictions);
+  const [healthInformation,setHealthInformation] = useState(initialProfileData.profileData.healthInformation);
   
-  const [password, setPassword] = useState("");
-
-
-
+  
+  const [login, setLogin] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+  
+  const onChangeFirstName = (e) => {
+    const firstName = e.target.value;
+    setName({first: firstName, last: name.last, nick: name.nick});
+  };
+
+  const onChangeLastName = (e) => {
+    const lastName = e.target.value;
+    setName({first: name.first, last: lastName, nick: name.nick});
+  };
+
+  const onChangeNickName = (e) => {
+    const nickName = e.target.value;
+    setName({first: name.first, last: name.first, nick: nickName});
   };
 
   const onChangeEmail = (e) => {
@@ -148,14 +230,7 @@ const Profile = (props) => {
             <div>
               <div className="form-group">
                 <label htmlFor="username">Käyttäjätunnus</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="username"
-                  value={username}
-                  onChange={onChangeUsername}
-                  validations={[required, vusername]}
-                />
+                <label>{username}</label>
               </div>
 
               <div className="form-group">
@@ -214,8 +289,7 @@ const Profile = (props) => {
     </div>
   );
 };
-
-
 */
+
 
 export default Profile;
