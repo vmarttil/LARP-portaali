@@ -13,6 +13,7 @@
 | 31052020 | 6,0 | Toteutettu käyttäjän profiilitietojen tallennus kryptattuna backendissa, refaktoroitu koodia (mm. .then -> async/await) |
 | 09012021 | 5,5 | Vaihdettu tietokanta MySQL:stä PostgreSQL:ään, määritelty tietokantarakenne uusiksi ja refaktoroitu backendin koodia yksinkertaisemmaksi |
 | 10012021 | 3,0 | Toteutettu käyttäjien henkilökohtaisten tietojen salaus tietokantaan tallennettaessa ja niiden purku luettaessa PostgreSQLn ja Sequelizen avulla |
+| 20012021 | 6,0 | Toteutettu käyttäjän tietojen päivitys backendissa, refaktoroitu backendia ja tutustuttu uudelleen frontendin koodiin |
 
-| **Yhteensä** | **31,0** | |
+| **Yhteensä** | **37,0** | |
 
