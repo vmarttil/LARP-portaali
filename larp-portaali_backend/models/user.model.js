@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   var key = process.env.DB_ENC_KEY;
-  const User = sequelize.define("users", {
+  const User = sequelize.define("user", {
     // Email is used as a username due to its inherently unique nature and verifiability
     email: {
       type: Sequelize.STRING,

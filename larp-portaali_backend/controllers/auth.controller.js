@@ -1,8 +1,7 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const database = require("../middlewares/database");
+const db_user = require("../db/db_user");
 const User = db.user;
-const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
@@ -12,18 +11,14 @@ var bcrypt = require("bcryptjs");
 exports.signup = async (req, res) => {
   // Save the user to the database
   try {
-    let personalData = JSON.stringify({
-    });
-    let profileData = JSON.stringify({
-    });
-    let user = await User.create({
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8),
-      personalData: db.Sequelize.fn('PGP_SYM_ENCRYPT', personalData, process.env.DB_ENC_KEY),
-      profileData: db.Sequelize.fn('PGP_SYM_ENCRYPT', profileData, process.env.DB_ENC_KEY),
-      admin: req.body.admin
-    });
-    res.send({ message: "Käyttäjätunnuksen luominen onnistui." });  
+    let user = await db_user.createUser(req.body)
+    console.log("Here we should have the user in the controller:")
+    console.log(user)
+    if (user.id) {
+      res.status(201).send({ message: "Käyttäjätunnuksen luominen onnistui." });
+    } else {
+      res.status(500).send({ message: "Käyttäjätunnuksen luominen epäonnistui." });
+    }
   } catch(err) {
       res.status(500).send({ message: err.message });
   };
@@ -31,7 +26,8 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await database.getUser(req.body.email)
+    let user = await db_user.getUser(req.body.email)
+    console.log(user)
     if (!user.id) {
       return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
     }
@@ -67,6 +63,7 @@ exports.signin = async (req, res) => {
       name: name,
       personalData: user.personalData,
       profileData: user.profileData,
+      admin: user.admin,
       accessToken: token
     });
   } catch(err) {

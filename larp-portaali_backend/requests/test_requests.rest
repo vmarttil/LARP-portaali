@@ -1,0 +1,73 @@
+POST http://localhost:8080/api/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "email": "ville.marttila@iki.fi",
+    "password": "test",
+    "admin": false
+}
+
+###
+
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+    "email": "ville.marttila@iki.fi",
+    "password": "test"
+}
+
+####
+
+GET http://www.localhost:8080/api/portal/user HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+####
+
+GET http://www.localhost:8080/api/portal/admin HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+####
+
+GET http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+{
+    "email": "ville.marttila@iki.fi"
+}
+
+####
+
+PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+{
+    "email": "ville.marttila@iki.fi",
+    "profileData": { "testContent": "This the newly updated profile data content." }
+}
+
+####
+
+PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+{
+    "email": "ville.marttila@iki.fi",
+    "personalData": { "testContent": "This the newly updated personal data content." }
+}
+
+####
+
+PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+{
+    "email": "ville.marttila@iki.fi",
+    "admin": true
+}

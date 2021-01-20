@@ -23,13 +23,12 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    if (user.admin) {
-      next();
-      return;
-    }
-  });
+isAdmin = async (req, res, next) => {
+  let user = await User.findByPk(req.userId)
+  if (user.admin) {
+    next();
+    return;
+  }
   res.status(403).send({
     message: "Vaatii ylläpitäjän käyttöoikeudet."
   });

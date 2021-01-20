@@ -10,16 +10,16 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/test/all", controller.allAccess);
+  app.get("/api/portal/all", controller.allAccess);
 
   app.get(
-    "/api/test/user",
+    "/api/portal/user",
     [authJwt.verifyToken],
     controller.userPortal
   );
 
   app.get(
-    "/api/test/admin",
+    "/api/portal/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminPortal
   );
@@ -33,13 +33,7 @@ module.exports = function(app) {
   app.put(
     "/api/user/profile",
     [authJwt.verifyToken],
-    controller.updateProfileData
+    controller.updateProfile
   );
-
-  app.put(
-    "/api/user/personal",
-    [authJwt.verifyToken],
-    controller.updatePersonalData
-  );
-
+  
 };
