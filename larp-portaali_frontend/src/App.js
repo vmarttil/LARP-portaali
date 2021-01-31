@@ -8,14 +8,13 @@ import UserService from "./services/user.service";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Home from "./components/Home";
+import MainPage from "./components/MainPage";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
 import AdminPortal from "./components/AdminPortal";
 
 const App = () => {
-  const [showOrganiserPortal, setShowOrganiserPortal] = useState(false);
   const [showAdminPortal, setShowAdminPortal] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -24,8 +23,7 @@ const App = () => {
 
     if (user) {
       setCurrentUser(user);
-      setShowOrganiserPortal(user.roles.includes("ROLE_ORGANISER"));
-      setShowAdminPortal(user.roles.includes("ROLE_ADMIN"));
+      setShowAdminPortal(user.admin);
     }
   }, []);
 
@@ -42,30 +40,22 @@ const App = () => {
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
+              <Link to={"/mainPage"} className="nav-link">
                 Pääsivu
               </Link>
             </li>
 
             {currentUser && (
               <li className="nav-item">
-                <Link to={"/player"} className="nav-link">
-                  Pelaajaportaali
-                </Link>
-              </li>
-            )}
-
-            {showOrganiserPortal && (
-              <li className="nav-item">
-                <Link to={"/organiser"} className="nav-link">
-                  Pelinjärjestäjäportaali
+                <Link to={"/portal/player"} className="nav-link">
+                  Omat ilmoittautumiset
                 </Link>
               </li>
             )}
 
             {showAdminPortal && (
               <li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
+                <Link to={"/portal/admin"} className="nav-link">
                   Hallintaportaali
                 </Link>
               </li>
@@ -104,13 +94,13 @@ const App = () => {
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/home"]} component={Home} />
+            <Route exact path={["/", "/mainPage"]} component={MainPage} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
-            <Route path="/player" component={PlayerPortal} />
-            <Route path="/organiser" component={OrganiserPortal} />
-            <Route path="/admin" component={AdminPortal} />
+            <Route path="/portal/player" component={PlayerPortal} />
+            <Route path="/portal/organiser" component={OrganiserPortal} />
+            <Route path="/portal/admin" component={AdminPortal} />
           </Switch>
         </div>
       </div>

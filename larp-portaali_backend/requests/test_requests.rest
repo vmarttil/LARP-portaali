@@ -19,21 +19,33 @@ content-type: application/json
 
 ####
 
-GET http://www.localhost:8080/api/portal/user HTTP/1.1
+
+GET http://www.localhost:8080/api/mainPage HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+
+####
+
+GET http://www.localhost:8080/api/portal/player HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
+
+####
+
+GET http://www.localhost:8080/api/portal/organiser HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 ####
 
 GET http://www.localhost:8080/api/portal/admin HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 ####
 
 GET http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 {
     "email": "ville.marttila@iki.fi"
@@ -43,31 +55,55 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTY
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 {
-    "email": "ville.marttila@iki.fi",
-    "profileData": { "testContent": "This the newly updated profile data content." }
+    "id": 2,
+    "profileData": { "testContent": "This the newly reupdated profile data content." }
 }
 
 ####
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 {
-    "email": "ville.marttila@iki.fi",
-    "personalData": { "testContent": "This the newly updated personal data content." }
+    "id": 2,
+    "personalData": { "testContent": "This the newly reupdated personal data content." }
 }
 
 ####
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjExMTYxNjMzLCJleHAiOjE2MTEyNDgwMzN9.KT_QM3t1R5chQB_ermqY9svhEFWoEjh5kpbUWyZKuwI
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
 
 {
+    "id": 2,
+    "email": "ville.marttila@helsinki.fi",
+    "password": "testisalasana"
+}
+
+####
+
+PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
+
+{
+    "id": 2,
     "email": "ville.marttila@iki.fi",
-    "admin": true
+    "password": "test"
+}
+
+####
+
+PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEyMDk4ODQxLCJleHAiOjE2MTIxODUyNDF9.BnZTSlY8gprGD1Qzli6iWJNo1N4Az6q4aw1ebFAGE2A
+
+{
+    "id": 2,
+    "admin": false
 }

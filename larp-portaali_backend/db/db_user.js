@@ -71,24 +71,32 @@ updateProfile = async (userData) => {
     if (userData.personalData) {
       let updated = await User.update(
         {personalData: db.Sequelize.fn('PGP_SYM_ENCRYPT', JSON.stringify(userData.personalData), process.env.DB_ENC_KEY)},
-        {where: {email: userData.email}}
+        {where: {id: userData.id}}
       )
       returnValue = updated > 0 ? { status: 200, message: "Käyttäjän henkilötiedot päivitetty." } : { status: 404, message: "Käyttäjää ei löydy."} 
     }
     else if (userData.profileData) {
       let updated = await User.update(
         {profileData: db.Sequelize.fn('PGP_SYM_ENCRYPT', JSON.stringify(userData.profileData), process.env.DB_ENC_KEY)},
-        {where: {email: userData.email}}
+        {where: {id: userData.id}}
       )
       returnValue = updated > 0 ? { status: 200, message: "Käyttäjän profiilitiedot päivitetty." } : { status: 404, message: "Käyttäjää ei löydy."}
     }
-    else {
+    else if (userData.admin) {
       let updated = await User.update(
         {admin: userData.admin},
-        {where: {email: userData.email}}
+        {where: {id: userData.id}}
       )
       returnValue = updated > 0 ? { status: 200, message: "Käyttäjän käyttöoikeus päivitetty." } : { status: 404, message: "Käyttäjää ei löydy."}
     }
+    else if (userData.email && userData.password) {
+      let updated = await User.update(
+        {email: userData.email, password: userData.password},
+        {where: {id: userData.id}}
+      )
+      returnValue = updated > 0 ? { status: 200, message: "Käyttäjän sähköposti ja salasana päivitetty." } : { status: 404, message: "Käyttäjää ei löydy."}
+    } 
+
     return returnValue
   } catch(err) {
     return {status: 500, message: err.message };

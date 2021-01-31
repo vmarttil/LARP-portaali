@@ -1,238 +1,163 @@
 import React, { useState, useRef } from "react";
+import { isEmail, isPhoneNumber } from '../utils/validate.js';
 import UserService from "../services/user.service";
 import AuthService from "../services/auth.service";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
-import produce from "immer";
-import { set, has } from "lodash";
 
-function enhancedReducer(state, updateArg) {
-  // tarkista onko updateArg callback-funktio
-  if (updateArg.constructor === Function) {
-    return { ...state, ...updateArg(state) };
-  }
-  // jos updateArg on objekti
-  if (updateArg.constructor === Object) {
-    // jos objektilla on _path- ja _value-avaimet,
-    // käytä niitä objektin syvempien tasojen päivittämiseen
-    if (has(updateArg, "_path") && has(updateArg, "_value")) {
-      const { _path, _value } = updateArg;
 
-      return produce(state, draft => {
-        set(draft, _path, _value);
-      });
-    } else {
-      return { ...state, ...updateArg };
-    }
-  }
-}
-
-/*
 const required = (value) => {
   if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Tämä kenttä on pakollinen.
-      </div>
-    );
+    return (<div className="alert alert-danger" role="alert">Tämä kenttä on pakollinen.</div>);
   }
 };
 
 const validEmail = (value) => {
   if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Sähköpostiosoite on virheellinen.
-      </div>
-    );
+    return (<div className="alert alert-danger" role="alert">Sähköpostiosoite on virheellinen.</div>);
   }
 };
 
-const vpassword = (value) => {
+const validPassword = (value) => {
   if (value.length < 8 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Salasanan tulee olla 8–40 merkin mittainen.
-      </div>
-    );
+    return (<div className="alert alert-danger" role="alert">Salasanan tulee olla 8–40 merkin mittainen.</div>);
   }
 };
 
-
-const Profile = () => {
-  const currentUser = UserService.getCurrentUser();
-
-  return (
-    <div className="container">
-      <header className="jumbotron">
-        <h1>
-          <strong>{currentUser.username}</strong>
-        </h1>
-      </header>
-
-
-      <p>
-        <strong>Tunniste:</strong> {currentUser.accessToken.substring(0, 20)} ...{" "}
-        {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-      </p>
-      <p>
-        <strong>Käyttäjänumero:</strong> {currentUser.id}
-      </p>
-      <p>
-        <strong>Sähköpostiosoite:</strong> {currentUser.profileData.email}
-      </p>
-      <strong>Valtuudet:</strong>
-      <ul>
-        {currentUser.roles &&
-          currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-      </ul>
-    </div>
-  );
+const validPhoneNumber = (value) => {
+  if (!isPhoneNumber(value)) {
+    return (<div className="alert alert-danger" role="alert">Puhelinnumeron tulee olla muodossa +xxx xx xxx xxxx.</div>);
+  }
 };
-
-*/
-
-
 
 const Profile = (props) => {
-  const form = useRef();
-  const checkBtn = useRef();
+  const accountDataForm = useRef();
+  const personalDataForm = useRef();
+  const profileDataForm = useRef();
+  const checkAccountDataBtn = useRef();
+  const checkPersonalDataBtn = useRef();
+  const checkProfileDataBtn = useRef();
 
   const currentUser = UserService.getCurrentUser();
-  const username = currentUser.username;
+  const userId = currentUser.id;
   
-  let initialProfileData = {};
-  
-  if (currentUser.profileData) {
-    initialProfileData = {
-      name: {
-        first: currentUser.profileData.name.first,
-        last: currentUser.profileData.name.last,
-        nick: currentUser.profileData.name.nick
-      },
-      email: currentUser.profileData.email,
-      phone: currentUser.profileData.phone,
-      hometown: currentUser.profileData.hometown,
-      gender: currentUser.profileData.gender,
-      birthDate: currentUser.profileData.birthDate,
-      playerPreferences: currentUser.profileData.playerPreferences,
-      dietaryRestrictions: currentUser.profileData.dietaryRestrictions,
-      healthInformation: currentUser.profileData.healthInformation,
-      isPlayer: currentUser.roles.includes('ROLE_PLAYER'),
-      isOrganiser: currentUser.roles.includes('ROLE_ORGANISER'),
-    };
-  } else {
-    initialProfileData = {
-      name: {
-        first: "",
-        last: "",
-        nick: ""
-      },
-      email: "",
-      phone: "",
-      hometown: "",
-      gender: "",
-      birthDate: "",
-      playerPreferences: "",
-      dietaryRestrictions: "",
-      healthInformation: "",
-      isPlayer: currentUser.roles.includes('ROLE_PLAYER'),
-      isOrganiser: currentUser.roles.includes('ROLE_ORGANISER'),
-    }
-  }
-
+  /* States for user profile data form */
+  const [email, setEmail] = useState(currentUser.email);
   const [password, setPassword] = useState(currentUser.password);
-  const [name, setName] = useState(initialProfileData.profileData.name); 
-  const [email, setEmail] = useState("");
-  
-  const [phone, setPhone] = useState(initialProfileData.profileData.phone);
-  const [hometown, setHometown] = useState(initialProfileData.profileData.hometown);
-  const [gender, setGender] = useState(initialProfileData.profileData.gender);
-  const [birthDate,setBirthDate] = useState(initialProfileData.profileData.birthDate);
-  const [playerProfile,setPlayerProfile] = useState(initialProfileData.profileData.playerProfile);
-  const [dietaryRestrictions,setDietaryRestrictions] = useState(initialProfileData.profileData.dietaryRestrictions);
-  const [healthInformation,setHealthInformation] = useState(initialProfileData.profileData.healthInformation);
-  
-  
-  const [login, setLogin] = useState(false);
+  /*
+  const [name, setName] = useState(currentUser.personalData.name); 
+  const [phone, setPhone] = useState(currentUser.personalData.phone ?? "");
+  const [hometown, setHometown] = useState(currentUser.personalData.hometown ?? "");
+  const [gender, setGender] = useState(currentUser.personalData.gender ?? "");
+  const [birthDate,setBirthDate] = useState(currentUser.personalData.birthDate ?? "");
+  const [dietaryRestrictions,setDietaryRestrictions] = useState(currentUser.personalData.dietaryRestrictions ?? "");
+  const [healthInformation,setHealthInformation] = useState(currentUser.personalData.healthInformation ?? "");
+  */
+  const [personalData, setPersonalData] = useState(currentUser.personalData) 
+  /*
+  const [playerProfile,setPlayerProfile] = useState(currentUser.profileData.playerProfile ?? "");
+  const [answerTemplates,setAnswerTemplates] = useState(currentUser.profileData.answerTemplates ?? []);
+  */
+ const [profileData, setProfileData] = useState(currentUser.profileData) 
+
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
 
-  
-  const onChangeFirstName = (e) => {
-    const firstName = e.target.value;
-    setName({first: firstName, last: name.last, nick: name.nick});
-  };
-
-  const onChangeLastName = (e) => {
-    const lastName = e.target.value;
-    setName({first: name.first, last: lastName, nick: name.nick});
-  };
-
-  const onChangeNickName = (e) => {
-    const nickName = e.target.value;
-    setName({first: name.first, last: name.first, nick: nickName});
-  };
-
+  /* Event handlers for form fields */ 
   const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
+    setEmail(e.target.value);
   };
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
+    setPassword(e.target.value);
   };
 
-  const handleRegister = (e) => {
+  const saveAccountData = async (e) => {
     e.preventDefault();
-
     setMessage("");
-    setSuccessful(false);
-
-    form.current.validateAll();
-
-    if (checkBtn.current.context._errors.length === 0) {
-      AuthService.register(username, email, password).then(
-        (response) => {
-          setMessage(response.data.message);
-          setSuccessful(true);
-          setTimeout(() => setLogin(true), 2000)
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setMessage(resMessage);
-          setSuccessful(false);
-        }
-      );
+    accountDataForm.current.validateAll();
+    let updateData =  {id: userId, 
+                      email: email, 
+                      password: password}
+    if (checkAccountDataBtn.current.context._errors.length === 0) {
+      saveData(updateData)
     }
   };
+
+/*
+  const onChangeFirstName = (e) => {
+    setName({first: e.target.value, last: name.last, nick: name.nick});
+  };
+
+  const onChangeLastName = (e) => {
+    setName({first: name.first, last: e.target.value, nick: name.nick});
+  };
+
+  const onChangeNickname = (e) => {
+    setName({first: name.first, last: name.last, nick: e.target.value});
+  };
+
+  const onChangePhone = (e) => {
+    setPhone(e.target.value);
+  };
+*/
+
+  const onChangePersonalData = (e) => {
+    setPersonalData({...personalData, [e.target.name]: e.target.value});
+  };
+
+  const savePersonalData = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    personalDataForm.current.validateAll();
+    let updateData =  {id: userId, 
+                      personalData: personalData}
+    if (checkPersonalDataBtn.current.context._errors.length === 0) {
+      saveData(updateData)
+    }
+  };
+
+  const onChangeProfileData = (e) => {
+    setProfileData({...profileData, [e.target.name]: e.target.value});
+  };
+
+  const saveProfileData = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    profileDataForm.current.validateAll();
+    let updateData =  {id: userId,
+                      profileData: profileData}
+    if (checkProfileDataBtn.current.context._errors.length === 0) {
+      saveData(updateData)
+    }
+  };
+
+  async function saveData(updateData) {
+    try {
+      let response = await UserService.saveUserProfile(updateData)
+      setMessage(response.data.message);
+      setSuccessful(true);
+    } catch (error) {
+      const resMessage =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      setMessage(resMessage);
+      setSuccessful(false);
+    }
+  }
 
   return (
     <div className="col-md-12">
       <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
-
-        <Form onSubmit={handleRegister} ref={form}>
-          {!successful && (
+        <h2>Käyttäjätilin tiedot</h2>
+        <Form onSubmit={saveAccountData} ref={accountDataForm}>
             <div>
               <div className="form-group">
-                <label htmlFor="username">Käyttäjätunnus</label>
-                <label>{username}</label>
+                <label>Käyttäjänumero</label>
+                <label>{userId}</label>
               </div>
-
               <div className="form-group">
                 <label htmlFor="email">Sähköpostiosoite</label>
                 <Input
@@ -244,7 +169,6 @@ const Profile = (props) => {
                   validations={[required, validEmail]}
                 />
               </div>
-
               <div className="form-group">
                 <label htmlFor="password">Salasana</label>
                 <Input
@@ -253,38 +177,158 @@ const Profile = (props) => {
                   name="password"
                   value={password}
                   onChange={onChangePassword}
-                  validations={[required, vpassword]}
+                  validations={[required, validPassword]}
                 />
               </div>
-
               <div className="form-group">
-                <button className="btn btn-primary btn-block">Rekisteröidy</button>
+                <button className="btn btn-primary btn-block">Tallenna käyttäjätilin tiedot</button>
               </div>
             </div>
-          )}
 
           {message && (
             <div className="form-group">
-              <div
-                className={ successful ? "alert alert-success" : "alert alert-danger" }
-                role="alert"
-              >
+              <div className={ successful ? "alert alert-success" : "alert alert-danger" } role="alert">
                 {message}
               </div>
             </div>
           )}
 
-          {login && (
-            AuthService.login(username, password).then(
-              () => {
-                props.history.push("/profile");
-                window.location.reload();
-              }
-            )
+          <CheckButton ref={checkAccountDataBtn} />
+        </Form>
+
+
+        <h2>Henkilökohtaiset tiedot</h2>
+        <Form onSubmit={savePersonalData} ref={personalDataForm}>
+            <div>
+              <div className="form-group">
+                <label htmlFor="firstName">Etunimi</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="firstName"
+                  value={personalData.firstName}
+                  onChange={onChangePersonalData}
+                  validations={[required]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="lastName">Sukunimi</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="lastName"
+                  value={personalData.lastName}
+                  onChange={onChangePersonalData}
+                  validations={[required]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="lastName">Lempinimi</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="nickname"
+                  value={personalData.nickname}
+                  onChange={onChangePersonalData}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">Puhelinnumero</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="phone"
+                  value={personalData.phone}
+                  onChange={onChangePersonalData}
+                  validations={[validPhoneNumber]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="hometown">Kotipaikkakunta</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="hometown"
+                  value={personalData.hometown}
+                  onChange={onChangePersonalData}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="gender">Sukupuoli</label>
+                <div className="radio">
+                  <label>
+                    <Input
+                      type="radio"
+                      className="form-control"
+                      name="gender"
+                      value="2"
+                      checked={personalData.gender === "2"}
+                      onChange={onChangePersonalData}
+                    />
+                    Nainen
+                  </label>
+                </div>
+                <div className="radio">
+                  <label>
+                    <Input
+                      type="radio"
+                      className="form-control"
+                      name="gender"
+                      value="1"
+                      checked={personalData.gender === "1"}
+                      onChange={onChangePersonalData}
+                    />
+                    Mies
+                  </label>
+                </div>
+                <div className="radio">
+                  <label>
+                    <Input
+                      type="radio"
+                      className="form-control"
+                      name="gender"
+                      value="9"
+                      checked={personalData.gender === "9"}
+                      onChange={onChangePersonalData}
+                    />
+                    Muu
+                  </label>
+                </div>
+              </div>
+              
+
+birthDate: birthDate,
+dietaryRestrictions: dietaryRestrictions,
+healthInformation: healthInformation
+
+
+
+
+
+              <div className="form-group">
+                <button className="btn btn-primary btn-block">Tallenna käyttäjätilin tiedot</button>
+              </div>
+            </div>
+
+          {message && (
+            <div className="form-group">
+              <div className={ successful ? "alert alert-success" : "alert alert-danger" } role="alert">
+                {message}
+              </div>
+            </div>
           )}
 
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
+          <CheckButton ref={checkAccountDataBtn} />
         </Form>
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   );
