@@ -16,5 +16,8 @@
 | 20012021 | 6,0 | Toteutettu käyttäjän tietojen päivitys backendissa, refaktoroitu backendia ja tutustuttu uudelleen frontendin koodiin |
 | 31012021 | 6,0 | Refaktoroitu frontendia ja koodattu käyttäjän tietojen muokkaussivua (kesken) |
 
-| **Yhteensä** | **43,0** | |
+| 02022021 | 5,0 | Refaktoroitu sisäänkirjaus- ja rekisteröintisivuja käyttämään Bootstrapia ja koodattu uusi lomakkeiden validointi |
+| 04022021 | 3,0 | Refaktoroitu lomakkeet käyttämään custom hookia ja geneeristä TextField-komponenttia |
+
+| **Yhteensä** | **51,0** | |
 
