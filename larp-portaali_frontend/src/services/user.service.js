@@ -28,7 +28,7 @@ const saveUserProfile = (userProfileData) => {
   return axios.put(API_URL + "profile", {headers: authHeader(), data: userProfileData });
 };
 
-export default {
+let UserService = {
   getMainPage,
   getPlayerPortal,
   getOrganiserPortal,
@@ -36,3 +36,5 @@ export default {
   getCurrentUser,
   saveUserProfile
 };
+
+export default UserService;

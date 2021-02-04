@@ -1,73 +1,63 @@
-import React, { useState, useRef } from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-
-
+import React, { useState, useRef, useEffect } from "react";
+import { isEmail, isPassword } from "../utils/validate"
+import { Form, Button, Alert } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Tämä kenttä on pakollinen.
-      </div>
-    );
-  }
-};
-
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Käyttäjätunnuksen tulee olla 3–20 merkin mittainen.
-      </div>
-    );
-  }
-};
-
-const vpassword = (value) => {
-  if (value.length < 8 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        Salasanan tulee olla 8–40 merkin mittainen.
-      </div>
-    );
-  }
-};
-
 const Register = (props) => {
-  const form = useRef();
-  const checkBtn = useRef();
+  const firstRender = useRef(true);
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState({value: "", error: null});
+  const [password, setPassword] = useState({value: "", error: null});
 
-  const [password, setPassword] = useState("");
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
+  
   const [login, setLogin] = useState(false);
 
-  const onChangeUsername = (e) => {
-    const username = e.target.value;
-    setUsername(username);
+// onChange handlers
+
+  const onChangeEmail = (e) => {
+    const email_field = e.target.value;
+    setEmail({...email, value: email_field});
   };
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
+    const password_field = e.target.value;
+    setPassword({...password, value: password_field});
   };
+
+// Validators
+
+  const validateEmail = () => {
+    if (email.value === "") {
+      setEmail({...email, error: "Sähköpostiosoite on pakollinen."});
+    } else if (!isEmail(email.value)) {
+      setEmail({...email, error: "Syötä kelvollinen sähköpostiosoite."});
+    } else {
+      setEmail({...email, error: null});
+    }
+  };
+
+  const validatePassword = () => {
+    if (password.value === "") {
+      setPassword({...password, error: "Salasana on pakollinen."});
+    } else if (!isPassword(password.value)) {
+      setPassword({...password, error: "Salasanan on oltava 8-40 merkkiä pitkä."});
+    } else {
+      setPassword({...password, error: null})
+    }
+  };
+
+  // Form submission handler
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     setMessage("");
     setSuccessful(false);
-
-    form.current.validateAll();
-
-    if (checkBtn.current.context._errors.length === 0) {
+    if (!email.error && !password.error) {
       try {
-        let response = await AuthService.register(username, password)
+        let response = await AuthService.register(email.value, password.value)
         setMessage(response.data.message);
         setSuccessful(true);
         setTimeout(() => setLogin(true), 2000)
@@ -85,6 +75,14 @@ const Register = (props) => {
     }
   };
 
+  // useEffect(() => {
+  //   if (firstRender.current) {
+  //     firstRender.current = false
+  //     return
+  //   }
+  //   setButtonDisabled( !validatePassword() || !validateEmail() )
+  // }, [email.value, password.value])
+
   return (
     <div className="col-md-12">
       <div className="card card-container">
@@ -93,62 +91,49 @@ const Register = (props) => {
           alt="profile-img"
           className="profile-img-card"
         />
-
-        <Form onSubmit={handleRegister} ref={form}>
+        <Form className="align-items-center" onSubmit={handleRegister}>
           {!successful && (
-            <div>
-              <div className="form-group">
-                <label htmlFor="username">Käyttäjätunnus</label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="username"
-                  value={username}
-                  onChange={onChangeUsername}
-                  validations={[required, vusername]}
-                />
-              </div>
+            <>
+              <Form.Group controlId="email_field">
+                <Form.Label>Sähköpostiosoite</Form.Label>
+                <Form.Control 
+                  type="email" 
+                  value={email.value}
+                  onChange={onChangeEmail}
+                  onBlur={validateEmail}/>
+                {email.error && (
+                  <Form.Text className="text-muted red">{email.error}</Form.Text>
+                )}
+              </Form.Group>
 
-
-              <div className="form-group">
-                <label htmlFor="password">Salasana</label>
-                <Input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={password}
+              <Form.Group controlId="password_field">
+                <Form.Label>Salasana</Form.Label>
+                <Form.Control 
+                  type="password" 
+                  value={password.value}
                   onChange={onChangePassword}
-                  validations={[required, vpassword]}
-                />
-              </div>
-
-              <div className="form-group">
-                <button className="btn btn-primary btn-block">Rekisteröidy</button>
-              </div>
-            </div>
+                  onBlur={validatePassword}/>
+                {password.error && (
+                  <Form.Text className="text-muted red">{password.error}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group controlId="submit">
+                <Button variant="primary" type="submit" block>Rekisteröidy</Button>
+              </Form.Group>
+            </>
           )}
-
-          {message && (
-            <div className="form-group">
-              <div
-                className={ successful ? "alert alert-success" : "alert alert-danger" }
-                role="alert"
-              >
-                {message}
-              </div>
-            </div>
-          )}
+          <Alert show={message} variant={ successful ? "success" : "danger"}>
+            {message}
+          </Alert>
 
           {login && (
-            AuthService.login(username, password).then(
+            AuthService.login(email.value, password.value).then(
               () => {
                 props.history.push("/profile");
                 window.location.reload();
               }
             )
           )}
-
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
       </div>
     </div>

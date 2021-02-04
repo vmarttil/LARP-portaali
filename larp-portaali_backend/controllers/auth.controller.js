@@ -12,8 +12,6 @@ exports.signup = async (req, res) => {
   // Save the user to the database
   try {
     let user = await db_user.createUser(req.body)
-    console.log("Here we should have the user in the controller:")
-    console.log(user)
     if (user.id) {
       res.status(201).send({ message: "Käyttäjätunnuksen luominen onnistui." });
     } else {
@@ -27,7 +25,6 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
   try {
     let user = await db_user.getUser(req.body.email)
-    console.log(user)
     if (!user.id) {
       return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
     }
