@@ -1,49 +1,17 @@
-import React, { useState, Link } from "react";
-import { isEmail, isPassword } from "../utils/validate"
+import React, { useState} from "react";
 import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
+import useField from "../utils/useField"
+import { TextField } from "./FormFields"
+import { validateEmail, validatePassword } from "../utils/validate"
 
 const Login = (props) => {
 
-  const [email, setEmail] = useState({ value: "", error: null });
-  const [password, setPassword] = useState({ value: "", error: null });
+  const emailField = useField("Sähköposti","email", validateEmail);
+  const passwordField = useField("Salasana","password", validatePassword);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
-  // Form field handlers
-
-  const onChangeEmail = (e) => {
-    const email_field = e.target.value;
-    setEmail({ ...email, value: email_field });
-  };
-
-  const onChangePassword = (e) => {
-    const password_field = e.target.value;
-    setPassword({ ...password, value: password_field });
-  };
-
-  // Validators
-
-  const validateEmail = () => {
-    if (email.value === "") {
-      setEmail({ ...email, error: "Sähköpostiosoite on pakollinen." });
-    } else if (!isEmail(email.value)) {
-      setEmail({ ...email, error: "Syötä kelvollinen sähköpostiosoite." });
-    } else {
-      setEmail({ ...email, error: null });
-    }
-  };
-
-  const validatePassword = () => {
-    if (password.value === "") {
-      setPassword({ ...password, error: "Salasana on pakollinen." });
-    } else if (!isPassword(password.value)) {
-      setPassword({ ...password, error: "Salasanan on oltava 8-40 merkkiä pitkä." });
-    } else {
-      setPassword({ ...password, error: null })
-    }
-  };
 
   // Form submission handler
 
@@ -53,9 +21,9 @@ const Login = (props) => {
     setMessage("");
     setLoading(true);
 
-    if (!email.error && !password.error) {
+    if (!emailField.error && !passwordField.error) {
       try {
-        let response = await AuthService.login(email.value, password.value)
+        let response = await AuthService.login(emailField.value, passwordField.value)
         props.history.push("/profile");
         window.location.reload();
       } catch (error) {
@@ -80,29 +48,8 @@ const Login = (props) => {
       
       <Form className="align-items-center" onSubmit={handleLogin}>
 
-        <Form.Group controlId="email_field">
-          <Form.Label>Sähköpostiosoite</Form.Label>
-          <Form.Control
-            type="email"
-            value={email.value}
-            onChange={onChangeEmail}
-            onBlur={validateEmail} />
-          {email.error && (
-            <Form.Text className="text-danger">{email.error}</Form.Text>
-          )}
-        </Form.Group>
-
-        <Form.Group controlId="password_field">
-          <Form.Label>Salasana</Form.Label>
-          <Form.Control
-            type="password"
-            value={password.value}
-            onChange={onChangePassword}
-            onBlur={validatePassword} />
-          {password.error && (
-            <Form.Text className="text-danger">{password.error}</Form.Text>
-          )}
-        </Form.Group>
+        <TextField {...emailField} />
+        <TextField {...passwordField} />
 
         <Form.Group controlId="submit">
           <Button variant="primary" type="submit" block>
