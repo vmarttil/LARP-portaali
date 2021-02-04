@@ -70,7 +70,7 @@ const App = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={logOut}>
+                <a href="/home" className="nav-link" onClick={logOut}>
                   Kirjaudu ulos
                 </a>
               </li>

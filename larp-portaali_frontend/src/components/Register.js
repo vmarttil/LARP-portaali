@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { isEmail, isPassword } from "../utils/validate"
-import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Form, Button, Alert } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
 
 const Register = (props) => {
@@ -34,7 +34,7 @@ const Register = (props) => {
       setEmail({ ...email, error: "Syötä kelvollinen sähköpostiosoite." });
     } else {
       setEmail({ ...email, error: null });
-    }
+    };
   };
 
   const validatePassword = () => {
@@ -44,7 +44,7 @@ const Register = (props) => {
       setPassword({ ...password, error: "Salasanan on oltava 8-40 merkkiä pitkä." });
     } else {
       setPassword({ ...password, error: null })
-    }
+    };
   };
 
   // Form submission handler
@@ -70,14 +70,16 @@ const Register = (props) => {
 
         setMessage(resMessage);
         setSuccessful(false);
-      }
-    }
+      };
+    };
   };
 
   return (
       <Card style={{ width: "24rem" }}>
         <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
+        
         <Form className="align-items-center" onSubmit={handleRegister}>
+          
           {!successful && (
             <>
               <Form.Group controlId="email_field">
@@ -88,7 +90,7 @@ const Register = (props) => {
                   onChange={onChangeEmail}
                   onBlur={validateEmail} />
                 {email.error && (
-                  <Form.Text className="text-muted red">{email.error}</Form.Text>
+                  <Form.Text className="text-danger">{email.error}</Form.Text>
                 )}
               </Form.Group>
 
@@ -100,14 +102,16 @@ const Register = (props) => {
                   onChange={onChangePassword}
                   onBlur={validatePassword} />
                 {password.error && (
-                  <Form.Text className="text-muted red">{password.error}</Form.Text>
+                  <Form.Text className="text-danger">{password.error}</Form.Text>
                 )}
               </Form.Group>
+
               <Form.Group controlId="submit">
                 <Button variant="primary" type="submit" block>Rekisteröidy</Button>
               </Form.Group>
             </>
           )}
+          
           <Alert show={message} variant={successful ? "success" : "danger"}>
             {message}
           </Alert>
@@ -120,6 +124,7 @@ const Register = (props) => {
               }
             )
           )}
+
         </Form>
       </Card>
   );

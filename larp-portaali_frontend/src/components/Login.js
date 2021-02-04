@@ -1,122 +1,127 @@
-import React, { useState, useRef } from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-
+import React, { useState, Link } from "react";
+import { isEmail, isPassword } from "../utils/validate"
+import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">Tämä kenttä on pakollinen.</div>
-    );
-  }
-};
-
 const Login = (props) => {
-  const form = useRef();
-  const checkBtn = useRef();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState({ value: "", error: null });
+  const [password, setPassword] = useState({ value: "", error: null });
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  // Form field handlers
+
   const onChangeEmail = (e) => {
-    const email = e.target.value;
-    setEmail(email);
+    const email_field = e.target.value;
+    setEmail({ ...email, value: email_field });
   };
 
   const onChangePassword = (e) => {
-    const password = e.target.value;
-    setPassword(password);
+    const password_field = e.target.value;
+    setPassword({ ...password, value: password_field });
   };
 
-  const handleLogin = (e) => {
+  // Validators
+
+  const validateEmail = () => {
+    if (email.value === "") {
+      setEmail({ ...email, error: "Sähköpostiosoite on pakollinen." });
+    } else if (!isEmail(email.value)) {
+      setEmail({ ...email, error: "Syötä kelvollinen sähköpostiosoite." });
+    } else {
+      setEmail({ ...email, error: null });
+    }
+  };
+
+  const validatePassword = () => {
+    if (password.value === "") {
+      setPassword({ ...password, error: "Salasana on pakollinen." });
+    } else if (!isPassword(password.value)) {
+      setPassword({ ...password, error: "Salasanan on oltava 8-40 merkkiä pitkä." });
+    } else {
+      setPassword({ ...password, error: null })
+    }
+  };
+
+  // Form submission handler
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     setMessage("");
     setLoading(true);
 
-    form.current.validateAll();
+    if (!email.error && !password.error) {
+      try {
+        let response = await AuthService.login(email.value, password.value)
+        props.history.push("/profile");
+        window.location.reload();
+      } catch (error) {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
 
-    if (checkBtn.current.context._errors.length === 0) {
-      AuthService.login(email, password).then(
-        () => {
-          props.history.push("/profile");
-          window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setLoading(false);
-          setMessage(resMessage);
-        }
-      );
+        setLoading(false);
+        setMessage(resMessage);
+      };
     } else {
       setLoading(false);
     }
   };
 
   return (
-    <div className="col-md-12">
-      <div className="card card-container">
-        <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="profile-img-card"
-        />
+    <Card style={{ width: "24rem" }}>
+      <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
+      
+      <Form className="align-items-center" onSubmit={handleLogin}>
 
-        <Form onSubmit={handleLogin} ref={form}>
-          <div className="form-group">
-            <label htmlFor="email">Sähköpostiosoite</label>
-            <Input
-              type="text"
-              className="form-control"
-              name="email"
-              value={email}
-              onChange={onChangeEmail}
-              validations={[required]}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Salasana</label>
-            <Input
-              type="password"
-              className="form-control"
-              name="password"
-              value={password}
-              onChange={onChangePassword}
-              validations={[required]}
-            />
-          </div>
-
-          <div className="form-group">
-            <button className="btn btn-primary btn-block" disabled={loading}>
-              {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
-              <span>Kirjaudu</span>
-            </button>
-          </div>
-
-          {message && (
-            <div className="form-group">
-              <div className="alert alert-danger" role="alert">
-                {message}
-              </div>
-            </div>
+        <Form.Group controlId="email_field">
+          <Form.Label>Sähköpostiosoite</Form.Label>
+          <Form.Control
+            type="email"
+            value={email.value}
+            onChange={onChangeEmail}
+            onBlur={validateEmail} />
+          {email.error && (
+            <Form.Text className="text-danger">{email.error}</Form.Text>
           )}
-          <CheckButton style={{ display: "none" }} ref={checkBtn} />
-        </Form>
-      </div>
-    </div>
+        </Form.Group>
+
+        <Form.Group controlId="password_field">
+          <Form.Label>Salasana</Form.Label>
+          <Form.Control
+            type="password"
+            value={password.value}
+            onChange={onChangePassword}
+            onBlur={validatePassword} />
+          {password.error && (
+            <Form.Text className="text-danger">{password.error}</Form.Text>
+          )}
+        </Form.Group>
+
+        <Form.Group controlId="submit">
+          <Button variant="primary" type="submit" block>
+            {loading && (
+              <Spinner as="span" animation="border" role="status" size="sm" />
+            )}
+            <span>Kirjaudu</span>
+          </Button>
+        </Form.Group>
+
+        <Alert show={message} variant={"danger"}>
+          {message}
+        </Alert>
+
+      </Form>
+      <Card.Footer>
+        Jos et ole vielä luonut käyttäjätunnusta, voit luoda sen <a href="/register">rekisteröitymissivulla</a>.
+      </Card.Footer>
+    </Card>
   );
 };
 
