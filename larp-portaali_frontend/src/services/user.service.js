@@ -23,9 +23,16 @@ const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
 
+const updateCurrentUser = (newUser) => {
+  localStorage.setItem("user", JSON.stringify(newUser));
+};
+
+const getUserProfile = () => {
+  return axios.get(API_URL + "user/profile/", { headers: authHeader() });
+}
 
 const saveUserProfile = (userProfileData) => {
-  return axios.put(API_URL + "profile", {headers: authHeader(), data: userProfileData });
+  return axios.put(API_URL + "user/profile", { data: userProfileData }, { headers: authHeader() });
 };
 
 let UserService = {
@@ -34,6 +41,7 @@ let UserService = {
   getOrganiserPortal,
   getAdminPortal,
   getCurrentUser,
+  updateCurrentUser,
   saveUserProfile
 };
 

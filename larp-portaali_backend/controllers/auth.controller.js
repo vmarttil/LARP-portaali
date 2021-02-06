@@ -46,11 +46,11 @@ exports.signin = async (req, res) => {
 
     // If the user has a name defined, use it instead of the email
     let name = user.email;
-    if (user.personalData.name) {
-      if (user.personalData.name.nick) {
-        name = user.personalData.name.first.concat(" '", user.personalData.name.nick, "' ", user.personal.name.last);
+    if (user.personalData.first_name && user.personalData.last_name) {
+      if (user.personalData.nickname) {
+        name = user.personalData.first_name.concat(" '", user.personalData.nickname, "' ", user.personalData.last_name);
       } else {
-        name = user.personalData.name.first.concat(" ", user.personalData.name.last);
+        name = user.personalData.first_name.concat(" ", user.personalData.last_name);
       }
     }
     // Return the user's data to the frontend

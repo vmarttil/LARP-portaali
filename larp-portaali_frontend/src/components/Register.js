@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
-import useField from "../utils/useField"
+import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"
 import { validateEmail, validatePassword } from "../utils/validate"
+import { errorMessage } from "../utils/messages"
 
 const Register = (props) => {
 
-  const emailField = useField("Sähköposti","email", validateEmail);
-  const passwordField = useField("Salasana","password", validatePassword);
+  const emailField = useTextField("email", "Sähköposti", "email", 32, validateEmail, "");
+  const passwordField = useTextField("password", "Salasana", "password", 32, validatePassword, "");
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
@@ -29,14 +30,7 @@ const Register = (props) => {
         setSuccessful(true);
         setTimeout(() => setLogin(true), 2000)
       } catch (error) {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        setMessage(resMessage);
+        setMessage(errorMessage(error));
         setSuccessful(false);
       };
     };

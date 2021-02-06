@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
       unique: true, 
       allowNull: false
     },
-    // Password is stored as hash string creatd with bcrypt
+    // Password is stored as hash string created with bcrypt
     password: {
       type: Sequelize.STRING,
       allowNull: false

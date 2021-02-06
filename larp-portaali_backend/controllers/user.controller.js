@@ -27,6 +27,7 @@ exports.playerPortal = (req, res) => {
 
 exports.userProfile = async (req, res) => {
   try {
+    console.log("DB fetch triggered.")
     let user = await db_user.getUser(req.body.email);
     if (user) {
       res.status(200).send(user);
@@ -40,7 +41,7 @@ exports.userProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    let result = await db_user.updateProfile(req.body);
+    let result = await db_user.updateProfile(req.body.data);
     res.status(result.status).send({ message: result.message });  
   } catch(err) {
     res.status(500).send({ message: err.message });

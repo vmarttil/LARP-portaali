@@ -1,14 +1,15 @@
 import React, { useState} from "react";
 import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import AuthService from "../services/auth.service";
-import useField from "../utils/useField"
+import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"
 import { validateEmail, validatePassword } from "../utils/validate"
+import { errorMessage } from "../utils/messages"
 
 const Login = (props) => {
 
-  const emailField = useField("Sähköposti","email", validateEmail);
-  const passwordField = useField("Salasana","password", validatePassword);
+  const emailField = useTextField("email", "Sähköposti","email", 32, validateEmail, "");
+  const passwordField = useTextField("password", "Salasana","password", 32, validatePassword, "");
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -24,18 +25,11 @@ const Login = (props) => {
     if (!emailField.error && !passwordField.error) {
       try {
         let response = await AuthService.login(emailField.value, passwordField.value)
-        props.history.push("/profile");
+        props.history.push("/portal/player");
         window.location.reload();
       } catch (error) {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
         setLoading(false);
-        setMessage(resMessage);
+        setMessage(errorMessage(error));
       };
     } else {
       setLoading(false);
