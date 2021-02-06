@@ -54,7 +54,7 @@ const Login = (props) => {
           </Button>
         </Form.Group>
 
-        <Alert show={message} variant={"danger"}>
+        <Alert show={message !== ""} variant={"danger"}>
           {message}
         </Alert>
 

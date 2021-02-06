@@ -53,7 +53,7 @@ const Register = (props) => {
             </>
           )}
 
-          <Alert show={message} variant={successful ? "success" : "danger"}>
+          <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
             {message}
           </Alert>
 
