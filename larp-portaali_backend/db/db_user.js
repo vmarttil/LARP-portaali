@@ -67,10 +67,8 @@ getUser = async (userEmail) => {
 
 updateProfile = async (userData) => {
   let returnValue = { status: 404, message: "Käyttäjää ei löydy."}
-  console.log(userData)
   try {
     if (userData.personalData) {
-      console.log(userData.personalData)
       let updated = await User.update(
         {personalData: db.Sequelize.fn('PGP_SYM_ENCRYPT', JSON.stringify(userData.personalData), process.env.DB_ENC_KEY)},
         {where: {id: userData.id}}

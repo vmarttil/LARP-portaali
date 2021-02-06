@@ -27,7 +27,6 @@ exports.playerPortal = (req, res) => {
 
 exports.userProfile = async (req, res) => {
   try {
-    console.log("DB fetch triggered.")
     let user = await db_user.getUser(req.body.email);
     if (user) {
       res.status(200).send(user);

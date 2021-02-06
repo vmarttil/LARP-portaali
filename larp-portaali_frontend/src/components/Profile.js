@@ -9,7 +9,6 @@ import { errorMessage } from "../utils/messages"
 const Profile = (props) => {
 
   const currentUser = UserService.getCurrentUser();
-  console.log(currentUser);
   const userId = currentUser.id;
 
   /* Fields for user profile data */
@@ -38,10 +37,6 @@ const Profile = (props) => {
   const [successful, setSuccessful] = useState(false);
   const [saveType, setSaveType] = useState(null);
   const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    console.log(genderField.value)
-  }, [genderField.value]);
 
   useEffect(() => {
     const timer = setTimeout(() => { 
