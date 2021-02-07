@@ -19,6 +19,7 @@
 | 02022021 | 5,0 | Refaktoroitu sisäänkirjaus- ja rekisteröintisivuja käyttämään Bootstrapia ja koodattu uusi lomakkeiden validointi |
 | 04022021 | 3,0 | Refaktoroitu lomakkeet käyttämään custom hookia ja geneeristä TextField-komponenttia |
 | 06022021 | 9,0 | Tehty kokeiluja eri tavoista muodostaa lomakkeet, ennakoivaa perehtymistä react-beautiful-dnd-kirjastoon, refaktoroitu rekisteröitymis- ja sisäänkirjauslomakkeet ja koodattu käyttäjäprofiilin muokkaussivu melkein valmiiksi käyttäen uutta lomakkeiden käsittelytapaa |
+| 07022021 | 1,0 | Parannettu lomakkeiden ulkoasua ja muunneltavuutta |
 
-| **Yhteensä** | **60,0** | |
+| **Yhteensä** | **61,0** | |
 
