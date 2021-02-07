@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useTextField = (id, label, type, maxlength, validator, initialValue, rows=1) => {
+const useTextField = (id, label, type, maxlength, validator, initialValue, keywords) => {
   
   const [value, setValue] = useState(initialValue)
   const [error, setError] = useState(null)
@@ -23,15 +23,46 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, rows=
     id,
     label,
     type,
+    value,
+    error,
+    onChange,
+    onBlur,
+    keywords
+  }
+};
+
+const useTextArea = (id, label, maxlength, validator, initialValue, keywords, rows=1) => {
+  
+  const [value, setValue] = useState(initialValue)
+  const [error, setError] = useState(null)
+
+  const onChange = (event) => {
+    if ( maxlength > 0 && event.target.value.length === maxlength) {
+      setValue(event.target.value)
+      setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
+    } else if (maxlength > 0 && event.target.value.length > maxlength) {
+      setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
+    } else {
+      setValue(event.target.value)
+      setError("")
+    }
+  };
+
+  const onBlur = validator ? (event) => {setError(validator(event.target.value))} : (event) => {}
+  
+  return {
+    id,
+    label,
     rows,
     value,
     error,
     onChange,
-    onBlur
+    onBlur,
+    keywords
   }
 };
 
-const useRadioField = (id, label, required, options, initialSelection) => {
+const useRadioField = (id, label, required, options, initialSelection, keywords) => {
   const [value, setValue] = useState(initialSelection)
   const [error, setError] = useState("")
 
@@ -56,11 +87,13 @@ const useRadioField = (id, label, required, options, initialSelection) => {
     error,
     onChange,
     onClick,
-    onValidation
+    onValidation,
+    keywords
   }
 };
 
 export {
   useTextField,
+  useTextArea,
   useRadioField
 }

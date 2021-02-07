@@ -8,8 +8,8 @@ import { errorMessage } from "../utils/messages"
 
 const Register = (props) => {
 
-  const emailField = useTextField("email", "Sähköposti", "email", 32, validateEmail, "");
-  const passwordField = useTextField("password", "Salasana", "password", 32, validatePassword, "");
+  const emailField = useTextField("email", "Sähköposti:", "email", 32, validateEmail, "", []);
+  const passwordField = useTextField("password", "Salasana:", "password", 32, validatePassword, "", []);
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");

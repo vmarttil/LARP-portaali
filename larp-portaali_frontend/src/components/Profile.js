@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import UserService from "../services/user.service";
-import { useTextField, useRadioField } from "../utils/hooks"
-import { TextField, RadioField } from "./FormFields"
+import { useTextField, useTextArea, useRadioField } from "../utils/hooks"
+import { TextField, TextArea, RadioField } from "./FormFields"
 import { noValidate, validateRequired, validateEmail, validatePassword, validatePhoneNumber, validateDate } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
 
@@ -12,24 +12,24 @@ const Profile = (props) => {
   const userId = currentUser.id;
 
   /* Fields for user profile data */
-  const emailField = useTextField("email", "Sähköposti", "email", 32, validateEmail, currentUser.email);
-  const passwordField = useTextField("password", "Salasana", "password", 32, validatePassword, currentUser.password);
+  const emailField = useTextField("email", "Sähköposti:", "email", 32, validateEmail, currentUser.email, ["horizontal_3-6"]);
+  const passwordField = useTextField("password", "Salasana:", "password", 32, validatePassword, currentUser.password, ["horizontal_3-6"]);
 
   /* Fields for personal data */
-  const firstNameField = useTextField("first_name", "Etunimi", "text", 32, validateRequired, currentUser.personalData.first_name ?? "");
-  const lastNameField = useTextField("last_name", "Sukunimi", "text", 32, validateRequired, currentUser.personalData.last_name ?? "");
-  const nicknameField = useTextField("nickname", "Lempinimi", "text", 32, noValidate, currentUser.personalData.nickname ?? "");
-  const phoneField = useTextField("phone", "Puhelinnumero", "text", 0, validatePhoneNumber, currentUser.personalData.phone ?? "");
-  const hometownField = useTextField("hometown", "Kotipaikkakunta", "text", 32, noValidate, currentUser.personalData.hometown ?? "");
+  const firstNameField = useTextField("first_name", "Etunimi:", "text", 32, validateRequired, currentUser.personalData.first_name ?? "", ["horizontal_3-6"]);
+  const lastNameField = useTextField("last_name", "Sukunimi:", "text", 32, validateRequired, currentUser.personalData.last_name ?? "", ["horizontal_3-6"]);
+  const nicknameField = useTextField("nickname", "Lempinimi:", "text", 32, noValidate, currentUser.personalData.nickname ?? "", ["horizontal_3-6"]);
+  const phoneField = useTextField("phone", "Puhelinnumero:", "text", 0, validatePhoneNumber, currentUser.personalData.phone ?? "", ["horizontal_3-6"]);
+  const hometownField = useTextField("hometown", "Kotipaikkakunta:", "text", 32, noValidate, currentUser.personalData.hometown ?? "", ["horizontal_3-6"]);
   const genderOptions = { 1: "Mies", 2: "Nainen", 9: "Muu" };
-  const genderField = useRadioField("gender", "Sukupuoli", false, genderOptions, currentUser.personalData.gender ?? null);
-  const birthdateField = useTextField("birthdate", "Syntymäaika", "text", 10, validateDate, currentUser.personalData.birthdate ?? "");
-  const dietaryRestrictionsField = useTextField("dietary_restrictions", "Ruokavaliorajoitteet", "textarea", 3000, noValidate, currentUser.personalData.dietary_restrictions ?? "", 8);
-  const healthInformationField = useTextField("health_information", "Terveystiedot", "textarea", 3000, noValidate, currentUser.personalData.health_information ?? "", 8);
+  const genderField = useRadioField("gender", "Sukupuoli:", false, genderOptions, currentUser.personalData.gender ?? null, ["inline", "horizontal_3-9"]);
+  const birthdateField = useTextField("birthdate", "Syntymäaika:", "text", 10, validateDate, currentUser.personalData.birthdate ?? "", ["horizontal_3-6"]);
+  const dietaryRestrictionsField = useTextArea("dietary_restrictions", "Ruokavaliorajoitteet:", 3000, noValidate, currentUser.personalData.dietary_restrictions ?? "", [], 8);
+  const healthInformationField = useTextArea("health_information", "Terveystiedot:", 3000, noValidate, currentUser.personalData.health_information ?? "", [], 8);
 
   /* Fields for profile data */
-  const playerProfileField = useTextField("player_profile", "Pelaajaprofiili", "textarea", 0, noValidate, currentUser.profileData.player_profile ?? "", 12);
-  const plotPreferencesField = useTextField("plot_preferences", "Juonimieltymykset", "textarea", 0, noValidate, currentUser.profileData.plot_preferences ?? "", 12);
+  const playerProfileField = useTextArea("player_profile", "Pelaajaprofiili:", 0, noValidate, currentUser.profileData.player_profile ?? "", [], 12);
+  const plotPreferencesField = useTextArea("plot_preferences", "Juonimieltymykset:", 0, noValidate, currentUser.profileData.plot_preferences ?? "", [], 12);
 
   const [successful, setSuccessful] = useState(false);
   const [saveType, setSaveType] = useState(null);
@@ -162,8 +162,8 @@ const Profile = (props) => {
           <TextField {...hometownField} />
           <RadioField {...genderField} />
           <TextField {...birthdateField} />
-          <TextField {...dietaryRestrictionsField} />
-          <TextField {...healthInformationField} />
+          <TextArea {...dietaryRestrictionsField} />
+          <TextArea {...healthInformationField} />
 
           <Form.Group controlId="submit">
             <Button variant="primary" type="submit" block>
@@ -182,8 +182,8 @@ const Profile = (props) => {
         <h2>Profiilitiedot</h2>
         <Form className="align-items-center" onSubmit={saveProfileData}>
 
-          <TextField {...playerProfileField} />
-          <TextField {...plotPreferencesField} />
+          <TextArea {...playerProfileField} />
+          <TextArea {...plotPreferencesField} />
 
           <Form.Group controlId="submit">
             <Button variant="primary" type="submit" block>
