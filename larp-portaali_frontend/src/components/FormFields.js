@@ -1,15 +1,17 @@
 import { Form, Row, Col } from 'react-bootstrap';
+import "bootstrap/dist/css/bootstrap.min.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../css/custom.css";
 
-const TextField = ({ id, label, type, value, error, onChange, onBlur, keywords }) => {
+
+const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, keywords }) => {
   const asRow = keywords.filter( item => item.includes("horizontal"))[0]
   keywords = keywords.filter( item => !item.includes("horizontal"))
 
   if (asRow && asRow.length > 0) {
-    console.log(asRow)
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
-    console.log(asRow)
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
-    console.log(asRow)
     return (
       <Form.Group controlId={id} as={Row} className="align-items-center">
         <Form.Label column sm={labelWidth}>{label}</Form.Label>
@@ -42,16 +44,14 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, keywords }
   }
 };
 
-const TextArea = ({ id, label, rows, value, error, onChange, onBlur, keywords }) => {
+
+const TextArea = ({ id, label, rows, value, error, onChange, onBlur, validate, keywords }) => {
   const asRow = keywords.filter( item => item.includes("horizontal"))[0]
   keywords = keywords.filter(item => !item.includes("horizontal"))
   
   if (asRow && asRow.length > 0) {   
-    console.log(asRow)
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
-    console.log(asRow)
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
-    console.log(asRow)
     return (
       <Form.Group controlId={id} as={Row}>
         <Form.Label column sm={labelWidth}>{label}</Form.Label>
@@ -86,7 +86,8 @@ const TextArea = ({ id, label, rows, value, error, onChange, onBlur, keywords })
   };
 };
 
-const RadioField = ({ id, label, options, value, error, onChange, onClick, onValidation, keywords }) => {
+
+const RadioField = ({ id, label, options, value, error, onChange, onClick, validate, keywords }) => {
 
   const asRow = keywords.filter( item => item.includes("horizontal"))[0]
   keywords = keywords.filter(item => !item.includes("horizontal"))
@@ -123,11 +124,8 @@ const RadioField = ({ id, label, options, value, error, onChange, onClick, onVal
   });
 
   if (asRow && asRow.length > 0) {
-    console.log(asRow)
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
-    console.log(asRow)
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
-    console.log(asRow)
     return (
       <Form.Group controlId={id} as={Row} className="align-items-center">
         <Form.Label column sm={labelWidth}>{label}</Form.Label>
@@ -153,8 +151,63 @@ const RadioField = ({ id, label, options, value, error, onChange, onClick, onVal
 };
 
 
+const DateField = ({ id, label, minDate, maxDate, value, onChange, validate, keywords }) => {
+  
+  const asRow = keywords.filter( item => item.includes("horizontal"))[0]
+  keywords = keywords.filter( item => !item.includes("horizontal"))
+  
+  if (asRow && asRow.length > 0) {
+    const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
+    const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
+    return (
+        <Form.Group controlId={id} as={Row} className="align-items-center">
+          <Form.Label column sm={labelWidth}>{label}</Form.Label>
+          <Col sm={inputWidth}>  
+            <div className="customDatePickerWidth">
+              <DatePicker
+                className="form-control"
+                selected={value}
+                onChange={onChange}
+                minDate={minDate}
+                maxDate={maxDate}
+                dateFormat="dd.MM.yyyy"
+                showYearDropdown
+                showMonthDropdown
+                yearDropdownItemNumber={70}
+                scrollableYearDropdown
+                scrollableMonthDropdown
+              />
+            </div>
+          </Col>
+        </Form.Group>
+      )
+    } else {
+      return (
+        <Form.Group controlId={id}>
+          <Form.Label>{label}</Form.Label>
+          <div className="customDatePickerWidth">
+            <DatePicker
+              className="form-control"
+              selected={value}
+              onChange={onChange}
+              minDate={minDate}
+              maxDate={maxDate}
+              dateFormat="dd.MM.yyyy"
+              showYearDropdown
+              showMonthDropdown
+              yearDropdownItemNumber={70}
+              scrollableYearDropdown
+              scrollableMonthDropdown
+            />
+          </div>
+        </Form.Group>
+      )
+    }
+  };
+
 export {
   TextField,
   TextArea,
-  RadioField
+  RadioField,
+  DateField
 }

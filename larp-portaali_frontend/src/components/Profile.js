@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import UserService from "../services/user.service";
-import { useTextField, useTextArea, useRadioField } from "../utils/hooks"
-import { TextField, TextArea, RadioField } from "./FormFields"
+import { useTextField, useTextArea, useRadioField, useDateField } from "../utils/hooks"
+import { TextField, TextArea, RadioField, DateField } from "./FormFields"
 import { noValidate, validateRequired, validateEmail, validatePassword, validatePhoneNumber, validateDate } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const Profile = (props) => {
 
@@ -23,7 +27,7 @@ const Profile = (props) => {
   const hometownField = useTextField("hometown", "Kotipaikkakunta:", "text", 32, noValidate, currentUser.personalData.hometown ?? "", ["horizontal_3-6"]);
   const genderOptions = { 1: "Mies", 2: "Nainen", 9: "Muu" };
   const genderField = useRadioField("gender", "Sukupuoli:", false, genderOptions, currentUser.personalData.gender ?? null, ["inline", "horizontal_3-9"]);
-  const birthdateField = useTextField("birthdate", "Syntymäaika:", "text", 10, validateDate, currentUser.personalData.birthdate ?? "", ["horizontal_3-6"]);
+  const birthdateField = useDateField("birthdate", "Syntymäaika:", new Date('1900-01-01'), new Date(), validateRequired, currentUser.personalData.birthdate ? new Date(currentUser.personalData.birthdate) : new Date(), ["horizontal_3-6"]);
   const dietaryRestrictionsField = useTextArea("dietary_restrictions", "Ruokavaliorajoitteet:", 3000, noValidate, currentUser.personalData.dietary_restrictions ?? "", [], 8);
   const healthInformationField = useTextArea("health_information", "Terveystiedot:", 3000, noValidate, currentUser.personalData.health_information ?? "", [], 8);
 
@@ -56,17 +60,22 @@ const Profile = (props) => {
       password: passwordField.value
     };
 
-    if (!emailField.error && !passwordField.error) {
+    if (emailField.validate() && !passwordField.validate()) {
       currentUser.email = emailField.value;
       UserService.updateCurrentUser(currentUser);
       setSaveType("account");
       saveData(updateData);
-    }
+    } else {
+      setSaveType("account");
+      setMessage("Täytä puuttuvat tiedot.")
+    };
   };
 
   const savePersonalData = async (e) => {
     e.preventDefault();
     setMessage("");
+    setSuccessful(false);
+
     let updateData = {
       id: userId,
       personalData: {
@@ -76,24 +85,28 @@ const Profile = (props) => {
         phone: phoneField.value,
         hometown: hometownField.value,
         gender: genderField.value,
-        birthdate: birthdateField.value,
+        birthdate: birthdateField.value.toJSON(),
         dietary_restrictions: dietaryRestrictionsField.value,
         health_information: healthInformationField.value
       }
     };
-    if (!firstNameField.error &&
-      !lastNameField.error &&
-      !nicknameField.error &&
-      !phoneField.error &&
-      !hometownField.error &&
-      !genderField.error &&
-      !birthdateField.error &&
-      !dietaryRestrictionsField.error &&
-      !healthInformationField.error) {
+
+    if (firstNameField.validate() &&
+        lastNameField.validate() &&
+        nicknameField.validate() &&
+        phoneField.validate() &&
+        hometownField.validate() &&
+        genderField.validate() &&
+        birthdateField.validate() &&
+        dietaryRestrictionsField.validate() &&
+        healthInformationField.validate()) {
       currentUser.personalData = updateData.personalData;
       UserService.updateCurrentUser(currentUser);
       setSaveType("personal");
       saveData(updateData);
+    } else {
+      setSaveType("personal");
+      setMessage("Täytä puuttuvat tiedot.")
     };
   };
 
@@ -109,12 +122,16 @@ const Profile = (props) => {
         plot_preferences: plotPreferencesField.value
       }
     };
-    if (!playerProfileField.error && !plotPreferencesField.error) {
+
+    if (playerProfileField.validate() && plotPreferencesField.validate()) {
       currentUser.profileData = updateData.profileData;
       UserService.updateCurrentUser(currentUser);
       setSaveType("profile");
       saveData(updateData);
-    }
+    } else {
+      setSaveType("profile");
+      setMessage("Täytä puuttuvat tiedot.")
+    };
   };
 
   async function saveData(updateData) {
@@ -161,7 +178,7 @@ const Profile = (props) => {
           <TextField {...phoneField} />
           <TextField {...hometownField} />
           <RadioField {...genderField} />
-          <TextField {...birthdateField} />
+          <DateField {...birthdateField} />
           <TextArea {...dietaryRestrictionsField} />
           <TextArea {...healthInformationField} />
 
@@ -200,7 +217,5 @@ const Profile = (props) => {
     </>
   );
 };
-
-
 
 export default Profile;

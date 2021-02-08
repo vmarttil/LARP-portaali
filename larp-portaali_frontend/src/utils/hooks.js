@@ -18,6 +18,10 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, keywo
   };
 
   const onBlur = validator ? (event) => {setError(validator(event.target.value))} : (event) => {}
+  const validate = validator ? () => {
+    setError(validator(value));
+    return validator(value) === null ? true : false
+  } : () => {}
   
   return {
     id,
@@ -27,6 +31,7 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, keywo
     error,
     onChange,
     onBlur,
+    validate,
     keywords
   }
 };
@@ -49,6 +54,10 @@ const useTextArea = (id, label, maxlength, validator, initialValue, keywords, ro
   };
 
   const onBlur = validator ? (event) => {setError(validator(event.target.value))} : (event) => {}
+  const validate = validator ? () => {
+    setError(validator(value));
+    return validator(value) === null ? true : false
+  } : () => {}
   
   return {
     id,
@@ -58,6 +67,7 @@ const useTextArea = (id, label, maxlength, validator, initialValue, keywords, ro
     error,
     onChange,
     onBlur,
+    validate,
     keywords
   }
 };
@@ -77,7 +87,10 @@ const useRadioField = (id, label, required, options, initialSelection, keywords)
     }
   }
 
-  const onValidation = () => { required && !value ? setError("Valitse jokin vaihtoehto.") : setError("")}
+  const validate = () => {
+    required && !value ? setError("Valitse jokin vaihtoehto.") : setError("")
+    return required && !value ? false : true
+  }
   
   return {
     id,
@@ -87,13 +100,42 @@ const useRadioField = (id, label, required, options, initialSelection, keywords)
     error,
     onChange,
     onClick,
-    onValidation,
+    validate,
     keywords
   }
 };
 
+const useDateField = (id, label, minDate, maxDate, validator, initialValue, keywords) => {
+
+  const [value, setValue] = useState(initialValue)
+  const [error, setError] = useState("")
+
+  const onChange = (date) => { 
+      setValue(date)
+  };
+  
+  const validate = validator ? () => {
+    setError(validator(value))
+    return validator(value) === null ? true : false
+  } : () => {}
+
+  return {
+    id,
+    label,
+    minDate,
+    maxDate,
+    value,
+    error,
+    onChange,
+    validate,
+    keywords
+  }
+};
+
+
 export {
   useTextField,
   useTextArea,
-  useRadioField
+  useRadioField,
+  useDateField
 }

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
+import fi from 'date-fns/locale/fi';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -13,6 +15,9 @@ import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
 import AdminPortal from "./components/AdminPortal";
+
+registerLocale('fi', fi)
+setDefaultLocale('fi');
 
 const App = () => {
   const [showAdminPortal, setShowAdminPortal] = useState(false);
