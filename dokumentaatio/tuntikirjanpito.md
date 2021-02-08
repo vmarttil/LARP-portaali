@@ -20,6 +20,7 @@
 | 04022021 | 3,0 | Refaktoroitu lomakkeet käyttämään custom hookia ja geneeristä TextField-komponenttia |
 | 06022021 | 9,0 | Tehty kokeiluja eri tavoista muodostaa lomakkeet, ennakoivaa perehtymistä react-beautiful-dnd-kirjastoon, refaktoroitu rekisteröitymis- ja sisäänkirjauslomakkeet ja koodattu käyttäjäprofiilin muokkaussivu melkein valmiiksi käyttäen uutta lomakkeiden käsittelytapaa |
 | 07022021 | 1,0 | Parannettu lomakkeiden ulkoasua ja muunneltavuutta |
+| 08022021 | 3,0 | Luotu Bootstrap-muotoiltu parametrisoitu päivämääräkenttä ja lisätty lähetettävien tietojen validointi profiilisivulle |
 
-| **Yhteensä** | **61,0** | |
+| **Yhteensä** | **64,0** | |
 
