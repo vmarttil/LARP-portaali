@@ -26,16 +26,20 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
+db.game = require("../models/game.model.js")(sequelize, Sequelize);
+db.game_organiser = require("../models/game_organiser.model.js")(sequelize, Sequelize);
 
-// db.role.belongsToMany(db.user, {
-//   through: "user_roles",
-//   foreignKey: "roleId",
-//   otherKey: "userId"
-// });
-// db.user.belongsToMany(db.role, {
-//   through: "user_roles",
-//   foreignKey: "userId",
-//   otherKey: "roleId"
-// });
+db.game.belongsToMany(db.user, {
+  as: "organisers",
+  through: "game_organisers",
+  foreignKey: "gameId",
+  otherKey: "organiserId"
+});
+db.user.belongsToMany(db.game, {
+  as: "organised_games",
+  through: "game_organisers",
+  foreignKey: "organiserId",
+  otherKey: "gameId"
+});
 
 module.exports = db;

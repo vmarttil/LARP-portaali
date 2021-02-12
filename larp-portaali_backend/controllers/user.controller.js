@@ -27,8 +27,8 @@ exports.playerPortal = (req, res) => {
 
 exports.userProfile = async (req, res) => {
   try {
-    let user = await db_user.getUser(req.body.email);
-    if (user) {
+    let user = await db_user.getUserData(req.body.email);
+    if (user.id === req.userId) {
       res.status(200).send(user);
     } else {
       res.status(404).send({ message: "Käyttäjää ei löydy." });
@@ -39,10 +39,16 @@ exports.userProfile = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-  try {
-    let result = await db_user.updateProfile(req.body.data);
-    res.status(result.status).send({ message: result.message });  
-  } catch(err) {
-    res.status(500).send({ message: err.message });
+  if (req.body.data.id === req.userId) {
+    try {
+      let result = await db_user.updateProfile(req.body.data);
+      res.status(result.status).send({ message: result.message });  
+    } catch(err) {
+      res.status(500).send({ message: err.message });
+    };
+  } else {
+    return res.status(401).send({
+      message: "Väärä käyttäjä ."
+    });
   };
 };

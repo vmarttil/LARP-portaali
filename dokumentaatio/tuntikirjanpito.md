@@ -21,6 +21,9 @@
 | 06022021 | 9,0 | Tehty kokeiluja eri tavoista muodostaa lomakkeet, ennakoivaa perehtymistä react-beautiful-dnd-kirjastoon, refaktoroitu rekisteröitymis- ja sisäänkirjauslomakkeet ja koodattu käyttäjäprofiilin muokkaussivu melkein valmiiksi käyttäen uutta lomakkeiden käsittelytapaa |
 | 07022021 | 1,0 | Parannettu lomakkeiden ulkoasua ja muunneltavuutta |
 | 08022021 | 3,0 | Luotu Bootstrap-muotoiltu parametrisoitu päivämääräkenttä ja lisätty lähetettävien tietojen validointi profiilisivulle |
+| 10022021 | 3,0 | Aloitettu pelien backend- ja tietokantatoteutuksen koodaus |
+| 11022021 | 2,0 | Jatkettu pelien backend- ja tietokantatoteutuksen koodausta |
 
-| **Yhteensä** | **64,0** | |
+
+| **Yhteensä** | **69,0** | |
 

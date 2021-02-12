@@ -6,12 +6,8 @@ const User = db.user;
 
 createUser = async (userData) => {
   try {
-    let personalData = JSON.stringify({
-      "testContent": "This is test content for personal data."
-    })
-    let profileData = JSON.stringify({
-      "testContent": "This is test content for profile data."
-    })
+    let personalData = JSON.stringify({})
+    let profileData = JSON.stringify({})
     let user = await User.create({
       email: userData.email,
       password: bcrypt.hashSync(userData.password, 8),
@@ -25,8 +21,20 @@ createUser = async (userData) => {
   };
 }
 
+getUserById = async (userId) => {
+  try {
+    let user = await User.findOne({
+      where: {
+        id: userId
+      }
+    });
+    return user;
+  } catch(err) {
+    return { message: err.message };
+  };
+}
 
-getUser = async (userEmail) => {
+getUserData = async (userEmail) => {
   try {
     let user = await User.findOne({
       attributes: [
@@ -104,7 +112,7 @@ updateProfile = async (userData) => {
 }
 
 const db_user = {
-  createUser, getUser, updateProfile
+  createUser, getUserData, updateProfile
 };
 
 module.exports = db_user;
