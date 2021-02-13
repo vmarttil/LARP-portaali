@@ -23,7 +23,8 @@
 | 08022021 | 3,0 | Luotu Bootstrap-muotoiltu parametrisoitu päivämääräkenttä ja lisätty lähetettävien tietojen validointi profiilisivulle |
 | 10022021 | 3,0 | Aloitettu pelien backend- ja tietokantatoteutuksen koodaus |
 | 11022021 | 2,0 | Jatkettu pelien backend- ja tietokantatoteutuksen koodausta |
+| 12022021 | 5,0 | Backend-toiminnallisuus pelien luomiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 
 
-| **Yhteensä** | **69,0** | |
+| **Yhteensä** | **74,0** | |
 

@@ -112,12 +112,31 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTYxMzA
 
 POST http://localhost:8080/api/game HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTYxMzA4ODAwOCwiZXhwIjoxNjEzMTc0NDA4fQ.eM45uRmOGkwNesfCsfOw2P4bm9qW0P28_j5qKBJSq1A
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTYxMzE4MzIwNCwiZXhwIjoxNjEzMjY5NjA0fQ.5BsA7v1Dd3EL_CgH1ekwsDHonnOfysIV0espplCvLnY
 
 {
     "name": "Testipeli 1",
-    "startdate": "2021-06-06",
+    "startDate": "2021-06-06",
     "endDate": "2021-06-07",
+    "place": "Espoo",
+    "description": "Tähän tulee kuvaus pelin luonteesta."
+}
+
+####
+
+GET http://localhost:8080/api/game/46 HTTP/1.1
+content-type: application/json
+
+####
+
+PUT http://localhost:8080/api/game/46 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTYxMzE4NDQ5NiwiZXhwIjoxNjEzMjcwODk2fQ.l7hC4iUSSruzFSIj1XUW5k1ehCC4o0MKw98cfpswUGc
+
+{
+    "name": "Testipeli 3",
+    "startDate": "2021-06-13",
+    "endDate": "2021-06-14",
     "place": "Espoo",
     "description": "Tähän tulee kuvaus pelin luonteesta."
 }

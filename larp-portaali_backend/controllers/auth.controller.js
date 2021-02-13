@@ -24,7 +24,7 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await db_user.getUserData(req.body.email)
+    let user = await db_user.getUserByEmail(req.body.email)
     if (!user.id) {
       return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
     }

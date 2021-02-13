@@ -8,11 +8,11 @@ module.exports = (sequelize, Sequelize) => {
     },
     // The start and end dates are stored as SQL dates and are mandatory (the registration should not be opened before dates are known)
     startDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: false
     },
     endDate: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: false
     },
     // The place where the game is held as a free-form string; the location is mandatory

@@ -10,10 +10,8 @@ var jwt = require("jsonwebtoken");
 exports.createGame = async (req, res) => {
   // Save the game to the database
   try {
-    console.log(req.body)
     let game = await db_game.createGame(req.userId, req.body)
-    console.log(game)
-    if (game.id) {
+    if (game.id && game.organisers) {
       res.status(201).send({ message: "Uuden pelin luominen onnistui." });
     } else {
       res.status(500).send({ message: "Uuden pelin luominen epäonnistui." });
@@ -39,11 +37,10 @@ exports.gameInfo = async (req, res) => {
 
 exports.updateGame = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
-  let game = await db_game.getGame(req.params.game_id)
-  if (game.organisers.includes(req.userId)) {
+  if (await db_game.checkOrganiserStatus(req.params.game_id, req.userId)) {
     // Updates the information of the game
     try {
-      let result = await db_game.updateGame(req.params.game_id, req.body.data);
+      let result = await db_game.updateGame(req.params.game_id, req.body);
       res.status(result.status).send({ message: result.message });  
     } catch(err) {
       res.status(500).send({ message: err.message });

@@ -29,15 +29,16 @@ db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.game = require("../models/game.model.js")(sequelize, Sequelize);
 db.game_organiser = require("../models/game_organiser.model.js")(sequelize, Sequelize);
 
-db.game.belongsToMany(db.user, {
+db.associations = {}
+db.associations.game_organisers = db.game.belongsToMany(db.user, {
   as: "organisers",
-  through: "game_organisers",
+  through: db.game_organiser,
   foreignKey: "gameId",
   otherKey: "organiserId"
 });
-db.user.belongsToMany(db.game, {
+db.associations.organised_games = db.user.belongsToMany(db.game, {
   as: "organised_games",
-  through: "game_organisers",
+  through: db.game_organiser,
   foreignKey: "organiserId",
   otherKey: "gameId"
 });

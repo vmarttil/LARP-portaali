@@ -27,9 +27,9 @@ exports.playerPortal = (req, res) => {
 
 exports.userProfile = async (req, res) => {
   try {
-    let user = await db_user.getUserData(req.body.email);
+    let user = await db_user.getUserByEmail(req.body.email);
     if (user.id === req.userId) {
-      res.status(200).send(user);
+      res.status(200).send(user.dataValues);
     } else {
       res.status(404).send({ message: "Käyttäjää ei löydy." });
     }

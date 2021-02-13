@@ -15,7 +15,34 @@ createUser = async (userData) => {
       profileData: db.Sequelize.fn('PGP_SYM_ENCRYPT', profileData, process.env.DB_ENC_KEY),
       admin: userData.admin
     })
-    return user
+    return user.dataValues
+  } catch(err) {
+    return { message: err.message };
+  };
+}
+
+getUserName = async (userId) => {
+  try {
+    let user = await User.findOne({
+      attributes: [
+        "id",
+        [
+          db.Sequelize.cast(
+            db.Sequelize.fn(
+              'PGP_SYM_DECRYPT',
+              db.Sequelize.cast(db.Sequelize.col("personalData"), "bytea"), 
+              process.env.DB_ENC_KEY
+            ), 
+            "json"), 
+          "personalData"
+        ]
+      ],
+      where: {
+        id: userId
+      }
+    });
+    let userName = user.personalData.nickname !== '' ? user.personalData.first_name + " '" + user.personalData.nickname + "' " + user.personalData.last_name : user.personalData.first_name + " " + user.personalData.last_name
+    return userName;
   } catch(err) {
     return { message: err.message };
   };
@@ -27,14 +54,14 @@ getUserById = async (userId) => {
       where: {
         id: userId
       }
-    });
+    })
     return user;
   } catch(err) {
     return { message: err.message };
   };
 }
 
-getUserData = async (userEmail) => {
+getUserByEmail = async (userEmail) => {
   try {
     let user = await User.findOne({
       attributes: [
@@ -67,7 +94,7 @@ getUserData = async (userEmail) => {
         email: userEmail
       }
     })
-    return user;
+    return user.dataValues;
   } catch(err) {
     return { message: err.message };
   };
@@ -112,7 +139,7 @@ updateProfile = async (userData) => {
 }
 
 const db_user = {
-  createUser, getUserData, updateProfile
+  createUser, getUserName, getUserById, getUserByEmail, updateProfile
 };
 
 module.exports = db_user;
