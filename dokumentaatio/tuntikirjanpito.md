@@ -24,7 +24,9 @@
 | 10022021 | 3,0 | Aloitettu pelien backend- ja tietokantatoteutuksen koodaus |
 | 11022021 | 2,0 | Jatkettu pelien backend- ja tietokantatoteutuksen koodausta |
 | 12022021 | 5,0 | Backend-toiminnallisuus pelien luomiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
+| 17022021 | 3,0 | Backend-toiminnallisuus pelien järjestäjien liittämiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
+| 19022021 | 2,0 | Backendin virheenkäsittelyn refaktorointi, pelien ja järjestäjien hallinnan testaus |
 
 
-| **Yhteensä** | **74,0** | |
+| **Yhteensä** | **79,0** | |
 
