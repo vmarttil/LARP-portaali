@@ -27,4 +27,21 @@ module.exports = function(app) {
     controller.updateGame
   );
 
+  app.get(
+    "/api/game/:game_id/organisers",
+    [authJwt.verifyToken],  
+    controller.getOrganisers
+  );
+
+  app.post(
+    "/api/game/:game_id/organisers",
+    [authJwt.verifyToken],  
+    controller.addOrganiser
+  );
+
+  app.delete(
+    "/api/game/:game_id/organisers",
+    [authJwt.verifyToken],  
+    controller.removeOrganiser
+  );
 };
