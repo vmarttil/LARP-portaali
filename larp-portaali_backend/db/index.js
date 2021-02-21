@@ -1,6 +1,12 @@
 const { Pool } = require('pg')
 const pool = new Pool()
 
+var types = require('pg').types
+
+types.setTypeParser(types.builtins.DATE, (stringValue) => {
+  return new Date(stringValue)
+})
+
 module.exports = {
   async query(text, params) {
     const start = Date.now()

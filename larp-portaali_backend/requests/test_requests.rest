@@ -9,17 +9,6 @@ content-type: application/json
 
 ###
 
-POST http://localhost:8080/api/auth/signup HTTP/1.1
-content-type: application/json
-
-{
-    "email": "testi.henkilo@testi.fi",
-    "password": "testisalasana",
-    "admin": false
-}
-
-###
-
 POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-type: application/json
 
@@ -30,6 +19,15 @@ content-type: application/json
 
 ####
 
+POST http://localhost:8080/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+    "email": "testi.henkilo@testi.fi",
+    "password": "testisalasana"
+}
+
+####
 
 GET http://www.localhost:8080/api/mainPage HTTP/1.1
 content-type: application/json
@@ -38,25 +36,25 @@ content-type: application/json
 
 GET http://www.localhost:8080/api/portal/player HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 ####
 
 GET http://www.localhost:8080/api/portal/organiser HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 ####
 
 GET http://www.localhost:8080/api/portal/admin HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 ####
 
 GET http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "email": "ville.marttila@iki.fi"
@@ -66,13 +64,13 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "id": 1,
     "profile_data": { 
-        "player_profile": "Tähän voi kirjoittaa vaikka kuinka paljon tekstiä. ",
-        "plot_preferences": "Jotain." 
+        "player_profile": "Tähän voi kirjoittaa ihan vaikka kuinka paljon tekstiä. ",
+        "plot_preferences": "Jotain lisää." 
     }
 }
 
@@ -80,7 +78,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "id": 1,
@@ -91,7 +89,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
         "phone": "+358 50 367 3187",
         "hometown": "Espoo",
         "gender": "1",
-        "birthdate": "1977-08-02T22:00:00.000Z",
+        "birthdate": "1977-08-03T00:00:00.000Z",
         "dietary_restrictions": "Ei merkittäviä.",
         "health_information": "Ei mainittavia."
     }
@@ -101,7 +99,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "id": 1,
@@ -113,7 +111,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "id": 1,
@@ -125,7 +123,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "id": 1,
@@ -136,7 +134,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 POST http://localhost:8080/api/game HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "name": "Testipeli 1",
@@ -148,14 +146,14 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 ####
 
-GET http://localhost:8080/api/game/25 HTTP/1.1
+GET http://localhost:8080/api/game/27 HTTP/1.1
 content-type: application/json
 
 ####
 
-PUT http://localhost:8080/api/game/25 HTTP/1.1
+PUT http://localhost:8080/api/game/27 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
 
 {
     "name": "Testipeli 3",
@@ -167,23 +165,23 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 ####
 
-GET http://localhost:8080/api/game/25/organisers HTTP/1.1
+GET http://localhost:8080/api/game/27/organisers HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3NTMzLCJleHAiOjE2MTQwMTM5MzN9.66i9HmNTgtDgreZUCab1PxS9BjhAYQ5uD_QhnLeszVo
 
 ####
 
-POST http://localhost:8080/api/game/25/organisers HTTP/1.1
+POST http://localhost:8080/api/game/27/organisers HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEzOTI3NDgyLCJleHAiOjE2MTQwMTM4ODJ9._pmglJoxyNAm83aIjN5GAz6YnRXAEnXPOK-w1MEJrOk
 
 {
-    "email": "testi.henkilo@testi.fi"
+    "email": "ville.marttila@iki.fi"
 }
 
 ####
 
-DELETE http://localhost:8080/api/game/25/organisers HTTP/1.1
+DELETE http://localhost:8080/api/game/27/organisers HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
 
