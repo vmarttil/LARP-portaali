@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require('morgan');
-const logger = require('./utils/logger')
+const logger = require('./utils/logger');
 const cookieParser = require('cookie-parser');
-const config = require("./config/config")
+const config = require("./config/config");
+
 
 const app = express();
 
@@ -19,15 +20,16 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 require('dotenv').config()
-const db = require("./models");
+// const db = require("./models");
 
-(async () => {
-  await db.sequelize.sync();
-})();
+// (async () => {
+//   await db.sequelize.sync();
+// })();
 
 // reititykset
 require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+require('./routes/portal.routes')(app);
+require('./routes/person.routes')(app);
 require('./routes/game.routes')(app);
 
 // palautetaan virheilmoitus tuntemattomasta endpointista

@@ -1,18 +1,14 @@
-const db = require("../models");
 const config = require("../config/auth.config");
-const db_user = require("../db/db_user");
-const User = db.user;
-
-const Op = db.Sequelize.Op;
+const Person = require("../db/person.db");
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = async (req, res) => {
-  // Save the user to the database
+  // Save the user as a person to the database
   try {
-    let user = await db_user.createUser(req.body)
-    if (user.id) {
+    let userId = await Person.create(req.body)
+    if (userId) {
       res.status(201).send({ message: "Käyttäjätunnuksen luominen onnistui." });
     } else {
       res.status(500).send({ message: "Käyttäjätunnuksen luominen epäonnistui." });
@@ -24,9 +20,11 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await db_user.getUserDataByEmail(req.body.email)
-    if (!user.id) {
-      return res.status(404).send({ message: "Käyttäjätunnusta ei löydy." });
+    let user = await Person.getByEmail(req.body.email)
+    if (!user) {
+      return res.status(404).send({ 
+        message: "Käyttäjätunnusta ei löydy." 
+      });
     }
     let passwordIsValid = bcrypt.compareSync(
       req.body.password,
@@ -46,11 +44,11 @@ exports.signin = async (req, res) => {
 
     // If the user has a name defined, use it instead of the email
     let name = user.email;
-    if (user.personalData.first_name && user.personalData.last_name) {
-      if (user.personalData.nickname) {
-        name = user.personalData.first_name.concat(" '", user.personalData.nickname, "' ", user.personalData.last_name);
+    if (user.personal_data.first_name && user.personal_data.last_name) {
+      if (user.personal_data.nickname) {
+        name = user.personal_data.first_name.concat(" '", user.personal_data.nickname, "' ", user.personal_data.last_name);
       } else {
-        name = user.personalData.first_name.concat(" ", user.personalData.last_name);
+        name = user.personal_data.first_name.concat(" ", user.personal_data.last_name);
       }
     }
     // Return the user's data to the frontend
@@ -58,12 +56,12 @@ exports.signin = async (req, res) => {
       id: user.id,
       email: user.email,
       name: name,
-      personalData: user.personalData,
-      profileData: user.profileData,
+      personal_data: user.personal_data,
+      profile_data: user.profile_data,
       admin: user.admin,
       accessToken: token
     });
   } catch(err) {
       res.status(500).send({ message: err.message });
-    };
+  };
 };

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config.js");
-const db = require("../models");
-const User = db.user;
+const config = require("../config/auth.config");
+const db = require("../db");
+const queries = require("../db/person.queries")
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -24,8 +24,8 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = async (req, res, next) => {
-  let user = await User.findByPk(req.userId)
-  if (user.admin) {
+  let { rows } = await db.query(queries.checkAdminStatus, [req.userId])
+  if (rows[0].admin) {
     next();
     return;
   }

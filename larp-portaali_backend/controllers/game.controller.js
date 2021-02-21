@@ -1,21 +1,18 @@
-const db = require("../models");
 const logger = require("../utils/logger");
-const Game = db.game;
-const db_game = require("../db/db_game");
+const Game = require("../db/game.db");
+const Person = require("../db/person.db");
 
-var jwt = require("jsonwebtoken");
-const db_user = require("../db/db_user");
 
 // Pelien tietojen hallinta
 
 exports.createGame = async (req, res) => {
   // Save the game to the database
   try {
-    let game = await db_game.createGame(req.userId, req.body);
+    let game = await Game.create(req.userId, req.body);
     if (game.id && game.organisers) {
-      res.status(201).send({ message: "Uuden pelin luominen onnistui." });
+      res.status(201).send({ message: "Uuden pelin luominen onnistui.", data: game });
     } else {
-      res.status(500).send({ message: "Uuden pelin luominen epäonnistui." });
+      res.status(500).send({ message: "Uuden pelin luominen ei onnistunut." });
     }
   } catch(err) {
       res.status(500).send({ message: err.message });
@@ -25,11 +22,11 @@ exports.createGame = async (req, res) => {
 exports.gameInfo = async (req, res) => {
   // Return the full information of the game
   try {
-    let result = await db_game.getGame(req.params.game_id);
-    if (result.status && result.message) {
-      res.status(result.status).send({ message: result.message });
+    let game = await Game.get(req.params.game_id);
+    if (game) {
+      res.status(200).send({ data: game });
     } else {
-      res.status(200).send(result);
+      res.status(404).send({ message: "Peliä ei löytynyt." });
     }
   } catch(err) {
     res.status(500).send({ message: err.message });
@@ -38,14 +35,14 @@ exports.gameInfo = async (req, res) => {
 
 exports.updateGame = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
-  if (await db_game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
     // Updates the information of the game
     try {
-      let result = await db_game.updateGame(req.params.game_id, req.body);
-      if (result.status && result.message) {
-        res.status(result.status).send({ message: result.message });
+      let result = await Game.update(req.params.game_id, req.body);
+      if (result) {
+        res.status(200).send({ message: "Pelin tiedot päivitetty." });
       } else {
-        res.status(200).send(result);
+        res.status(404).send({ message: "Peliä ei löytynyt." });
       }
     } catch(err) {
       res.status(500).send({ message: err.message });
@@ -57,14 +54,14 @@ exports.updateGame = async (req, res) => {
 
 exports.getOrganisers = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
-  if (await db_game.checkOrganiserStatus(req.params.game_id, req.userId)) {
-    // Gets a list of organiser ids, names and emails 
+  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+    // Gets a list of organiser ids and names
     try {
-      let result = await db_game.getOrganisers(req.params.game_id);
-      if (result.status && result.message) {
-        res.status(result.status).send({ message: result.message });
+      let result = await Game.getOrganisers(req.params.game_id);
+      if (result) {
+        res.status(200).send({ data: result });
       } else {
-        res.status(200).send(result);
+        res.status(404).send({ message: "Peliä ei löytynyt."});
       }
     } catch(err) {
       res.status(500).send({ message: err.message });
@@ -75,45 +72,44 @@ exports.getOrganisers = async (req, res) => {
 }
 
 exports.addOrganiser = async (req, res) => {
-  // Checks whether the logged in user is an organiser of the game and whether the email address given corresponds to a user
-  if (await db_game.checkOrganiserStatus(req.params.game_id, req.userId) === false) {
-    res.status(403).send({ message: "Et ole pelin järjestäjä." });
-  } else if (!await db_user.getUserDataByEmail(req.body.email)) {
-    res.status(404).send({ message: "Lisättävää käyttäjää ei löydy." });
-  } else {
-    // Adds the user with the given email as an organiser of the given game
-    try {
-      let result = await db_game.addOrganiser(req.params.game_id, req.body.email);
-      if (result.status && result.message) {
-        res.status(result.status).send({ message: result.message });
+  // Checks whether the logged in user is an organiser of the game
+  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+    let newOrganiser = await Person.getByEmail(req.body.email);
+    // Checks whether the user exists
+    if (newOrganiser) {
+      // Checks whether the user is already an organiser
+      if (await Game.checkOrganiserStatus(req.params.game_id, newOrganiser.id) === false) {
+        await Game.addOrganiser(req.params.game_id, newOrganiser.id);
+        let organiserList = await Game.getOrganisers(req.params.game_id);
+        res.status(200).send({ data: organiserList });  
       } else {
-        res.status(200).send(result);
+        res.status(403).send({ message: "Henkilö on jo pelin järjestäjä." });  
       }
-    } catch(err) {
-      res.status(500).send({ message: err.message });
+    } else {
+      res.status(404).send({ message: "Henkilöä ei löytynyt." });
     }
+  } else {
+    res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
 }
 
 exports.removeOrganiser = async (req, res) => {
-  // Checks whether the logged in user is an organiser of the game and whether the id given corresponds to another organiser
-  if (req.userId === req.body.id) {
-    res.status(403).send({ message: "Et voi poistaa itseäsi." });
-  } else if (await db_game.checkOrganiserStatus(req.params.game_id, req.userId) === false) {
-    res.status(403).send({ message: "Et ole pelin järjestäjä." });
-  } else if (await db_game.checkOrganiserStatus(req.params.game_id, req.body.id) === false) {
-    res.status(403).send({ message: "Poistettava käyttäjä ei ole pelin järjestäjä." });
-  } else {
-    // Removes the user with the given id from the organisers of the given game  
-    try {
-      let result = await db_game.removeOrganiser(req.params.game_id, req.body.id);
-      if (result.status && result.message) {
-        res.status(result.status).send({ message: result.message });
+  // Checks whether the logged in user is an organiser of the game
+  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+    // Checks whether the user to be removed is an organiser of the game
+    if (await Game.checkOrganiserStatus(req.params.game_id, req.body.id)) {
+      // Checks whether the removed user is the only organiser of the game
+      let organiserList = await Game.getOrganisers(req.params.game_id);
+      if (organiserList.length > 1) {
+        let result = await Game.removeOrganiser(req.params.game_id, req.body.id);
+        res.status(200).send({ message: "Järjestäjä poistettu." });  
       } else {
-        res.status(200).send(result);
+        res.status(403).send({ message: "Pelin ainoaa järjestäjää ei voi poistaa." });
       }
-    } catch(err) {
-      res.status(500).send({ message: err.message });
+    } else {
+      res.status(403).send({ message: "Henkilö ei ole pelin järjestäjä." });
     }
+  } else {
+    res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
 }

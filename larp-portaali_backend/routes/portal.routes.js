@@ -1,5 +1,5 @@
 const { authJwt } = require("../middlewares");
-const controller = require("../controllers/user.controller");
+const controller = require("../controllers/portal.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -30,18 +30,6 @@ module.exports = function(app) {
     "/api/portal/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminPortal
-  );
-
-  app.get(
-    "/api/user/profile",
-    [authJwt.verifyToken],
-    controller.userProfile
-  );
-
-  app.put(
-    "/api/user/profile",
-    [authJwt.verifyToken],  
-    controller.updateProfile
   );
 
 };
