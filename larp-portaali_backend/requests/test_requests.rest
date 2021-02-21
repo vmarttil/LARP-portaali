@@ -2,9 +2,11 @@ POST http://localhost:8080/api/auth/signup HTTP/1.1
 content-type: application/json
 
 {
-    "email": "ville.marttila@iki.fi",
-    "password": "testisalasana",
-    "admin": false
+    "data": {
+        "email": "ville.marttila@iki.fi",
+        "password": "testisalasana",
+        "admin": false
+    }
 }
 
 ###
@@ -13,8 +15,10 @@ POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-    "email": "ville.marttila@iki.fi",
-    "password": "testisalasana"
+    "data": {
+        "email": "ville.marttila@iki.fi",
+        "password": "testisalasana"
+    }
 }
 
 ####
@@ -23,8 +27,10 @@ POST http://localhost:8080/api/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-    "email": "testi.henkilo@testi.fi",
-    "password": "testisalasana"
+    "data": {
+        "email": "testi.henkilo@testi.fi",
+        "password": "testisalasana"
+    }
 }
 
 ####
@@ -36,41 +42,29 @@ content-type: application/json
 
 GET http://www.localhost:8080/api/portal/player HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 ####
 
 GET http://www.localhost:8080/api/portal/organiser HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 ####
 
 GET http://www.localhost:8080/api/portal/admin HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 ####
 
 GET http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
-{
-    "email": "ville.marttila@iki.fi"
-}
-
-####
-
-PUT http://www.localhost:8080/api/user/profile HTTP/1.1
-content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
-
-{
-    "id": 1,
-    "profile_data": { 
-        "player_profile": "Tähän voi kirjoittaa ihan vaikka kuinka paljon tekstiä. ",
-        "plot_preferences": "Jotain lisää." 
+{   
+    "data": {
+        "email": "ville.marttila@iki.fi"
     }
 }
 
@@ -78,20 +72,15 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "id": 1,
-    "personal_data": {
-        "first_name": "Ville",
-        "last_name": "Marttila",
-        "nickname": "",
-        "phone": "+358 50 367 3187",
-        "hometown": "Espoo",
-        "gender": "1",
-        "birthdate": "1977-08-03T00:00:00.000Z",
-        "dietary_restrictions": "Ei merkittäviä.",
-        "health_information": "Ei mainittavia."
+    "data": {
+        "id": 1,
+        "profile_data": { 
+            "player_profile": "Tähän voi kirjoittaa ihan vaikka kuinka paljon tekstiä. ",
+            "plot_preferences": "Jotain lisää." 
+        }
     }
 }
 
@@ -99,93 +88,117 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "id": 1,
-    "email": "ville.marttila@iki.fi",
-    "password": "testisalasana"
+    "data": {
+        "id": 1,
+        "personal_data": {
+            "first_name": "Ville",
+            "last_name": "Marttila",
+            "nickname": "",
+            "phone": "+358 50 367 3187",
+            "hometown": "Espoo",
+            "gender": "1",
+            "birthdate": "1977-08-03T00:00:00.000Z",
+            "dietary_restrictions": "Ei merkittäviä.",
+            "health_information": "Ei mainittavia."
+        }
+    }
 }
 
 ####
 
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "id": 1,
-    "email": "ville.marttila@iki.fi",
-    "password": "testisalasana"
+    "data": {
+        "id": 1,
+        "email": "ville.marttila@iki.fi",
+        "password": "testisalasana"
+    }
 }
 
 ####
 
+
 PUT http://www.localhost:8080/api/user/profile HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "id": 1,
-    "admin": false
+    "data": {
+        "id": 1,
+        "admin": false
+    }
 }
 
 ####
 
 POST http://localhost:8080/api/game HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "name": "Testipeli 1",
-    "start_date": "2021-06-06",
-    "end_date": "2021-06-07",
-    "place": "Espoo",
-    "description": "Tähän tulee kuvaus pelin luonteesta."
+    "data": {
+        "name": "Testipeli 1",
+        "start_date": "2021-06-06",
+        "end_date": "2021-06-07",
+        "place": "Espoo",
+        "description": "Tähän tulee kuvaus pelin luonteesta."
+    }
 }
 
 ####
 
-GET http://localhost:8080/api/game/27 HTTP/1.1
+GET http://localhost:8080/api/game/28 HTTP/1.1
 content-type: application/json
 
 ####
 
-PUT http://localhost:8080/api/game/27 HTTP/1.1
+PUT http://localhost:8080/api/game/28 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3MTMwLCJleHAiOjE2MTQwMTM1MzB9.F1ead-sQuQmmYX83gF5P5OLiSPuJQvUwFuxkUbsRCd4
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "name": "Testipeli 3",
-    "start_date": "2021-06-13",
-    "end_date": "2021-06-14",
-    "place": "Espoo",
-    "description": "Tähän tulee vielä pidempi kuvaus pelin luonteesta."
+    "data": {
+        "name": "Testipeli 3",
+        "start_date": "2021-06-13",
+        "end_date": "2021-06-14",
+        "place": "Espoo",
+        "description": "Tähän tulee vielä pidempi kuvaus pelin luonteesta."
+    }
 }
 
 ####
 
-GET http://localhost:8080/api/game/27/organisers HTTP/1.1
+GET http://localhost:8080/api/game/28/organisers HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI3NTMzLCJleHAiOjE2MTQwMTM5MzN9.66i9HmNTgtDgreZUCab1PxS9BjhAYQ5uD_QhnLeszVo
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 ####
 
-POST http://localhost:8080/api/game/27/organisers HTTP/1.1
+POST http://localhost:8080/api/game/28/organisers HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjEzOTI3NDgyLCJleHAiOjE2MTQwMTM4ODJ9._pmglJoxyNAm83aIjN5GAz6YnRXAEnXPOK-w1MEJrOk
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "email": "ville.marttila@iki.fi"
+    "data": {
+        "email": "testi.henkilo@testi.fi"
+    }
 }
 
 ####
 
-DELETE http://localhost:8080/api/game/27/organisers HTTP/1.1
+DELETE http://localhost:8080/api/game/28/organisers HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTI0Njk3LCJleHAiOjE2MTQwMTEwOTd9.iyHRioSjiU5A0W9UYRq2dYjZtSszlRozUzkc-JYf_D8
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
 {
-    "id": 1
+    "data": {
+        "id": 1
+    }
 }
  

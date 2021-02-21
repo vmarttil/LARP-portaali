@@ -26,7 +26,7 @@
 | 17022021 | 3,0 | Backend-toiminnallisuus pelien järjestäjien liittämiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 | 19022021 | 2,0 | Backendin virheenkäsittelyn refaktorointi, pelien ja järjestäjien hallinnan testaus |
 | 20022021 | 7,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin (koska Sequelize oli tarpeeton ja teki kaikesta vain hankalaa). |
-| 21022021 | 8,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin. |
+| 21022021 | 10,0 | Backendin ja frontendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin ja API:n johdonmukaistamista. |
 
-| **Yhteensä** | **94,0** | |
+| **Yhteensä** | **96,0** | |
 

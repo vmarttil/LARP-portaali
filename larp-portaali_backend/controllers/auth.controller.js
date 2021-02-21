@@ -7,7 +7,7 @@ var bcrypt = require("bcryptjs");
 exports.signup = async (req, res) => {
   // Save the user as a person to the database
   try {
-    let userId = await Person.create(req.body)
+    let userId = await Person.create(req.body.data)
     if (userId) {
       res.status(201).send({ message: "Käyttäjätunnuksen luominen onnistui." });
     } else {
@@ -20,14 +20,14 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await Person.getByEmail(req.body.email)
+    let user = await Person.getByEmail(req.body.data.email)
     if (!user) {
       return res.status(404).send({ 
         message: "Käyttäjätunnusta ei löydy." 
       });
     }
     let passwordIsValid = bcrypt.compareSync(
-      req.body.password,
+      req.body.data.password,
       user.password
     );
 
@@ -53,13 +53,13 @@ exports.signin = async (req, res) => {
     }
     // Return the user's data to the frontend
     res.status(200).send({
-      id: user.id,
-      email: user.email,
-      name: name,
-      personal_data: user.personal_data,
-      profile_data: user.profile_data,
-      admin: user.admin,
-      accessToken: token
+        id: user.id,
+        email: user.email,
+        name: name,
+        personal_data: user.personal_data,
+        profile_data: user.profile_data,
+        admin: user.admin,
+        accessToken: token
     });
   } catch(err) {
       res.status(500).send({ message: err.message });

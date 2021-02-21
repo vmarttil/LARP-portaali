@@ -42,6 +42,7 @@ let UserService = {
   getAdminPortal,
   getCurrentUser,
   updateCurrentUser,
+  getUserProfile,
   saveUserProfile
 };
 

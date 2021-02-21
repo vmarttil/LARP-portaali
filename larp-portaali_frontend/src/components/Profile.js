@@ -20,20 +20,20 @@ const Profile = (props) => {
   const passwordField = useTextField("password", "Salasana:", "password", 32, validatePassword, currentUser.password, ["horizontal_3-6"]);
 
   /* Fields for personal data */
-  const firstNameField = useTextField("first_name", "Etunimi:", "text", 32, validateRequired, currentUser.personalData.first_name ?? "", ["horizontal_3-6"]);
-  const lastNameField = useTextField("last_name", "Sukunimi:", "text", 32, validateRequired, currentUser.personalData.last_name ?? "", ["horizontal_3-6"]);
-  const nicknameField = useTextField("nickname", "Lempinimi:", "text", 32, noValidate, currentUser.personalData.nickname ?? "", ["horizontal_3-6"]);
-  const phoneField = useTextField("phone", "Puhelinnumero:", "text", 0, validatePhoneNumber, currentUser.personalData.phone ?? "", ["horizontal_3-6"]);
-  const hometownField = useTextField("hometown", "Kotipaikkakunta:", "text", 32, noValidate, currentUser.personalData.hometown ?? "", ["horizontal_3-6"]);
+  const firstNameField = useTextField("first_name", "Etunimi:", "text", 32, validateRequired, currentUser.personal_data.first_name ?? "", ["horizontal_3-6"]);
+  const lastNameField = useTextField("last_name", "Sukunimi:", "text", 32, validateRequired, currentUser.personal_data.last_name ?? "", ["horizontal_3-6"]);
+  const nicknameField = useTextField("nickname", "Lempinimi:", "text", 32, noValidate, currentUser.personal_data.nickname ?? "", ["horizontal_3-6"]);
+  const phoneField = useTextField("phone", "Puhelinnumero:", "text", 0, validatePhoneNumber, currentUser.personal_data.phone ?? "", ["horizontal_3-6"]);
+  const hometownField = useTextField("hometown", "Kotipaikkakunta:", "text", 32, noValidate, currentUser.personal_data.hometown ?? "", ["horizontal_3-6"]);
   const genderOptions = { 1: "Mies", 2: "Nainen", 9: "Muu" };
-  const genderField = useRadioField("gender", "Sukupuoli:", false, genderOptions, currentUser.personalData.gender ?? null, ["inline", "horizontal_3-9"]);
-  const birthdateField = useDateField("birthdate", "Syntymäaika:", new Date('1900-01-01'), new Date(), validateRequired, currentUser.personalData.birthdate ? new Date(currentUser.personalData.birthdate) : new Date(), ["horizontal_3-6"]);
-  const dietaryRestrictionsField = useTextArea("dietary_restrictions", "Ruokavaliorajoitteet:", 3000, noValidate, currentUser.personalData.dietary_restrictions ?? "", [], 8);
-  const healthInformationField = useTextArea("health_information", "Terveystiedot:", 3000, noValidate, currentUser.personalData.health_information ?? "", [], 8);
+  const genderField = useRadioField("gender", "Sukupuoli:", false, genderOptions, currentUser.personal_data.gender ?? null, ["inline", "horizontal_3-9"]);
+  const birthdateField = useDateField("birthdate", "Syntymäaika:", new Date('1900-01-01'), new Date(), validateRequired, currentUser.personal_data.birthdate ? new Date(currentUser.personal_data.birthdate) : new Date(), ["horizontal_3-6"]);
+  const dietaryRestrictionsField = useTextArea("dietary_restrictions", "Ruokavaliorajoitteet:", 3000, noValidate, currentUser.personal_data.dietary_restrictions ?? "", [], 8);
+  const healthInformationField = useTextArea("health_information", "Terveystiedot:", 3000, noValidate, currentUser.personal_data.health_information ?? "", [], 8);
 
   /* Fields for profile data */
-  const playerProfileField = useTextArea("player_profile", "Pelaajaprofiili:", 0, noValidate, currentUser.profileData.player_profile ?? "", [], 12);
-  const plotPreferencesField = useTextArea("plot_preferences", "Juonimieltymykset:", 0, noValidate, currentUser.profileData.plot_preferences ?? "", [], 12);
+  const playerProfileField = useTextArea("player_profile", "Pelaajaprofiili:", 0, noValidate, currentUser.profile_data.player_profile ?? "", [], 12);
+  const plotPreferencesField = useTextArea("plot_preferences", "Juonimieltymykset:", 0, noValidate, currentUser.profile_data.plot_preferences ?? "", [], 12);
 
   const [successful, setSuccessful] = useState(false);
   const [saveType, setSaveType] = useState(null);
@@ -60,7 +60,7 @@ const Profile = (props) => {
       password: passwordField.value
     };
 
-    if (emailField.validate() && !passwordField.validate()) {
+    if (emailField.validate() && passwordField.validate()) {
       currentUser.email = emailField.value;
       UserService.updateCurrentUser(currentUser);
       setSaveType("account");
@@ -78,7 +78,7 @@ const Profile = (props) => {
 
     let updateData = {
       id: userId,
-      personalData: {
+      personal_data: {
         first_name: firstNameField.value,
         last_name: lastNameField.value,
         nickname: nicknameField.value,
@@ -100,7 +100,7 @@ const Profile = (props) => {
         birthdateField.validate() &&
         dietaryRestrictionsField.validate() &&
         healthInformationField.validate()) {
-      currentUser.personalData = updateData.personalData;
+      currentUser.personal_data = updateData.personal_data;
       UserService.updateCurrentUser(currentUser);
       setSaveType("personal");
       saveData(updateData);
@@ -117,14 +117,14 @@ const Profile = (props) => {
 
     let updateData = {
       id: userId,
-      profileData: {
+      profile_data: {
         player_profile: playerProfileField.value,
         plot_preferences: plotPreferencesField.value
       }
     };
 
     if (playerProfileField.validate() && plotPreferencesField.validate()) {
-      currentUser.profileData = updateData.profileData;
+      currentUser.profile_data = updateData.profile_data;
       UserService.updateCurrentUser(currentUser);
       setSaveType("profile");
       saveData(updateData);
