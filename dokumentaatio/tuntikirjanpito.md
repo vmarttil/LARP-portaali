@@ -15,7 +15,6 @@
 | 10012021 | 3,0 | Toteutettu käyttäjien henkilökohtaisten tietojen salaus tietokantaan tallennettaessa ja niiden purku luettaessa PostgreSQLn ja Sequelizen avulla |
 | 20012021 | 6,0 | Toteutettu käyttäjän tietojen päivitys backendissa, refaktoroitu backendia ja tutustuttu uudelleen frontendin koodiin |
 | 31012021 | 6,0 | Refaktoroitu frontendia ja koodattu käyttäjän tietojen muokkaussivua (kesken) |
-
 | 02022021 | 5,0 | Refaktoroitu sisäänkirjaus- ja rekisteröintisivuja käyttämään Bootstrapia ja koodattu uusi lomakkeiden validointi |
 | 04022021 | 3,0 | Refaktoroitu lomakkeet käyttämään custom hookia ja geneeristä TextField-komponenttia |
 | 06022021 | 9,0 | Tehty kokeiluja eri tavoista muodostaa lomakkeet, ennakoivaa perehtymistä react-beautiful-dnd-kirjastoon, refaktoroitu rekisteröitymis- ja sisäänkirjauslomakkeet ja koodattu käyttäjäprofiilin muokkaussivu melkein valmiiksi käyttäen uutta lomakkeiden käsittelytapaa |
@@ -26,7 +25,8 @@
 | 12022021 | 5,0 | Backend-toiminnallisuus pelien luomiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 | 17022021 | 3,0 | Backend-toiminnallisuus pelien järjestäjien liittämiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 | 19022021 | 2,0 | Backendin virheenkäsittelyn refaktorointi, pelien ja järjestäjien hallinnan testaus |
+| 20022021 | 7,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin (koska Sequelize oli tarpeeton ja teki kaikesta vain hankalaa). |
+| 21022021 | 8,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin. |
 
-
-| **Yhteensä** | **79,0** | |
+| **Yhteensä** | **94,0** | |
 
