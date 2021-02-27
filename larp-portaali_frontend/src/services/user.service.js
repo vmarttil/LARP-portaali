@@ -3,10 +3,6 @@ import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/";
 
-const getMainPage = () => {
-  return axios.get(API_URL + "mainPage");
-};
-
 const getPlayerPortal = () => {
   return axios.get(API_URL + "portal/player", { headers: authHeader() });
 };
@@ -36,7 +32,6 @@ const saveUserProfile = (userProfileData) => {
 };
 
 let UserService = {
-  getMainPage,
   getPlayerPortal,
   getOrganiserPortal,
   getAdminPortal,

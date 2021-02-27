@@ -4,7 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../css/custom.css";
 
-
 const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, keywords }) => {
   const asRow = keywords.filter( item => item.includes("horizontal"))[0]
   keywords = keywords.filter( item => !item.includes("horizontal"))

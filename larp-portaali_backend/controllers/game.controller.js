@@ -5,6 +5,11 @@ const Person = require("../db/person.db");
 
 // Pelien tietojen hallinta
 
+exports.gameList = async (req, res) => {
+  let gameList = await Game.getOpenGames();
+  res.status(200).send({ games: gameList });
+};
+
 exports.createGame = async (req, res) => {
   // Save the game to the database
   try {

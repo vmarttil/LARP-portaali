@@ -11,6 +11,10 @@ module.exports = function(app) {
   });
 
   app.get(
+    "/api/gameList", 
+    controller.gameList);
+
+  app.get(
     "/api/game/:game_id", 
     controller.gameInfo
   );

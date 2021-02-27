@@ -7,6 +7,12 @@ const getGame = `
   FROM game
   WHERE id = $1;
 `
+const getOpenGames = `
+  SELECT *
+  FROM game
+  WHERE start_date > NOW()
+  ORDER BY start_date ASC;
+`
 const updateGame = `
   UPDATE game 
   SET name = $2, start_date = $3, end_date = $4, place = $5, description = $6
@@ -39,6 +45,7 @@ const removeOrganiser = `
 module.exports = {
   createGame,
   getGame,
+  getOpenGames,
   updateGame,
   checkOrganiserStatus,
   getOrganisers,

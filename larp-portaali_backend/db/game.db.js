@@ -48,6 +48,15 @@ update = async (gameId, gameData) => {
   return rows.length > 0;
 }
 
+getOpenGames = async () => {
+  let { rows } = await db.query(queries.getOpenGames, []);
+  for (row of rows) {
+    row.organisers = await getOrganisers(row.id);
+  }
+  console.log(rows);
+  return rows;
+}
+
 checkOrganiserStatus = async (gameId, personId) => {
   let { rows } = await db.query(queries.checkOrganiserStatus, [gameId, personId]);
   return rows.length > 0;
@@ -79,6 +88,7 @@ module.exports = {
   create, 
   get,
   update,
+  getOpenGames,
   checkOrganiserStatus, 
   getOrganisers, 
   addOrganiser,

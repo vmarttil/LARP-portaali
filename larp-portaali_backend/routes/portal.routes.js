@@ -11,10 +11,6 @@ module.exports = function(app) {
   });
 
   app.get(
-    "/api/mainPage", 
-    controller.mainPage);
-
-  app.get(
     "/api/portal/player",
     [authJwt.verifyToken],
     controller.playerPortal

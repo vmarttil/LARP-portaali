@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useParams, useLocation } from "react-router-dom";
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import fi from 'date-fns/locale/fi';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,6 +11,7 @@ import UserService from "./services/user.service";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import MainPage from "./components/MainPage";
+import Game from "./components/Game";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
@@ -99,13 +100,30 @@ const App = () => {
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/home", "/mainPage"]} component={MainPage} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/profile" component={Profile} />
-            <Route path="/portal/player" component={PlayerPortal} />
-            <Route path="/portal/organiser" component={OrganiserPortal} />
-            <Route path="/portal/admin" component={AdminPortal} />
+            <Route exact path={["/", "/home", "/mainPage"]}>
+              <MainPage />
+            </Route>
+            <Route exact path="/login">
+              <Login/>
+            </Route>
+            <Route exact path="/register">
+              <Register />  
+            </Route>
+            <Route exact path="/profile">
+              <Profile/>  
+            </Route>
+            <Route path="/game/:id">
+              <Game />  
+            </Route>
+            <Route path="/portal/player">
+              <PlayerPortal />  
+            </Route>
+            <Route path="/portal/organiser">
+              <OrganiserPortal />  
+            </Route>
+            <Route path="/portal/admin">
+              <AdminPortal />
+            </Route>
           </Switch>
         </div>
       </div>
