@@ -3,16 +3,16 @@ import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/";
 
-const getPlayerPortal = () => {
-  return axios.get(API_URL + "portal/player", { headers: authHeader() });
+const getPlayerPortal = async () => {
+  return await axios.get(API_URL + "portal/player", { headers: authHeader() });
 };
 
-const getOrganiserPortal = () => {
-  return axios.get(API_URL + "portal/organiser", { headers: authHeader() });
+const getOrganiserPortal = async () => {
+  return await axios.get(API_URL + "portal/organiser", { headers: authHeader() });
 };
 
-const getAdminPortal = () => {
-  return axios.get(API_URL + "portal/admin", { headers: authHeader() });
+const getAdminPortal = async () => {
+  return await axios.get(API_URL + "portal/admin", { headers: authHeader() });
 };
 
 const getCurrentUser = () => {
@@ -23,12 +23,16 @@ const updateCurrentUser = (newUser) => {
   localStorage.setItem("user", JSON.stringify(newUser));
 };
 
-const getUserProfile = () => {
-  return axios.get(API_URL + "user/profile/", { headers: authHeader() });
+const getUserProfile = async () => {
+  return await axios.get(API_URL + "user/profile/", { headers: authHeader() });
 }
 
-const saveUserProfile = (userProfileData) => {
-  return axios.put(API_URL + "user/profile", { data: userProfileData }, { headers: authHeader() });
+const saveUserProfile = async (userProfileData) => {
+  return await axios.put(API_URL + "user/profile", { data: userProfileData }, { headers: authHeader() });
+};
+
+const findPerson = async (email) => {
+  return await axios.post(API_URL + "user", { data: {email: email} });
 };
 
 let UserService = {
@@ -38,7 +42,8 @@ let UserService = {
   getCurrentUser,
   updateCurrentUser,
   getUserProfile,
-  saveUserProfile
+  saveUserProfile,
+  findPerson
 };
 
 export default UserService;

@@ -15,7 +15,7 @@ exports.createGame = async (req, res) => {
   try {
     let game = await Game.create(req.userId, req.body.data);
     if (game.id && game.organisers) {
-      res.status(201).send({ message: "Uuden pelin luominen onnistui.", game: game });
+      res.status(201).send({ message: "Uuden pelin luominen onnistui."});
     } else {
       res.status(500).send({ message: "Uuden pelin luominen ei onnistunut." });
     }
@@ -34,6 +34,21 @@ exports.gameInfo = async (req, res) => {
       res.status(404).send({ message: "Peliä ei löytynyt." });
     }
   } catch(err) {
+    res.status(500).send({ message: err.message });
+  }
+}
+
+exports.organiserGameList = async (req, res) => {
+  // Return a list of the games organised by the current person
+  try {
+    let organiserGameList = await Game.getOrganiserGames(req.userId);
+    if (organiserGameList) {
+      res.status(200).send({ games: organiserGameList });
+    } else {
+      res.status(404).send({ message: "Käyttäjän pelejä ei löytynyt." });
+    }
+  } catch(err) {
+    console.log(err.message);
     res.status(500).send({ message: err.message });
   }
 }
@@ -79,19 +94,13 @@ exports.getOrganisers = async (req, res) => {
 exports.addOrganiser = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
   if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
-    let newOrganiser = await Person.getByEmail(req.body.data.email);
-    // Checks whether the user exists
-    if (newOrganiser) {
-      // Checks whether the user is already an organiser
-      if (await Game.checkOrganiserStatus(req.params.game_id, newOrganiser.id) === false) {
-        await Game.addOrganiser(req.params.game_id, newOrganiser.id);
-        let organiserList = await Game.getOrganisers(req.params.game_id);
-        res.status(200).send({ organisers: organiserList });  
-      } else {
-        res.status(403).send({ message: "Henkilö on jo pelin järjestäjä." });  
-      }
+    let newOrganiserId = req.body.data.id;
+    // Checks whether the user is already an organiser
+    if (await Game.checkOrganiserStatus(req.params.game_id, newOrganiserId) === false) {
+      await Game.addOrganiser(req.params.game_id, newOrganiserId);
+      res.status(200).send({ message: "Henkilö lisätty järjestäjäksi." });  
     } else {
-      res.status(404).send({ message: "Henkilöä ei löytynyt." });
+      res.status(403).send({ message: "Henkilö on jo pelin järjestäjä." });  
     }
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
@@ -113,6 +122,30 @@ exports.removeOrganiser = async (req, res) => {
       }
     } else {
       res.status(403).send({ message: "Henkilö ei ole pelin järjestäjä." });
+    }
+  } else {
+    res.status(403).send({ message: "Et ole pelin järjestäjä." });
+  }
+}
+
+exports.toggleGame = async (req, res) => {
+  // Checks whether the logged in user is an organiser of the game
+  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+    // Checks whether the registration for the game is open or not
+    if (await Game.registrationOpen(req.params.game_id)) {
+      let result = await Game.closeRegistration(req.params.game_id);
+      if (result) {
+        res.status(200).send({ form_open: false });  
+      } else {
+        res.status(403).send({ form_open: true });
+      }
+    } else {
+      let result = await Game.openRegistration(req.params.game_id);
+      if (result) {
+        res.status(200).send({ form_open: true });
+      } else {
+        res.status(403).send({ form_open: false });
+      }
     }
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });

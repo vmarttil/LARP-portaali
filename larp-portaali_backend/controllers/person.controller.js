@@ -44,3 +44,19 @@ exports.updateProfile = async (req, res) => {
     res.status(401).send({ message: "Väärä henkilö." });
   }
 }
+
+exports.findPerson = async (req, res) => {
+  console.log(req.body)
+  try {
+    let user = await Person.getByEmail(req.body.data.email);
+    if (user) {
+      let personName = await Person.getName(user.id);
+      let person = {id: user.id, name: personName};
+      res.status(200).send({ person: person });
+    } else {
+      res.status(404).send({ message: "Henkilöä ei löydy." });
+    }
+  } catch(err) {
+    res.status(500).send({ message: err.message });
+  }
+}

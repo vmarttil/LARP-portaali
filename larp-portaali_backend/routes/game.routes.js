@@ -19,6 +19,11 @@ module.exports = function(app) {
     controller.gameInfo
   );
 
+  app.get(
+    "/api/organiserGameList", 
+    [authJwt.verifyToken],
+    controller.organiserGameList);
+
   app.post(
     "/api/game", 
     [authJwt.verifyToken],
@@ -31,6 +36,12 @@ module.exports = function(app) {
     controller.updateGame
   );
 
+  app.put(
+    "/api/game/:game_id/toggle",
+    [authJwt.verifyToken],  
+    controller.toggleGame
+  );
+
   app.get(
     "/api/game/:game_id/organisers",
     [authJwt.verifyToken],  
@@ -38,13 +49,13 @@ module.exports = function(app) {
   );
 
   app.post(
-    "/api/game/:game_id/organisers",
+    "/api/game/:game_id/addOrganiser",
     [authJwt.verifyToken],  
     controller.addOrganiser
   );
 
-  app.delete(
-    "/api/game/:game_id/organisers",
+  app.post(
+    "/api/game/:game_id/removeOrganiser",
     [authJwt.verifyToken],  
     controller.removeOrganiser
   );

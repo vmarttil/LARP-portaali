@@ -22,4 +22,9 @@ module.exports = function(app) {
     controller.updateProfile
   );
 
+  app.post(
+    "/api/user",
+    controller.findPerson
+  );
+
 };

@@ -61,6 +61,13 @@ const updateAdminData = `
   SET admin = $2 
   WHERE id = $1;
 `
+const findPersonByEmail = `
+  SELECT 
+    id, 
+    CAST(PGP_SYM_DECRYPT(personal_data, $2) AS json) AS personal_data,
+  FROM person
+  WHERE email = $1;
+`
 
 module.exports = {
   checkAdminStatus,
@@ -71,5 +78,6 @@ module.exports = {
   updateLoginData,
   updatePersonalData,
   updateProfileData,
-  updateAdminData
+  updateAdminData,
+  findPersonByEmail
 };

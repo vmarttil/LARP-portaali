@@ -1,7 +1,7 @@
 import { concat } from "lodash";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Card, Button, Alert, Jumbotron } from 'react-bootstrap';
+import { Card, Button, Alert, Jumbotron, Container, Row, Col } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
 import { formatDateRange } from "../utils/formatters"
@@ -9,13 +9,14 @@ import { errorMessage } from "../utils/messages"
 
 
 const MainPage = (props) => {
+
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchGames = async () => {
-      let response = await GameService.getGameList();
       try {
+        let response = await GameService.getGameList();
         setGameList(response.data.games);
       } catch (error) {
         setMessage(errorMessage(error));
@@ -32,27 +33,27 @@ const MainPage = (props) => {
   }, [message]);
 
   const GameTable = () => {
-    return  (
-      <table id="games">
+    return (
+      <table id="games" style={{ width: "100%" }}>
         <thead>
           <tr>
             <th>Nimi</th>
             <th>Ajankohta</th>
             <th>Paikka</th>
           </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
           {gameList.map(row => {
             return (
-            <tr key={`game_${row.id}`} >
-              <td>
-                <Link to={`/game/${row.id}`}>
-                  {row.name}
-                </Link>
-              </td>
-              <td>{formatDateRange(row.start_date, row.end_date)}</td>
-              <td>{row.place}</td>
-            </tr>)
+              <tr key={`game_${row.id}`} >
+                <td>
+                  <Link to={`/game/${row.id}`}>
+                    {row.name}
+                  </Link>
+                </td>
+                <td>{formatDateRange(row.start_date, row.end_date)}</td>
+                <td>{row.place}</td>
+              </tr>)
           })}
         </tbody>
       </table>
@@ -60,25 +61,47 @@ const MainPage = (props) => {
   }
 
   return (
-    <>
-        <h1>LARP-portaali</h1>
-        <p>LARP-portaali on verkkosovellus, joka tarjoaa liveroolipelien (LARP) järjestäjille ja osallistujille helppokäyttöisen ja 
-          tarkoitusta varten suunnitellun ympäristön pelien ilmoittautumisten ja hahmojakojen toteutukseen ja hallintaan. Sovellus 
-          tarjoaa peleihin liittyvän tiedon tarkasteluun ja käsittelyyn erilliset käyttöliittymät pelinjärjestäjille ja pelaajille. 
-          Pelinjärjestäjän käyttöliittymän kautta on mahdollista tarkastella, määritellä, laskea ja hallinnoida peliin liittyviä 
-          tietoja, kuten pelin julkisia tietoja, sen hahmoprofiileja, ilmoittautumislomaketta, ilmoittautumisia ja hahmojakoon 
-          liittyviä tilastotietoja. Pelaajan käyttöliittymän kautta on mahdollista tarkastella tarjolla olevia pelejä ja niihin 
-          liittyviä julkisia tietoja sekä täyttää pelien ilmoittautumislomakkeita ja tarkastella ilmoittautumiseen liittyviä 
-          tilannetietoja.</p>
-      <Card style={{ width: "48rem" }}>
-        <h2>Avoimet pelit</h2>
-        <GameTable />
-        
-        <Alert show={message !== ""} variant="danger">
-            {message}
-          </Alert>
-      </Card>
-    </>
+    <Container>
+      <Row>
+        <Col sm="12">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+                <h1>LARP-portaali</h1>
+              </Card.Title>
+              <Card.Text>
+                LARP-portaali on verkkosovellus, joka tarjoaa liveroolipelien (LARP) järjestäjille ja osallistujille helppokäyttöisen ja
+                tarkoitusta varten suunnitellun ympäristön pelien ilmoittautumisten ja hahmojakojen toteutukseen ja hallintaan. Sovellus
+                tarjoaa peleihin liittyvän tiedon tarkasteluun ja käsittelyyn erilliset käyttöliittymät pelinjärjestäjille ja pelaajille.
+                Pelinjärjestäjän käyttöliittymän kautta on mahdollista tarkastella, määritellä, laskea ja hallinnoida peliin liittyviä
+                tietoja, kuten pelin julkisia tietoja, sen hahmoprofiileja, ilmoittautumislomaketta, ilmoittautumisia ja hahmojakoon
+                liittyviä tilastotietoja. Pelaajan käyttöliittymän kautta on mahdollista tarkastella tarjolla olevia pelejä ja niihin
+                liittyviä julkisia tietoja sekä täyttää pelien ilmoittautumislomakkeita ja tarkastella ilmoittautumiseen liittyviä
+                tilannetietoja.
+          </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+                <h2>Avoimet pelit</h2>
+              </Card.Title>
+              <GameTable />
+
+              <Alert show={message !== ""} variant="danger">
+                {message}
+              </Alert>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+    </Container>
   );
 };
 

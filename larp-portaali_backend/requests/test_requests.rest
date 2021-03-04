@@ -180,9 +180,9 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-POST http://localhost:8080/api/game/28/organisers HTTP/1.1
+POST http://localhost:8080/api/game/26/addOrganiser HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE0ODAxNjIzLCJleHAiOjE2MTQ4ODgwMjN9.DL6JhYAha1sbY-4Y4zQJqAij3M8M7PkSlVknfbU2e_g
 
 {
     "data": {
@@ -192,7 +192,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-DELETE http://localhost:8080/api/game/28/organisers HTTP/1.1
+POST http://localhost:8080/api/game/28/removeOrganiser HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 

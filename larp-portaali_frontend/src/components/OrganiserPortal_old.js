@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 import UserService from "../services/user.service";
 
-const PlayerPortal = () => {
-  
+const OrganiserPortal = () => {
   const [content, setContent] = useState("");
 
-
   useEffect(() => {
-    UserService.getPlayerPortal().then(
+    UserService.getOrganiserPortal().then(
       (response) => {
         setContent(response.data);
       },
@@ -26,9 +23,6 @@ const PlayerPortal = () => {
     );
   }, []);
 
-
-
-
   return (
     <div className="container">
       <header className="jumbotron">
@@ -38,4 +32,4 @@ const PlayerPortal = () => {
   );
 };
 
-export default PlayerPortal;
+export default OrganiserPortal;

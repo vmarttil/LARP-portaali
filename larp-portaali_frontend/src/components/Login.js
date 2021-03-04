@@ -1,16 +1,18 @@
 import React, { useState} from "react";
 import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"
 import { validateEmail, validatePassword } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
 
-const Login = (props) => {
+const Login = ({ setCurrentUser }) => {
 
   const emailField = useTextField("email", "Sähköposti:","email", 32, validateEmail, "", []);
   const passwordField = useTextField("password", "Salasana:","password", 32, validatePassword, "", []);
 
+  const [redirect, setRedirect] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -25,8 +27,10 @@ const Login = (props) => {
     if (!emailField.error && !passwordField.error) {
       try {
         let response = await AuthService.login(emailField.value, passwordField.value)
-        props.history.push("/portal/player");
-        window.location.reload();
+        setCurrentUser(response);
+        setRedirect(true);
+        // props.history.push("/portal/player");
+        // window.location.reload();
       } catch (error) {
         setLoading(false);
         setMessage(errorMessage(error));
@@ -38,6 +42,9 @@ const Login = (props) => {
 
   return (
     <Card style={{ width: "24rem" }}>
+      {redirect && (
+        <Redirect to={{pathname: '/portal/player'}} />
+      )}
       <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
       
       <Form className="align-items-center" onSubmit={handleLogin}>

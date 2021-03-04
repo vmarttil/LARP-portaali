@@ -32,7 +32,8 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, keywo
     onChange,
     onBlur,
     validate,
-    keywords
+    keywords,
+    setValue
   }
 };
 
@@ -68,7 +69,8 @@ const useTextArea = (id, label, maxlength, validator, initialValue, keywords, ro
     onChange,
     onBlur,
     validate,
-    keywords
+    keywords,
+    setValue
   }
 };
 
@@ -101,19 +103,30 @@ const useRadioField = (id, label, required, options, initialSelection, keywords)
     onChange,
     onClick,
     validate,
-    keywords
+    keywords,
+    setValue
   }
 };
 
-const useDateField = (id, label, minDate, maxDate, validator, initialValue, keywords) => {
+const useDateField = (id, label, min, max, validator, initialValue, keywords) => {
 
-  const [value, setValue] = useState(initialValue)
-  const [error, setError] = useState("")
+  const [value, setValue] = useState(initialValue);
+  const [minDate, setMinDate] = useState(min);
+  const [maxDate, setMaxDate] = useState(max);
+  const [error, setError] = useState("");
 
   const onChange = (date) => { 
-      setValue(date)
+    setValue(date)
   };
   
+  const updateMinDate = (newMin) => {
+    setMinDate(newMin)
+  };
+
+  const updateMaxDate = (newMax) => {
+    setMaxDate(newMax)
+  };
+
   const validate = validator ? () => {
     setError(validator(value))
     return validator(value) === null ? true : false
@@ -123,12 +136,15 @@ const useDateField = (id, label, minDate, maxDate, validator, initialValue, keyw
     id,
     label,
     minDate,
+    updateMinDate,
     maxDate,
+    updateMaxDate,
     value,
     error,
     onChange,
     validate,
-    keywords
+    keywords,
+    setValue
   }
 };
 

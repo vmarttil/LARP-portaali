@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link, useParams, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import fi from 'date-fns/locale/fi';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,6 +12,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import MainPage from "./components/MainPage";
 import Game from "./components/Game";
+import EditGame from "./components/EditGame";
+import NewGame from "./components/NewGame";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
@@ -55,6 +57,22 @@ const App = () => {
               <li className="nav-item">
                 <Link to={"/portal/player"} className="nav-link">
                   Omat ilmoittautumiset
+                </Link>
+              </li>
+            )}
+
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/game/new"} className="nav-link">
+                  Luo uusi peli
+                </Link>
+              </li>
+            )}
+
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/portal/organiser"} className="nav-link">
+                  Omat pelit
                 </Link>
               </li>
             )}
@@ -104,13 +122,19 @@ const App = () => {
               <MainPage />
             </Route>
             <Route exact path="/login">
-              <Login/>
+              <Login setCurrentUser={setCurrentUser}/>
             </Route>
             <Route exact path="/register">
               <Register />  
             </Route>
             <Route exact path="/profile">
               <Profile/>  
+            </Route>
+            <Route path="/game/new">
+              <NewGame />  
+            </Route>
+            <Route path="/game/:id/edit">
+              <EditGame />  
             </Route>
             <Route path="/game/:id">
               <Game />  

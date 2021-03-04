@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert } from 'react-bootstrap';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"
@@ -15,6 +16,21 @@ const Register = (props) => {
   const [message, setMessage] = useState("");
 
   const [login, setLogin] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  
+  useEffect(() => {
+    const loginUser = async () => {
+      if (login) {
+        try {
+          await AuthService.login(emailField.value, passwordField.value);
+          setRedirect(true);
+        } catch (error) {
+          setMessage(errorMessage(error));
+        }
+      }
+    };
+    loginUser();
+  }, [emailField.value, passwordField.value, login]);
 
   // Form submission handler
 
@@ -57,14 +73,10 @@ const Register = (props) => {
             {message}
           </Alert>
 
-          {login && (
-            AuthService.login(emailField.value, passwordField.value).then(
-              () => {
-                props.history.push("/profile");
-                window.location.reload();
-              }
+          {redirect && (
+            <Redirect to={{pathname: '/profile'}} />
             )
-          )}
+          }
 
         </Form>
       </Card>

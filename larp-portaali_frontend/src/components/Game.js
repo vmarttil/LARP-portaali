@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Container, Spinner } from 'react-bootstrap';
+import { Card, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
 import { Link, useParams, useLocation } from "react-router-dom";
 import UserService from "../services/user.service";
 import GameService from "../services/game.service";
@@ -37,6 +37,7 @@ const Game = (props) => {
   // }, [message]);
   
   return (
+    <>
       <Card style={{ width: "48rem" }}>
       {game ? (
         <>
@@ -70,6 +71,12 @@ const Game = (props) => {
       ) : 
       <Spinner animation="border" role="status" />}
     </Card>
+    <Container style={{ width: "48rem", padding: "0px" }}>
+      <Link to={`/`}>
+        <Button variant="primary" type="button" size="sm">Takaisin pääsivulle</Button>
+      </Link>
+    </Container>
+    </>
   );
 };
 
