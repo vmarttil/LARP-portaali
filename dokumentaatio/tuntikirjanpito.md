@@ -25,8 +25,14 @@
 | 12022021 | 5,0 | Backend-toiminnallisuus pelien luomiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 | 17022021 | 3,0 | Backend-toiminnallisuus pelien järjestäjien liittämiseen, näyttämiseen ja muokkaamiseen tehty valmiiksi|
 | 19022021 | 2,0 | Backendin virheenkäsittelyn refaktorointi, pelien ja järjestäjien hallinnan testaus |
-| 20022021 | 7,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin (koska Sequelize oli tarpeeton ja teki kaikesta vain hankalaa). |
-| 21022021 | 10,0 | Backendin ja frontendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin ja API:n johdonmukaistamista. |
+| 20022021 | 7,0 | Backendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin (koska Sequelize oli tarpeeton ja teki kaikesta vain hankalaa) |
+| 21022021 | 10,0 | Backendin ja frontendin refaktorointi Sequelizen vaihtamiseksi node-pg-kirjastoon ja auki kirjoitettuihin SQL-kyselyihin ja API:n johdonmukaistamista |
+| 22022021 | 1,0 | Backend-toiminnallisuus pääsivua varten |
+| 23022021 | 2,0 | Frontendin pääsivulle lista tulevista peleistä |
+| 27022021 | 3,0 | Frontendiin pelin tietojen tarkastelusivu |
+| 28022021 | 9,0 | Front- ja backendiin pelin luontisivu ja omien pelien hallintasivu |
+| 03032021 | 7,0 | Pelin tietojen muokkaussivun ja järjestäjien lisäyksen ja poiston toteutus frontendiin ja frontendin lomakkeiden ja ulkoasun refaktorointia |
 
-| **Yhteensä** | **96,0** | |
+
+| **Yhteensä** | **118,0** | |
 
