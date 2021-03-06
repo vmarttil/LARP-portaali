@@ -31,6 +31,7 @@ require('./routes/auth.routes')(app);
 require('./routes/portal.routes')(app);
 require('./routes/person.routes')(app);
 require('./routes/game.routes')(app);
+require('./routes/form.routes')(app);
 
 // palautetaan virheilmoitus tuntemattomasta endpointista
 const unknownEndpoint = (request, response) => {

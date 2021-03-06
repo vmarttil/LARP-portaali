@@ -9,13 +9,12 @@ const checkEmail = `
   WHERE email = $1;
   `
 const createPerson = `
-  INSERT INTO person (email, password, personal_data, profile_data, admin)
+  INSERT INTO person (email, password, personal_data, profile_data)
   VALUES (
     $1, 
     $2, 
-    PGP_SYM_ENCRYPT($3, $6),
-    PGP_SYM_ENCRYPT($4, $6),
-    $5
+    PGP_SYM_ENCRYPT($3, $5),
+    PGP_SYM_ENCRYPT($4, $5)
   ) 
   RETURNING id;
 `

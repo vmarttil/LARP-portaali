@@ -227,7 +227,7 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
                 yearDropdownItemNumber={70}
                 scrollableYearDropdown
                 scrollableMonthDropdown
-                customInput={<CustomDateInput />}
+                customInput={<CustomDateInput onChange={onChange} />}
               />
             </div>
           </Col>

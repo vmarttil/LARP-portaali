@@ -66,7 +66,6 @@ getOrganiserGames = async (organiserId) => {
     row.registrations = 0;
     row.organisers = await getOrganisers(row.id);
   }
-  console.log(rows)
   return rows;
 }
 
@@ -87,7 +86,6 @@ getOrganisers = async (gameId) => {
 }
 
 addOrganiser = async (gameId, organiserId) => {
-  console.log([gameId, organiserId]);
   let {rowCount} = await db.query(queries.addOrganiser, [gameId, organiserId]);  
   return rowCount > 0;
 }
@@ -97,16 +95,9 @@ removeOrganiser = async (gameId, organiserId) => {
   return rowCount > 0;
 }
 
-getFormId = async (gameId) => {
-
-}
-
-openRegistration = async (gameId) => {
-
-}
-
-closeRegistration = async (gameId) => {
-  
+getGameForms = async (gameId) => {
+  let { rows } = await db.query(queries.getForms, [gameId]);
+  return rows.length > 0 ? rows : null;
 }
 
 module.exports = {

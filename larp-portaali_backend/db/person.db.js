@@ -11,7 +11,6 @@ create = async (userData) => {
     bcrypt.hashSync(userData.password, 8),
     personal_data,
     profile_data,
-    userData.admin,
     process.env.DB_ENC_KEY
   ];
   let { rows } = await db.query(queries.createPerson, parameters);

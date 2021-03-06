@@ -1,5 +1,14 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+DROP TABLE IF EXISTS game CASCADE;
+DROP TABLE IF EXISTS game_organiser CASCADE;
+DROP TABLE IF EXISTS form CASCADE;
+DROP TABLE IF EXISTS game_form CASCADE;
+DROP TABLE IF EXISTS question_type CASCADE;
+DROP TABLE IF EXISTS question CASCADE;
+DROP TABLE IF EXISTS form_question CASCADE;
+DROP TABLE IF EXISTS option CASCADE;
+
 CREATE TABLE IF NOT EXISTS person (
   id int GENERATED ALWAYS AS IDENTITY,
   email varchar(64) UNIQUE NOT NULL,
@@ -37,23 +46,14 @@ CREATE TABLE IF NOT EXISTS game_organiser (
 
 CREATE TABLE IF NOT EXISTS form (
   id int GENERATED ALWAYS AS IDENTITY,
+  game_id int NOT NULL,
   name varchar(64) NOT NULL,
   description varchar(256) NOT NULL,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS game_form (
-  game_id int NOT NULL,
-  form_id int NOT NULL,
   is_open boolean NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (game_id, form_id),
-  CONSTRAINT fk_game_form
+  PRIMARY KEY (id),
+  CONSTRAINT fk_form_game
     FOREIGN KEY (game_id) 
 	  REFERENCES game(id)
-    ON DELETE CASCADE,
-  CONSTRAINT fk_form_game
-    FOREIGN KEY (form_id) 
-	  REFERENCES form(id)
     ON DELETE CASCADE
 );
 
@@ -95,10 +95,10 @@ CREATE TABLE form_question (
 );
 
 CREATE TABLE option (
-  id int GENERATED ALWAYS AS IDENTITY,
   question_id int NOT NULL,
+  option_number int NOT NULL,
   option_text text NOT NULL,
-  PRIMARY KEY (id),
+  PRIMARY KEY (question_id, option_number),
   CONSTRAINT fk_option_question
     FOREIGN KEY (question_id) 
 	  REFERENCES question(id)
