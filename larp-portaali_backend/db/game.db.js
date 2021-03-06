@@ -11,6 +11,7 @@ create = async (organiserId, gameData) => {
     gameData.start_date,
     gameData.end_date,
     gameData.place,
+    gameData.price,
     gameData.description
   ];
   let { rows } = await db.query(queries.createGame, parameters);
@@ -42,6 +43,7 @@ update = async (gameId, gameData) => {
     gameData.start_date,
     gameData.end_date,
     gameData.place,
+    gameData.price,
     gameData.description
   ];
   let { rows } = await db.query(queries.updateGame, parameters);

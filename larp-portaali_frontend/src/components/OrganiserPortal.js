@@ -55,7 +55,7 @@ const OrganiserPortal = (props) => {
             <Card className="my-3" key={`game_${row.id}`}>
               <Card.Body>
                 <Card.Title>{row.name}</Card.Title>
-                <Card.Subtitle>{formatDateRange(row.start_date, row.end_date)}, {row.place}</Card.Subtitle>
+                <Card.Subtitle>{formatDateRange(row.start_date, row.end_date)}, {row.place} ({row.price} €)</Card.Subtitle>
                 <Card.Text className="mt-3">
                   {row.description}
                 </Card.Text>

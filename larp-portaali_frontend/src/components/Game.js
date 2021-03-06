@@ -54,6 +54,10 @@ const Game = (props) => {
             <Col sm="10">{game.place}</Col>
           </Row>
           <Row>
+            <Col sm="2"><span>Hinta: </span></Col>
+            <Col sm="10">{game.price} €</Col>
+          </Row>
+          <Row>
             <Col sm="2"><span>Järjestäjät: </span></Col>
             <Col sm="10">
               <ul class="list-unstyled">

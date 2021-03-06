@@ -14,7 +14,7 @@ const getOpenGames = `
   ORDER BY start_date ASC;
 `
 const getOrganiserGames = `
-  SELECT g.id, g.name, g.start_date, g.end_date, g.place, g.description
+  SELECT g.id, g.name, g.start_date, g.end_date, g.place, g.price, g.description
   FROM game AS g
   JOIN game_organiser AS go ON g.id = go.game_id
   WHERE go.person_id = $1
@@ -22,7 +22,7 @@ const getOrganiserGames = `
 `
 const updateGame = `
   UPDATE game 
-  SET name = $2, start_date = $3, end_date = $4, place = $5, description = $6
+  SET name = $2, start_date = $3, end_date = $4, place = $5, price = $6, description = $7
   WHERE id = $1
   RETURNING id;
 `

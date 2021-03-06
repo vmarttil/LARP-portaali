@@ -8,10 +8,20 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, keywo
   const onChange = (event) => {
     if ( maxlength > 0 && event.target.value.length === maxlength) {
       setValue(event.target.value)
-      setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
-    } else if (maxlength > 0 && event.target.value.length > maxlength) {
-      setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
-    } else {
+      if (type === "number") {
+        setError(("Suurin sallittu luku on ").concat("9".repeat(maxlength), "."))
+      } else {
+        setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
+      }
+    } 
+    else if (maxlength > 0 && event.target.value.length > maxlength) {
+      if (type === "number") {
+        setError(("Suurin sallittu luku on ").concat("9".repeat(maxlength), "."))
+      } else {
+        setError(("Tekstin enimmäispituus on ").concat(maxlength, " merkkiä."))
+      }
+    } 
+    else {
       setValue(event.target.value)
       setError("")
     }

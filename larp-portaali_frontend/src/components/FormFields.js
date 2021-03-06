@@ -19,11 +19,7 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
             <Form.Label className="mt-2">{label}</Form.Label>
           </Col>
           <Col sm={inputWidth} className="pl-1">
-            <Form.Control
-              type={type}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur} />
+            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
             {error && (
               <Form.Text className="text-danger">{error}</Form.Text>
             )}
@@ -37,14 +33,10 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
             <Form.Label className="mt-2">{label}</Form.Label>
           </Col>
           <Col sm={inputWidth} className="pl-1">
-            <Form.Control
-              type={type}
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur} />
-            {error && (
-              <Form.Text className="text-danger">{error}</Form.Text>
-            )}
+          <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
+          {error && (
+            <Form.Text className="text-danger">{error}</Form.Text>
+          )}
           </Col>
         </Row>
       )
@@ -53,11 +45,7 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
     return (
       <Form.Group controlId={id}>
         <Form.Label>{label}</Form.Label>
-        <Form.Control
-          type={type}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur} />
+        <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
         {error && (
           <Form.Text className="text-danger">{error}</Form.Text>
         )}
@@ -65,6 +53,31 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
     )
   }
 };
+
+const TextFieldControl = ({ type, value, onChange, onBlur, keywords }) => {
+  if (type === "number" && keywords.includes("currency")) {
+    return (
+        <InputGroup>
+          <Form.Control
+            type={type}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur} />
+          <InputGroup.Append>
+            <InputGroup.Text>€</InputGroup.Text>
+          </InputGroup.Append>
+        </InputGroup>
+    )
+  } else {
+    return (
+        <Form.Control
+          type={type}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur} />
+    )
+  }
+}
 
 
 const TextArea = ({ id, label, rows, value, error, onChange, onBlur, validate, keywords }) => {
@@ -175,22 +188,14 @@ const RadioField = ({ id, label, options, value, error, onChange, onClick, valid
 };
 
 
-const CustomDateInput = ({ value, onClick}) => {
+const CustomDateInput = ({ value, onClick, onChange }) => {
   return (
     <InputGroup onClick={onClick}>
-      <FormControl value={value}/>
+      <FormControl value={value} onChange={onChange}/>
       <InputGroup.Append>
-        <InputGroup.Text><Calendar/></InputGroup.Text>
+        <InputGroup.Text><Calendar /></InputGroup.Text>
       </InputGroup.Append>
     </InputGroup>
-
-
-    // <div class="input-group">
-    //   <input class="form-control" onClick={onClick} value={value}/>
-    //   <div class="input-group-append">
-    //     <Calendar/>
-    //   </div>
-    // </div>
   )
 }
 
@@ -222,7 +227,7 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
                 yearDropdownItemNumber={70}
                 scrollableYearDropdown
                 scrollableMonthDropdown
-                customInput={<CustomDateInput/>}
+                customInput={<CustomDateInput />}
               />
             </div>
           </Col>
@@ -248,7 +253,7 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
                 yearDropdownItemNumber={70}
                 scrollableYearDropdown
                 scrollableMonthDropdown
-                customInput={<CustomDateInput/>}
+                customInput={<CustomDateInput />}
               />
             </div>
           </Col>
@@ -272,7 +277,7 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
             yearDropdownItemNumber={70}
             scrollableYearDropdown
             scrollableMonthDropdown
-            customInput={<CustomDateInput/>}
+            customInput={<CustomDateInput />}
           />
         </div>
       </Form.Group>

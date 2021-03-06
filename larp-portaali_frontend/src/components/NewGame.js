@@ -19,6 +19,7 @@ const NewGame = (props) => {
   const startDateField = useDateField("start_date", "Alkuajankohta:", new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1)), validateRequired, new Date(), ["horizontal_3-3", "partialRow"]);
   const endDateField = useDateField("end_date", "Loppuajankohta:", new Date(), new Date(new Date().setFullYear(new Date().getFullYear() + 1)), validateRequired, new Date(), ["horizontal_3-3", "partialRow"]);
   const placeField = useTextField("place", "Paikka:", "text", 64, validateRequired, "", ["horizontal_3-9"]);
+  const priceField = useTextField("price", "Hinta:", "number", 4, validateRequired, "", ["horizontal_3-3", "currency"]);
   const descriptionField = useTextArea("description", "Pelin kuvaus:", 5000, validateRequired, "", [], 8);
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const NewGame = (props) => {
       start_date: startDateField.value.toJSON(),
       end_date: endDateField.value.toJSON(),
       place: placeField.value,
+      price: priceField.value,
       description: descriptionField.value
     };
 
@@ -52,6 +54,7 @@ const NewGame = (props) => {
       startDateField.validate() &&
       endDateField.validate() &&
       placeField.validate() &&
+      priceField.validate() &&
       descriptionField.validate()) {
       try {
         let response = await GameService.saveNewGame(gameData)
@@ -108,6 +111,7 @@ const NewGame = (props) => {
                   <DateField {...endDateField} />
                 </Row>
                 <TextField {...placeField} />
+                <TextField {...priceField} />
                 <TextArea {...descriptionField} />
 
                 <Form.Group controlId="submit">
