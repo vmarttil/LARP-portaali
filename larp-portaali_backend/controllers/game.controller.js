@@ -48,7 +48,6 @@ exports.organiserGameList = async (req, res) => {
       res.status(404).send({ message: "Käyttäjän pelejä ei löytynyt." });
     }
   } catch(err) {
-    console.log(err.message);
     res.status(500).send({ message: err.message });
   }
 }
@@ -138,7 +137,6 @@ exports.gameForms = async (req, res) => {
       res.status(404).send({ message: "Pelin lomakkeita ei löytynyt." });
     }
   } catch(err) {
-    console.log(err.message);
     res.status(500).send({ message: err.message });
   }
 }

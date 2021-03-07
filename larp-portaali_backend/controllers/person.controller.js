@@ -46,7 +46,6 @@ exports.updateProfile = async (req, res) => {
 }
 
 exports.findPerson = async (req, res) => {
-  console.log(req.body)
   try {
     let user = await Person.getByEmail(req.body.data.email);
     if (user) {

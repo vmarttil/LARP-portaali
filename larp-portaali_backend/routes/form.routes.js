@@ -29,19 +29,19 @@ module.exports = function(app) {
   );
 
   app.put(
-    "/api/form/edit/:form_id",
+    "/api/form/update/:form_id",
     [authJwt.verifyToken],  
     controller.updateForm
   );
 
   app.post(
-    "/api/form/question/create", 
+    "/api/form/question", 
     [authJwt.verifyToken],
     controller.createQuestion
   );
 
-  app.post(
-    "/api/form/question/update", 
+  app.put(
+    "/api/form/question", 
     [authJwt.verifyToken],
     controller.updateQuestion
   );

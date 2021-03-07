@@ -13,10 +13,10 @@ exports.createForm = async (req, res) => {
   if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
     // Save the new form to the database and populate it with the default questions
     try {
-      let form = await Form.create(req.body.data);
-      console.log(form);
+      let form = await Form.createForm(req.body.data);
+      let available = await Question.getAvailableQuestions(req.UserId); 
       if (form.id) {
-        res.status(201).send({ message: "Uuden lomakkeen luominen onnistui."});
+        res.status(201).send({ form: form, available_questions: available });
       } else {
         res.status(500).send({ message: "Uuden lomakkeen luominen ei onnistunut." });
       }
@@ -31,7 +31,7 @@ exports.createForm = async (req, res) => {
 exports.getForm = async (req, res) => {
   // Return the form with its associated array of questions
   try {
-    let form = await Form.get(req.params.form_id);
+    let form = await Form.getForm(req.params.form_id);
     if (form) {
       res.status(200).send({ form: form });
     } else {
@@ -44,20 +44,22 @@ exports.getForm = async (req, res) => {
 
 exports.editForm = async (req, res) => {
   // Return the form for editing with its associated array of questions and a list of all questions available for the user
-  try {
-    let form = await Form.get(req.params.form_id);
-    // Check whether the form is open and whether there are answers for it
-    if (form.is_open)
-    
-    let available = await Question.getAvailableQuestions(req.UserId); 
-    if (form) {
-      res.status(200).send({ form: form, available_questions: available });
-    } else {
-      res.status(404).send({ message: "Lomaketta ei löytynyt." });
+  // Check whether the form is open and whether there are answers for it
+  // if (await Form.isOpen(req.params.form_id) === false && await Form.countRegistrations(req.params.form_id) === 0) {
+    try {
+      let form = await Form.editForm(req.params.form_id);
+      let available = await Question.getAvailableQuestions(req.userId); 
+      if (form) {
+        res.status(200).send({ form: form, available_questions: available });
+      } else {
+        res.status(404).send({ message: "Lomaketta ei löytynyt." });
+      }
+    } catch(err) {
+      res.status(500).send({ message: err.message });
     }
-  } catch(err) {
-    res.status(500).send({ message: err.message });
-  }
+  // } else {
+  //   res.status(403).send({ message: "Lomaketta ei voi muokata, koska ilmoittautuminen on auki tai peliin on jo ilmoittautumisia." });
+  // }
 }
 
 exports.updateForm = async (req, res) => {
@@ -65,7 +67,7 @@ exports.updateForm = async (req, res) => {
   if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
     // Updates the content and structure of the form
     try {
-      let result = await Form.update(req.params.form_id, req.body.data);
+      let result = await Form.updateForm(req.params.form_id, req.body.data);
       if (result) {
         res.status(200).send({ message: "Lomakkeen tiedot päivitetty." });
       } else {
@@ -79,10 +81,10 @@ exports.updateForm = async (req, res) => {
   }
 }
 
-exports.getAvailableQuestions = (req, res) => {
+exports.getAvailableQuestions = async (req, res) => {
   // Gets all questions available for the user
   try {
-    let result = await Form.getAvailable(req.userId);
+    let result = await Question.getAvailableQuestions(req.userId);
     if (result) {
       res.status(200).send({ available_questions: result });
     } else {
@@ -99,7 +101,6 @@ exports.createQuestion = async (req, res) => {
     // Save the new question to the database and associate it with the current form
     try {
       let question = await Question.createQuestion(req.body.data);
-      console.log(question);
       if (question.id) {
         res.status(201).send({ message: "Uuden kysymyksen luonti onnistui.", question: question});
       } else {

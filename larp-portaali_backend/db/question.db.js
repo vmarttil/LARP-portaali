@@ -2,9 +2,6 @@ require('dotenv').config()
 var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./question.queries.js")
-const Form = require("./form.db.js")
-const Game = require("./game.db.js")
-const Person = require("./person.db.js")
 
 
 createQuestion = async (questionData) => {
@@ -40,7 +37,9 @@ getAvailableQuestions = async (personId) => {
   if (rows.length > 0) {
     let questionList = [];
     for (row of rows) {
-      row.options = await getQuestionOptions(questionId);
+      if (row.type === "radio" || row.type === "checkbox") {
+        row.options = await getQuestionOptions(row.question_id);
+      }
       questionList.push(row);
     }
     return questionList;
@@ -63,7 +62,7 @@ updateQuestion = async (questionId, questionData) => {
   await db.query(queries.updateQuestionData, parameters);
   
   let newOptions = questionData.options;
-  let oldOptions = getOptions(questionId);
+  let oldOptions = getQuestionOptions(questionId);
   for (option of newOptions) {
     if (!oldOptions.map(o => o.number).includes(option.number)) {
       // Add the new option
@@ -83,7 +82,7 @@ updateQuestion = async (questionId, questionData) => {
   for (option of oldOptions) {
     await db.query(queries.removeOption, [questionId, option.number]);
   }
-  return await get(questionId);
+  return await getQuestion(questionId);
 }
 
 deleteQuestion = async (questionId) => {
@@ -101,7 +100,7 @@ module.exports = {
   getQuestion,
   getAvailableQuestions,
   getQuestionOptions,
-  updatequestion,
+  updateQuestion,
   deleteQuestion,
   countForms
 };

@@ -3,11 +3,9 @@ var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./form.queries.js")
 const Question = require("./question.db.js")
-const Game = require("./game.db.js")
-const Person = require("./person.db.js")
 
 
-create = async (formData) => {
+createForm = async (formData) => {
   let parameters = [
     formData.game_id,
     formData.name,
@@ -16,15 +14,31 @@ create = async (formData) => {
   let { rows } = await db.query(queries.createForm, parameters);
   if (rows.length > 0) {
     let form = rows[0];
-    await db.query(queries.addDefaultQuestions, [formId])
-    form.questions = await getFormQuestions(form.id);
+    await db.query(queries.addDefaultQuestions, [form.id])
+    form.questions = await getFormQuestionList(form.id);
     return form;
   } else {
     return null;
   }
 }
 
-get = async (formId) => {
+editForm = async (formId) => {
+  let { rows } = await db.query(queries.getForm, [formId]);
+  if (rows.length > 0) {
+    let form = rows[0];
+    form.questions = await getFormQuestionList(formId);
+    return form;
+  } else {
+    return null;
+  }
+}
+
+getFormQuestionList = async (formId) => {
+  let { rows } = await db.query(queries.getFormQuestionList, [formId]);
+  return rows.length > 0 ? rows : null;
+}
+
+getForm = async (formId) => {
   let { rows } = await db.query(queries.getForm, [formId]);
   if (rows.length > 0) {
     let form = rows[0];
@@ -37,10 +51,21 @@ get = async (formId) => {
 
 getFormQuestions = async (formId) => {
   let { rows } = await db.query(queries.getFormQuestions, [formId]);
-  return rows.length > 0 ? rows : null;
+  if (rows.length > 0) {
+    let questions = [];
+    for (row of rows) {
+      if (row.type === "radio" || row.type === "checkbox") {
+        row.options = await getQuestionOptions(row.id);
+      }
+      questions.push(row);
+    }
+    return questions
+  } else {
+    return null;
+  }
 }
 
-update = async (formId, formData) => {
+updateForm = async (formId, formData) => {
   let parameters = [
     formId, 
     formData.name,
@@ -48,20 +73,20 @@ update = async (formId, formData) => {
     ]
   await db.query(queries.updateFormData, parameters);
   
-  let oldQuestions = getFormQuestions(formId);
+  let oldQuestions = await getFormQuestions(formId);
   let newQuestions = formData.questions;
   for (question of newQuestions) {
-    if (!oldQuestions.map(q => q.id).includes(question.id)) {
+    if (!oldQuestions.map(q => q.question_id).includes(question.question_id)) {
       // Add the new question
       await db.query(queries.addQuestion, [formId, question.question_id, question.position]);
     } else {
-      if (oldQuestions.find(q => q.id === question.id).position !== question.position) {
+      if (oldQuestions.find(q => q.question_id === question.question_id).position !== question.position) {
         // Update the position of the existing question and remove it from the list of old questions
         await db.query(queries.updateQuestionPosition, [formId, question.question_id, question.position]);
-        oldQuestions = oldQuestions.filter(q => q.id !== question.id);
+        oldQuestions = oldQuestions.filter(q => q.question_id !== question._question_id);
       } else {
         // Just remove the question from the list of old questions
-        oldQuestions = oldQuestions.filter(q => q.id !== question.id);
+        oldQuestions = oldQuestions.filter(q => q.question_id !== question.question_id);
       }
     }
   }
@@ -69,11 +94,12 @@ update = async (formId, formData) => {
   for (question of oldQuestions) {
     await db.query(queries.removeQuestion, [formId, question.question_id]);
     // If they are no longer used anywhere, remove them from the database
+    console.log("Form count: ", await Question.countForms(question.question_id))
     if (await Question.countForms(question.question_id) === 0) {
       await db.query(queries.deleteQuestion, [question.question_id])
     }
   }
-  return await get(formId);
+  return await getForm(formId);
 }
 
 isOpen = async (formId) => {
@@ -86,12 +112,18 @@ toggleRegistration = async (formId) => {
   return rows.length > 0 ? rows[0].is_open : null;
 }
 
+countRegistrations = async (formId) => {
+  // To be implemented with registrations
+  return 0;
+}
 
 module.exports = {
-  create, 
-  get,
+  createForm, 
+  editForm,
+  getForm,
   getFormQuestions,
-  update,
+  updateForm,
   isOpen,
-  toggleRegistration
+  toggleRegistration,
+  countRegistrations
 };

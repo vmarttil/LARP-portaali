@@ -9,14 +9,30 @@ const addDefaultQuestions = `
   WHERE is_default = TRUE;
 `
 const getForm = `
-  SELECT game_id, name, description, is_open
+  SELECT id, game_id, name, description, is_open
   FROM form
   WHERE id = $1;
 `
-const getFormQuestions = `
-  SELECT question_id, order
+const getFormQuestionList = `
+  SELECT question_id, position
   FROM form_question 
   WHERE form_id = $1;
+`
+const getFormQuestions = `
+  SELECT 
+    q.id AS question_id, 
+    qt.name AS question_type, 
+    q.question_text, 
+    q.description,
+    q.is_optional, 
+    q.prefill_tag,
+    fq.position
+  FROM question AS q
+  JOIN form_question AS fq 
+    ON q.id = fq.question_id
+  JOIN question_type AS qt
+    ON q.question_type_id = qt.id
+  WHERE fq.form_id = $1;
 `
 const updateFormData = `
   UPDATE form 
@@ -41,10 +57,11 @@ const removeQuestion = `
 const toggleRegistration = `
   UPDATE form SET 
     is_open = NOT is_open 
-  WHERE id = $1;
+  WHERE id = $1
+  RETURNING is_open;
 `
 const isOpen = `
-  SELECT is_open FROM form WHERE id = $1 RETURNING is_open;
+  SELECT is_open FROM form WHERE id = $1;
 `
 
 
@@ -52,6 +69,7 @@ module.exports = {
   createForm,
   addDefaultQuestions,
   getForm,
+  getFormQuestionList,
   getFormQuestions,
   updateFormData,
   addQuestion,

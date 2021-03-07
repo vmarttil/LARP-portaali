@@ -71,19 +71,34 @@ const updateQuestionData = `
     description = $3
   WHERE id = $1;
 `
+const deleteQuestion = `
+  DELETE FROM question WHERE id = $1;
+`
 const getOptions = `
   SELECT option_number AS number, option_text AS text
-  FROM options
+  FROM option
   WHERE question_id = $1;
 `
 const addOption = `
-
+  INSERT INTO option (
+    question_id, 
+    option_number, 
+    option_text
+  )
+  VALUES 
+  (
+    $1,
+    $2,
+    $3
+  );
 `
 const updateOptionText = `
-
+  UPDATE option SET
+    option_text = $3
+  WHERE question_id = $1 AND option_number = $2;
 `
 const removeOption = `
-
+  DELETE FROM option WHERE question_id = $1 AND option_number = $2;
 `
 const countForms = `
   SELECT COUNT(*) 
@@ -96,9 +111,14 @@ const countForms = `
 module.exports = {
   getAvailableQuestions,
   getQuestion,
-  getQuestionOptions,
   createQuestion,
+  associateToForm,
   updateQuestionData,
-  addQuestionOption
+  deleteQuestion,
+  getOptions,
+  addOption,
+  updateOptionText,
+  removeOption,
+  countForms
 };
 

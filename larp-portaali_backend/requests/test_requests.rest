@@ -202,3 +202,84 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
     }
 }
  
+####
+
+POST http://localhost:8080/api/form/create HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+
+{
+    "data": {
+        "game_id": 1,
+        "name": "Testilomake 1",
+        "description": "Tämä on testipeliä varten luotu ilmoittautumislomake."
+    }
+}
+
+####
+
+GET http://localhost:8080/api/form/1 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+
+####
+
+GET http://localhost:8080/api/form/edit/1 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+
+####
+
+PUT http://localhost:8080/api/form/update/5 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+
+{
+    "data": {
+        "game_id": 1,
+        "name": "Testilomake 2",
+        "description": "Tämä on testipeliä varten luotu ja muokattu ilmoittautumislomake.",
+    "questions": [
+      {
+        "question_id": 1,
+        "position": 1
+      },
+      {
+        "question_id": 2,
+        "position": 2
+      },
+      {
+        "question_id": 3,
+        "position": 3
+      },
+      {
+        "question_id": 4,
+        "position": 4
+      },
+      {
+        "question_id": 5,
+        "position": 5
+      },
+      {
+        "question_id": 6,
+        "position": 6
+      },
+      {
+        "question_id": 7,
+        "position": 7
+      },
+      {
+        "question_id": 10,
+        "position": 8
+      },
+      {
+        "question_id": 9,
+        "position": 9
+      },
+      {
+        "question_id": 8,
+        "position": 10
+      }
+    ]
+    }
+}
