@@ -9,7 +9,7 @@ const addDefaultQuestions = `
   WHERE is_default = TRUE;
 `
 const getForm = `
-  SELECT id, game_id, name, description, is_open
+  SELECT id AS form_id, game_id, name, description, is_open
   FROM form
   WHERE id = $1;
 `

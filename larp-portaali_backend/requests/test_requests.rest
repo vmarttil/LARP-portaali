@@ -220,19 +220,19 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc
 
 GET http://localhost:8080/api/form/1 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
 
 ####
 
-GET http://localhost:8080/api/form/edit/1 HTTP/1.1
+GET http://localhost:8080/api/form/edit/5 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
 
 ####
 
 PUT http://localhost:8080/api/form/update/5 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
 
 {
     "data": {
@@ -242,7 +242,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc
     "questions": [
       {
         "question_id": 1,
-        "position": 1
+        "position": 3
       },
       {
         "question_id": 2,
@@ -250,7 +250,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc
       },
       {
         "question_id": 3,
-        "position": 3
+        "position": 1
       },
       {
         "question_id": 4,
@@ -281,5 +281,87 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc
         "position": 10
       }
     ]
+    }
+}
+
+####
+
+POST http://localhost:8080/api/form/question HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+
+{
+    "data": {
+        "game_id": 1,
+        "form_id": 5,
+        "question_type": "text",
+        "question_text": "Näkyykö tämä tekstikenttäkysymys?",
+        "description": "Tämä on testausta varten testilomakkeeseen luotu testikysymys."
+    }
+}
+
+####
+
+POST http://localhost:8080/api/form/question HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+
+{
+    "data": {
+        "game_id": 1,
+        "form_id": 5,
+        "question_type": "checkbox",
+        "question_text": "Näkyykö tämä valintaruutukysymys?",
+        "description": "Tämä on testilomaketta varten luotu testimonivalinta, jossa pitäisi olla neljä vaihtoehtoa.",
+        "options": [
+            {"number": 1, "text": "Vaihtoehto 1"}, 
+            {"number": 2, "text": "Vaihtoehto 2"},
+            {"number": 3, "text": "Vaihtoehto 3"},
+            {"number": 4, "text": "Vaihtoehto 4"}
+        ]
+    }
+}
+
+####
+
+GET http://localhost:8080/api/form/question/24 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+
+####
+
+PUT http://localhost:8080/api/form/question/1 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+
+{
+    "data": {
+        "game_id": 1,
+        "form_id": 5,
+        "question_type": "text",
+        "question_text": "Koko nimi",
+        "description": "Ilmoittautujan koko nimi."
+    }
+}
+
+####
+
+PUT http://localhost:8080/api/form/question/24 HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+
+{
+    "data": {
+        "game_id": 1,
+        "form_id": 5,
+        "question_type": "checkbox",
+        "question_text": "Näkyykö tämä valintaruutukysymys?",
+        "description": "Tämä on testilomaketta varten muokattu testimonivalinta, jossa pitäisi olla neljä vaihtoehtoa.",
+        "options": [
+            {"number": 1, "text": "Vaihtoehto 1"}, 
+            {"number": 2, "text": "Vaihtoehto 2"},
+            {"number": 3, "text": "Vaihtoehto 3"},
+            {"number": 4, "text": "Vaihtoehto 4"}
+        ]
     }
 }

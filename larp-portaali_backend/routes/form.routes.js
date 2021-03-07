@@ -40,8 +40,14 @@ module.exports = function(app) {
     controller.createQuestion
   );
 
+  app.get(
+    "/api/form/question/:question_id", 
+    [authJwt.verifyToken],
+    controller.getQuestion
+  );
+
   app.put(
-    "/api/form/question", 
+    "/api/form/question/:question_id", 
     [authJwt.verifyToken],
     controller.updateQuestion
   );

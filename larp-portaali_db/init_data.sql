@@ -74,7 +74,7 @@ INSERT INTO option (
     (7,8,'Vastoinkäymiset'),
     (7,9,'Yllätykset'),
     (8,1,'Läheisen kuolema'),
-    (8.2,'Fyysinen väkivalta'),
+    (8,2,'Fyysinen väkivalta'),
     (8,3,'Seksuaalisuus'),
     (8,4,'Alistaminen'),
     (8,5,'Yksinäisyys'),
@@ -87,7 +87,7 @@ INSERT INTO option (
 INSERT INTO game (
   name, 
   start_date,
-  _date,
+  end_date,
   place,
   price,
   description

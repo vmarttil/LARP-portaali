@@ -2,8 +2,8 @@ const getAvailableQuestions = `
   SELECT DISTINCT
     fq.form_id AS form_id, 
     q.id AS question_id, 
-    qt.name AS type, 
-    q.question_text AS text, 
+    qt.name AS question_type, 
+    q.question_text, 
     q.description,
     q.is_optional, 
     q.prefill_tag
@@ -23,11 +23,11 @@ const getAvailableQuestions = `
 const getQuestion = `
   SELECT 
     q.id AS question_id, 
-    qt.name AS type, 
-    q.question_text AS text, 
+    qt.name AS question_type, 
+    q.question_text, 
     q.description,
     q.is_optional, 
-    q.prefill_tag,
+    q.prefill_tag
   FROM question AS q
   JOIN question_type AS qt
     ON q.question_type_id = qt.id
@@ -43,14 +43,20 @@ const createQuestion = `
     prefill_tag
     )
   VALUES (
-    (SELECT id FROM question_type WHERE name = $2),
+    (SELECT id FROM question_type WHERE name = $1),
+    $2,
     $3,
-    $4,
     FALSE,
     TRUE,
     NULL
   )
-  RETURNING *;
+  RETURNING 
+    id AS question_id,
+    $1 AS question_type,
+    question_text AS text,
+    description,
+    is_optional,
+    prefill_tag;
 `
 const associateToForm = `
   INSERT INTO form_question (
@@ -63,7 +69,8 @@ const associateToForm = `
     $1,
     $2,
     (SELECT MAX(position) FROM form_question WHERE form_id = $1) + 1
-    );
+    )
+  RETURNING position;
 `
 const updateQuestionData = `
   UPDATE question SET
@@ -101,11 +108,20 @@ const removeOption = `
   DELETE FROM option WHERE question_id = $1 AND option_number = $2;
 `
 const countForms = `
-  SELECT COUNT(*) 
-  FROM form_question 
+  SELECT COUNT(*) AS count
+  FROM form_question
   WHERE question_id = $1; 
 `
-
+const checkDefault = `
+  SELECT is_default
+  FROM question
+  WHERE id = $1;
+`
+const checkOptional = `
+  SELECT is_optional
+  FROM question
+  WHERE id = $1;
+`
 
 
 module.exports = {
@@ -119,6 +135,8 @@ module.exports = {
   addOption,
   updateOptionText,
   removeOption,
-  countForms
+  countForms,
+  checkDefault,
+  checkOptional
 };
 

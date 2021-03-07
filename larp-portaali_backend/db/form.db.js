@@ -54,8 +54,8 @@ getFormQuestions = async (formId) => {
   if (rows.length > 0) {
     let questions = [];
     for (row of rows) {
-      if (row.type === "radio" || row.type === "checkbox") {
-        row.options = await getQuestionOptions(row.id);
+      if (row.question_type === "radio" || row.question_type === "checkbox") {
+        row.options = await getQuestionOptions(row.question_id);
       }
       questions.push(row);
     }
@@ -73,7 +73,7 @@ updateForm = async (formId, formData) => {
     ]
   await db.query(queries.updateFormData, parameters);
   
-  let oldQuestions = await getFormQuestions(formId);
+  let oldQuestions = await getFormQuestionList(formId);
   let newQuestions = formData.questions;
   for (question of newQuestions) {
     if (!oldQuestions.map(q => q.question_id).includes(question.question_id)) {
@@ -93,9 +93,8 @@ updateForm = async (formId, formData) => {
   // Finally remove the old questions that were no longer in the new questions
   for (question of oldQuestions) {
     await db.query(queries.removeQuestion, [formId, question.question_id]);
-    // If they are no longer used anywhere, remove them from the database
-    console.log("Form count: ", await Question.countForms(question.question_id))
-    if (await Question.countForms(question.question_id) === 0) {
+    // If they are not default questions and no longer used anywhere, remove them from the database
+    if (await Question.isRemovable(question.question_id)) {
       await db.query(queries.deleteQuestion, [question.question_id])
     }
   }
