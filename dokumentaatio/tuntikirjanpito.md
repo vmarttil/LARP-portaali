@@ -32,7 +32,8 @@
 | 27022021 | 3,0 | Frontendiin pelin tietojen tarkastelusivu |
 | 28022021 | 9,0 | Front- ja backendiin pelin luontisivu ja omien pelien hallintasivu |
 | 03032021 | 7,0 | Pelin tietojen muokkaussivun ja järjestäjien lisäyksen ja poiston toteutus frontendiin ja frontendin lomakkeiden ja ulkoasun refaktorointia |
+| 06032021 | 12,0 | Ilmoittautumislomakkeiden tietokantarakenteen ja niiden luonnin ja muokkauksen backend-toiminnallisuus tehty lähes valmiiksi |
 
 
-| **Yhteensä** | **118,0** | |
+| **Yhteensä** | **130,0** | |
 
