@@ -4,7 +4,6 @@ const db = require("./index.js");
 const queries = require("./form.queries.js")
 const Question = require("./question.db.js")
 
-
 createForm = async (formData) => {
   let parameters = [
     formData.game_id,
@@ -101,9 +100,14 @@ updateForm = async (formId, formData) => {
   return await getForm(formId);
 }
 
+getFormGameId = async (formId) => {
+  let { rows } = await db.query(queries.getFormGame, [formId]);
+  return rows[0].game_id;
+}
+
 isOpen = async (formId) => {
   let { rows } = await db.query(queries.isOpen, [formId]);
-  return rows[0].is_open;
+  return rows.length > 0 ? rows[0].is_open : null;
 }
 
 toggleRegistration = async (formId) => {
@@ -122,6 +126,7 @@ module.exports = {
   getForm,
   getFormQuestions,
   updateForm,
+  getFormGameId,
   isOpen,
   toggleRegistration,
   countRegistrations

@@ -139,6 +139,9 @@ const App = () => {
             <Route path="/game/:id">
               <Game />  
             </Route>
+            <Route path="/game/:game_id/form/:form_id/edit">
+              <EditForm />  
+            </Route>
             <Route path="/portal/player">
               <PlayerPortal />  
             </Route>

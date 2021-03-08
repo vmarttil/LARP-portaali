@@ -1,0 +1,37 @@
+import axios from "axios";
+import authHeader from "./auth-header";
+
+const API_URL = "http://localhost:8080/api/";
+
+const getForm = async (formId) => {
+  let form =  await axios.get(API_URL + "form/" + formId, { headers: authHeader() });
+  console.log(form)
+  return form;
+};
+
+const createForm = async (formData) => {
+  let form =  await axios.post(API_URL + "form/create", { data: formData }, { headers: authHeader() });
+  console.log(form)
+  return form;
+};
+
+const editForm = async (formId) => {
+  let form =  await axios.get(API_URL + "form/" + formId + "/edit", { headers: authHeader() });
+  console.log(form)
+  return form;
+};
+
+const updateForm = async (formData) => {
+  let form =  await axios.put(API_URL + "form/" + formData.form_id + "/update", { data: formData }, { headers: authHeader() });
+  console.log(form)
+  return form;
+};
+
+let FormService = {
+  getForm,
+  createForm,
+  editForm,
+  updateForm
+};
+
+export default FormService;

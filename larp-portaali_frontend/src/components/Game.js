@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
-import { Link, useParams, useLocation } from "react-router-dom";
-import UserService from "../services/user.service";
+import { Link, useParams } from "react-router-dom";
 import GameService from "../services/game.service";
 import { errorMessage } from "../utils/messages";
 import { formatDateRange } from "../utils/formatters";
 
 const Game = (props) => {
 
-  const currentUser = UserService.getCurrentUser();
-  const userId = currentUser.id;
   const [message, setMessage] = useState("");
   const [game, setGame] = useState(null);
 
@@ -26,15 +23,6 @@ const Game = (props) => {
     };
     fetchGame();
   }, [id]);
-
-
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setMessage('');
-  //   }, 3000);
-  //   return () => clearTimeout(timer);
-  // }, [message]);
 
   return (
     <Container>

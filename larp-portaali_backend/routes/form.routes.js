@@ -17,21 +17,27 @@ module.exports = function(app) {
   );
 
   app.get(
-    "/api/form/:form_id", 
-    [authJwt.verifyToken],
-    controller.getForm
-  );
-
-  app.get(
-    "/api/form/edit/:form_id", 
+    "/api/form/:form_id/edit", 
     [authJwt.verifyToken],
     controller.editForm
   );
 
   app.put(
-    "/api/form/update/:form_id",
+    "/api/form/:form_id/update",
     [authJwt.verifyToken],  
     controller.updateForm
+  );
+
+  app.post(
+    "/api/form/:form_id/toggle", 
+    [authJwt.verifyToken],
+    controller.toggleRegistration
+  );
+
+  app.get(
+    "/api/form/:form_id", 
+    [authJwt.verifyToken],
+    controller.getForm
   );
 
   app.post(
@@ -51,6 +57,4 @@ module.exports = function(app) {
     [authJwt.verifyToken],
     controller.updateQuestion
   );
-
-
 };

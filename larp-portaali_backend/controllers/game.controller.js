@@ -1,5 +1,6 @@
 const logger = require("../utils/logger");
 const Game = require("../db/game.db");
+const Form = require("../db/form.db");
 const Person = require("../db/person.db");
 
 
@@ -127,7 +128,7 @@ exports.removeOrganiser = async (req, res) => {
   }
 }
 
-exports.gameForms = async (req, res) => {
+exports.getForms = async (req, res) => {
   // Return a list of the forms created for the game with their id, name description and status
   try {
     let gameFormList = await Game.getGameForms(req.params.game_id);
@@ -138,29 +139,5 @@ exports.gameForms = async (req, res) => {
     }
   } catch(err) {
     res.status(500).send({ message: err.message });
-  }
-}
-
-exports.toggleGame = async (req, res) => {
-  // Checks whether the logged in user is an organiser of the game
-  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
-    // Checks whether the registration for the game is open or not
-    if (await Game.registrationOpen(req.params.game_id)) {
-      let result = await Game.closeRegistration(req.params.game_id);
-      if (result) {
-        res.status(200).send({ form_open: false });  
-      } else {
-        res.status(403).send({ form_open: true });
-      }
-    } else {
-      let result = await Game.openRegistration(req.params.game_id);
-      if (result) {
-        res.status(200).send({ form_open: true });
-      } else {
-        res.status(403).send({ form_open: false });
-      }
-    }
-  } else {
-    res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
 }

@@ -38,7 +38,7 @@ const OrganiserPortal = (props) => {
       let response = await GameService.toggleRegistration(event.target.value);
       let newGameList = [...gameList];
       let newGame = { ...newGameList[index] };
-      newGame.form_open = response.data.form_open;
+      newGame.is_open = response.data.is_open;
       console.log(newGame);
       newGameList[index] = newGame;
       setGameList(newGameList);

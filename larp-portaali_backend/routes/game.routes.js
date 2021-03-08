@@ -36,12 +36,6 @@ module.exports = function(app) {
     controller.updateGame
   );
 
-  app.put(
-    "/api/game/:game_id/toggle",
-    [authJwt.verifyToken],  
-    controller.toggleGame
-  );
-
   app.get(
     "/api/game/:game_id/organisers",
     [authJwt.verifyToken],  
@@ -58,5 +52,11 @@ module.exports = function(app) {
     "/api/game/:game_id/removeOrganiser",
     [authJwt.verifyToken],  
     controller.removeOrganiser
+  );
+
+  app.get(
+    "/api/game/:game_id/forms",
+    [authJwt.verifyToken],  
+    controller.getForms
   );
 };

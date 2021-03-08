@@ -1,6 +1,5 @@
 const getAvailableQuestions = `
-  SELECT DISTINCT
-    fq.form_id AS form_id, 
+  SELECT DISTINCT 
     q.id AS question_id, 
     qt.name AS question_type, 
     q.question_text, 

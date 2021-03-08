@@ -204,15 +204,22 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
  
 ####
 
+GET http://localhost:8080/api/organiserGameList HTTP/1.1
+content-type: application/json
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTIxODM0LCJleHAiOjE2MTUyMDgyMzR9.SvIWmPDVjpTcSxMt4ITVzl3plPebSxEn1CbsqXFDSLQ
+
+
+####
+
 POST http://localhost:8080/api/form/create HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MDc1MzMzLCJleHAiOjE2MTUxNjE3MzN9.PsYlYSFNbMIHMz9Opp9cz4ctb78aod2KZPh9tW1mQNY
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTY0MDM5LCJleHAiOjE2MTUyNTA0Mzl9.RLy3OW3G_jBM0UUEc-YBz4vFCs0GoIvyVSUs938Sz_4
 
 {
     "data": {
         "game_id": 1,
-        "name": "Testilomake 1",
-        "description": "Tämä on testipeliä varten luotu ilmoittautumislomake."
+        "name": "Testilomake 4",
+        "description": "Tämä on neljäs testipeliä varten luotu ilmoittautumislomake."
     }
 }
 
@@ -224,13 +231,13 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA
 
 ####
 
-GET http://localhost:8080/api/form/edit/5 HTTP/1.1
+GET http://localhost:8080/api/form/1/edit HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTY0MDM5LCJleHAiOjE2MTUyNTA0Mzl9.RLy3OW3G_jBM0UUEc-YBz4vFCs0GoIvyVSUs938Sz_4
 
 ####
 
-PUT http://localhost:8080/api/form/update/5 HTTP/1.1
+PUT http://localhost:8080/api/form/1/update HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
 
@@ -239,48 +246,48 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA
         "game_id": 1,
         "name": "Testilomake 2",
         "description": "Tämä on testipeliä varten luotu ja muokattu ilmoittautumislomake.",
-    "questions": [
-      {
-        "question_id": 1,
-        "position": 3
-      },
-      {
-        "question_id": 2,
-        "position": 2
-      },
-      {
-        "question_id": 3,
-        "position": 1
-      },
-      {
-        "question_id": 4,
-        "position": 4
-      },
-      {
-        "question_id": 5,
-        "position": 5
-      },
-      {
-        "question_id": 6,
-        "position": 6
-      },
-      {
-        "question_id": 7,
-        "position": 7
-      },
-      {
-        "question_id": 10,
-        "position": 8
-      },
-      {
-        "question_id": 9,
-        "position": 9
-      },
-      {
-        "question_id": 8,
-        "position": 10
-      }
-    ]
+        "questions": [
+            {
+            "question_id": 1,
+            "position": 3
+            },
+            {
+            "question_id": 2,
+            "position": 2
+            },
+            {
+            "question_id": 3,
+            "position": 1
+            },
+            {
+            "question_id": 4,
+            "position": 4
+            },
+            {
+            "question_id": 5,
+            "position": 5
+            },
+            {
+            "question_id": 6,
+            "position": 6
+            },
+            {
+            "question_id": 7,
+            "position": 7
+            },
+            {
+            "question_id": 10,
+            "position": 8
+            },
+            {
+            "question_id": 9,
+            "position": 9
+            },
+            {
+            "question_id": 8,
+            "position": 10
+            }
+        ]
     }
 }
 

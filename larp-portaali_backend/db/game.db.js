@@ -60,13 +60,16 @@ getOpenGames = async () => {
 
 getOrganiserGames = async (organiserId) => {
   let { rows } = await db.query(queries.getOrganiserGames, [organiserId]);
-  for (row of rows) {  
-    row.form_id = 1;
-    row.open = false;
-    row.registrations = 0;
-    row.organisers = await getOrganisers(row.id);
+  let gameList = []
+  for (row of rows) {
+    let game = row;
+    // This will be implemented with registrations
+    game.registrations = 0;
+    game.organisers = await getOrganisers(game.id);
+    game.forms = await getGameForms(game.id);
+    gameList.push(game);
   }
-  return rows;
+  return gameList;
 }
 
 checkOrganiserStatus = async (gameId, personId) => {
@@ -109,5 +112,6 @@ module.exports = {
   checkOrganiserStatus, 
   getOrganisers, 
   addOrganiser,
-  removeOrganiser
+  removeOrganiser,
+  getGameForms
 };

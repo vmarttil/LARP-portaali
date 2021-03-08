@@ -33,8 +33,8 @@ const removeOrganiser = async (gameId, organiserId) => {
   return await axios.post(API_URL + "game/" + gameId + "/removeOrganiser", { data: {id : organiserId} }, { headers: authHeader() });
 };
 
-const toggleRegistration = async (gameId) => {
-  return await axios.put(API_URL + "game/" + gameId + "/toggle", { headers: authHeader() });
+const toggleRegistration = async (formId) => {
+  return await axios.post(API_URL + "form/" + formId + "/toggle", { headers: authHeader() });
 };
 
 let GameService = {

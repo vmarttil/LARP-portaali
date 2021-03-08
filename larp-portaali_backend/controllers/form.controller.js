@@ -14,11 +14,11 @@ exports.createForm = async (req, res) => {
     // Save the new form to the database and populate it with the default questions
     try {
       let form = await Form.createForm(req.body.data);
-      let available = await Question.getAvailableQuestions(req.UserId);
+      let available = await Question.getAvailableQuestions(req.userId);
       if (form.id) {
         res.status(201).send({ form: form, available_questions: available });
       } else {
-        res.status(500).send({ message: "Uuden lomakkeen luominen ei onnistunut." });
+        res.status(500).send({ message: "Uuden lomakkeen luonti ei onnistunut." });
       }
     } catch (err) {
       res.status(500).send({ message: err.message });
@@ -71,9 +71,9 @@ exports.updateForm = async (req, res) => {
       try {
         let result = await Form.updateForm(req.params.form_id, req.body.data);
         if (result) {
-          res.status(200).send({ message: "Lomakkeen tiedot päivitetty." });
+          res.status(200).send({ message: "Lomakkeen tallennus onnistui." });
         } else {
-          res.status(404).send({ message: "Lomaketta ei löytynyt." });
+          res.status(404).send({ message: "Lomakkeen tallennus ei onnistunut." });
         }
       } catch (err) {
         res.status(500).send({ message: err.message });
@@ -124,7 +124,7 @@ exports.createQuestion = async (req, res) => {
       if (question.question_id) {
         res.status(201).send({ message: "Uuden kysymyksen luonti onnistui.", question: question });
       } else {
-        res.status(500).send({ message: "Uuden kysymyksen luominen ei onnistunut." });
+        res.status(500).send({ message: "Uuden kysymyksen luonti ei onnistunut." });
       }
     } catch (err) {
       res.status(500).send({ message: err.message });
@@ -152,9 +152,9 @@ exports.updateQuestion = async (req, res) => {
           question = await Question.createQuestion(req.body.data);
         }
         if (question.question_id) {
-          res.status(201).send({ message: "Kysymys päivitetty.", question: question });
+          res.status(201).send({ message: "Kysymyksen tallennus onnistui.", question: question });
         } else {
-          res.status(500).send({ message: "Kysymyksen päivitys ei onnistunut." });
+          res.status(500).send({ message: "Kysymyksen tallennus ei onnistunut." });
         }
       } else {
         res.status(403).send({ message: "Pakollista kysymystä ei voi muokata." });
@@ -167,3 +167,18 @@ exports.updateQuestion = async (req, res) => {
   }
 }
 
+exports.toggleRegistration = async (req, res) => {
+  // Checks whether the logged in user is an organiser of the game
+  let gameId = await Form.getFormGameId(req.params.form_id);
+  if (await Game.checkOrganiserStatus(gameId, req.userId)) {
+    // Toggles the status of the form
+    try {
+      let formStatus = await Form.toggleRegistration(req.params.form_id);
+      res.status(200).send({ is_open: formStatus });
+    } catch (err) {
+      res.status(500).send({ message: err.message });
+    }
+  } else {
+    res.status(403).send({ message: "Et ole pelin järjestäjä." });
+  }
+}
