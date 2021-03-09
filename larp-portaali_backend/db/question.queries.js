@@ -17,7 +17,10 @@ const getAvailableQuestions = `
     ON f.game_id = g.id
   JOIN game_organiser AS go
     ON g.id = go.game_id
-  WHERE go.person_id = $1;
+  WHERE go.person_id = $1 
+    AND q.id NOT IN (
+      SELECT question_id FROM form_question WHERE form_id = $2
+    );
 `
 const getQuestion = `
   SELECT 

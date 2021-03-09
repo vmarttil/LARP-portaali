@@ -37,8 +37,8 @@ getQuestion = async (questionId) => {
   }
 }
 
-getAvailableQuestions = async (personId) => {
-  let { rows } = await db.query(queries.getAvailableQuestions, [personId]);
+getAvailableQuestions = async (personId, formId) => {
+  let { rows } = await db.query(queries.getAvailableQuestions, [personId, formId]);
   if (rows.length > 0) {
     let questionList = [];
     for (row of rows) {
@@ -49,7 +49,7 @@ getAvailableQuestions = async (personId) => {
     }
     return questionList;
   } else {
-    return null;
+    return [];
   }
 }
 
@@ -97,6 +97,28 @@ deleteQuestion = async (questionId) => {
   return rowCount > 0;
 }
 
+isChanged = async (questionData) => {
+  let oldQuestionData = await getQuestion(questionData.question_id);
+  if (
+      questionData.question_type !== oldQuestionData.question_type ||
+      questionData.question_text !== oldQuestionData.question_text ||
+      questionData.description !== oldQuestionData.description
+     ) {
+      return true;
+  }
+  if (questionData.hasOwnProperty('options')) {
+    if (questionData.options.length !== oldQuestionData.options.length) {
+      return true;
+    }
+    for (option of questionData.options) {
+      if (option.text !== oldQuestionData.options.find(o => o.number === option.number).text) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 isEditable = async (questionId) => {
   let formCount = await countForms(questionId);
   let is_default = await isDefault(questionId);
@@ -131,6 +153,7 @@ module.exports = {
   getQuestionOptions,
   updateQuestion,
   deleteQuestion,
+  isChanged,
   isEditable,
   isRemovable,
   isOptional

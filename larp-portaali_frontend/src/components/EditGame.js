@@ -14,7 +14,7 @@ const EditGame = (props) => {
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [isBusy, setBusy] = useState(true);
+  // const [isBusy, setBusy] = useState(true);
   const [organisers, setOrganisers] = useState([]);
   const [newOrganiserEmail, setNewOrganiserEmail] = useState("");
   const [newOrganiser, setNewOrganiser] = useState(null);
@@ -42,10 +42,10 @@ const EditGame = (props) => {
         priceField.setValue(game.price);
         descriptionField.setValue(game.description);
         setOrganisers(game.organisers);
-        setBusy(false);
+        // setBusy(false);
       } catch (error) {
         setMessage(errorMessage(error));
-        setBusy(false);
+        // setBusy(false);
       };
     };
     fetchGame();
@@ -165,7 +165,6 @@ const EditGame = (props) => {
 
 
   return (
-    (!isBusy &&
       <>
         <Container>
           <Row>
@@ -252,7 +251,7 @@ const EditGame = (props) => {
             <Col sm="1"></Col>
           </Row>
         </Container>
-      </>)
+      </>
   );
 };
 

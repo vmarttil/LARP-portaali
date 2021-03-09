@@ -1,79 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import { Card, Form, Button, Alert, Container, Row, Col, Spinner } from 'react-bootstrap';
 import { Redirect, useParams } from "react-router-dom";
 import UserService from "../services/user.service";
 import GameService from "../services/game.service";
 import FormService from "../services/form.service";
 import { useTextField, useTextArea } from "../utils/hooks"
-import { TextField, TextArea } from "./FormFields"
+import { TextField, TextArea, DummyField } from "./FormFields"
 import { validateRequired, validateDate } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 import { formatDateRange } from "../utils/formatters";
 import { getQueriesForElement } from "@testing-library/react";
+import { Trash, PencilSquare } from 'react-bootstrap-icons';
+
 
 const EditForm = (props) => {
 
-  let { game_id, form_id } = useParams();
-  
+  const { game_id, form_id } = useParams();
+
   const [successful, setSuccessful] = useState(false);
-  const [redirect, setRedirect] = useState(false);
   const [message, setMessage] = useState("");
-  
-  const [formId, setFormId] = useState(false);
-  const [availableQuestions, setAvailableQuestions] = useState(null);
-  const [questions, setQuestions] = useState(null);
+  const [isBusy, setBusy] = useState(true);
+  const [formId, setFormId] = useState(null);
+  const [availableQuestions, setAvailableQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [isOpen, setOpen] = useState(false);
-  
+
 
   /* Fields for form data */
   const nameField = useTextField("name", "Lomakkeen nimi:", "text", 64, validateRequired, "", ["horizontal_3-9"]);
-  const descriptionField = useTextArea("description", "Lomakkeen kuvaus:", 256, validateRequired, "", ["horizontal_3-9"], 3);
+  const descriptionField = useTextArea("description", "Lomakkeen kuvaus:", 256, validateRequired, "", ["horizontal_3-9"], 4);
 
   useEffect(() => {
-    const createNewForm = async () => {
-      try {
-        let gameResponse = await GameService.getGame(game_id);
-        let game = gameResponse.data.game;
-        let formData = {
-          game_id: game_id,
-          name: game.name + ": Ilmoittautuminen",
-          description: "Tämä on " + formatDateRange(game.start_date, game.end_date) + " pidettävää " + game.name + " -larppia varten luotu ilmoittautumislomake."
-        }
-        let response = await FormService.createNewForm(formData);
-        return response.data;
-      } catch (error) {
-        setMessage(errorMessage(error));
-      };
-    };
-
-    const getEditForm = async (form_id) => {
-      try {
-        let response = await FormService.editForm(form_id);
-        return response.data;
-      } catch (error) {
-        setMessage(errorMessage(error));
-      };
-    };
-
-    let formData = null;
-    if (form_id === 0) {
-      formData = createNewForm();
-    } else {
-      formData = getEditForm(form_id);
-    }
-    let questionList = formData.form.questions.sort((a, b) => a.position - b.position);
-    let availableQuestions = formData.available_questions;    
-    let selectAvailableQuestion = (qid) => availableQuestions.find(q => q.question_id === qid)
-    let questions = questionList.map((question) => selectAvailableQuestion(question.id));
-    console.log(questions);
-        
-    nameField.setValue(formData.form.name);
-    descriptionField.setValue(formData.form.description);
-    setFormId(formData.form.form_id);
-    setAvailableQuestions(availableQuestions);
-    setQuestions(questions);
-    setOpen(formData.form.is_open);
-  }, [game_id]);
+    fetchForm();
+  }, [form_id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -82,22 +41,37 @@ const EditForm = (props) => {
     return () => clearTimeout(timer);
   }, [message]);
 
+  const fetchForm = async () => {
+    try {
+      let response = await FormService.editForm(form_id);
+      let formData = response.data;
+      let questions = formData.form.questions.sort((a, b) => a.position - b.position);
 
-  const saveGameData = async (e) => {
+      nameField.setValue(formData.form.name);
+      descriptionField.setValue(formData.form.description);
+      setFormId(formData.form.form_id);
+      setAvailableQuestions(formData.available_questions);
+      setQuestions(questions);
+      setOpen(formData.form.is_open);
+      setBusy(false);
+    } catch (error) {
+      setMessage(errorMessage(error));
+    };
+  };
+
+  const saveFormData = async (e) => {
     e.preventDefault();
     setMessage("");
     setSuccessful(false);
+    setBusy(true);
 
     let formData = {
       game_id: game_id,
       form_id: formId,
       name: nameField.value,
-      description: descriptionField.value
+      description: descriptionField.value,
+      questions: questions
     };
-    let questionList = questions.map((q, index) => {
-      return {question_id: q.question_id, position: (index + 1)}
-    });
-    formData.questions = questionList;
 
     if (nameField.validate() &&
       descriptionField.validate()) {
@@ -105,7 +79,7 @@ const EditForm = (props) => {
         let response = await FormService.updateForm(formData)
         setMessage(response.data.message);
         setSuccessful(true);
-
+        await fetchForm();
       } catch (error) {
         setMessage(errorMessage(error));
         setSuccessful(false);
@@ -116,6 +90,31 @@ const EditForm = (props) => {
   };
 
 
+
+  const QuestionList = () => {
+    return (
+      <div>
+          {questions.map((question, index) => {
+            return (
+              <Card key={question.question_id} className="mx-0 my-3 p-0 bg-white">
+                <Card.Header className="d-flex justify-content-end p-1" style={{ backgroundColor: "#e9ecef" }}>
+                  <PencilSquare className="lead mx-1"/>
+                  <Trash className="lead mx-1"/>
+                </Card.Header>
+                <Card.Body className="p-2">
+                  <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []}/>
+                </Card.Body>
+
+              </Card>
+            )
+          })}
+      </div>
+    )
+  }
+
+
+
+
   return (
     <Container>
       <Row>
@@ -123,16 +122,17 @@ const EditForm = (props) => {
           <Card className="my-3">
             <Card.Body>
               <Card.Title>
-                <h1>Uuden pelin luonti</h1>
+                <h1>Ilmoittautumislomakkeen muokkaus</h1>
               </Card.Title>
               <Card.Text>
-                Tällä sivulla voit syöttää perustiedot pelistä, jolle haluat luoda ilmoittautumislomakkeen. Kun olet 
-                tallentanut pelin tiedot, peli näkyy omien peliesi hallintasivulla, jossa voit muokata sen tietoja, luoda 
-                sille ilmoittautumislomakkeen, avata ilmoittautumisen ja tarkastella siihen tehtyjä ilmoittautumisia. Pelin 
-                järjestäjäksi merkitään sen luonut henkilö, mutta voit lisätä pelin tietoihin muita järjestäjiä pelin 
-                tietojen muokkaussivulla ja halutessasi myös poistaa itsesi järjestäjien joukosta (kunhan pelille jää 
-                vähintään yksi järjestäjä). Kun olet tallentanut pelin, se näkyy myös tulevien pelien luettelossa ja muut 
-                käyttäjät voivat tarkastella sen tietoja. 
+                Tällä sivulla voit muokata peliin ilmoittautumiseen käytettävää lomaketta poistamalla tai muokkaamalla
+                oletuskysymyksiä, lisäämällä uusia kysymyksiä ja muuttamalla kysymysten järjestystä. Kokonaan uusien kysymysten
+                luomisen lisäksi voit myös lisätä peliin kysymyksiä mahdollisista muista peleistä, joissa olet järjestäjänä ja
+                muokata niitä tarvittaessa. Myös uusille lomakkeille määritetyt oletuskysymykset ja muokattavasta lomakkeesta poistamasi
+                kysymykset ovat aina lisättävissä (kunnes tallennat lomakkeen, jolloin poistetut kysymykset poistuvat pysyvästi elleivät
+                ne ole oletuskysymyksiä tai käytössä jollakiin muulla lomakkeella). Ainoat pakolliset kysymykset ovat ilmoittautujan nimi
+                ja sähköpostiosoite. Voit myös luoda useita lomakkeita samalle pelille (esim. avustaja- tai NPC-ilmoittautumisia varten)
+                ja hallinnoida niitä erikseen.
           </Card.Text>
             </Card.Body>
           </Card>
@@ -142,43 +142,39 @@ const EditForm = (props) => {
         <Col sm="1"></Col>
         <Col sm="10">
           <Card className="my-3">
-            <Card.Body>
-              <Card.Title>
-                <h2>Pelin tiedot</h2>
-              </Card.Title>
+            {/* {!isBusy ? ( */}
+              <Card.Body>
+                <Card.Title>
+                  <h2>Lomakkeen tiedot</h2>
+                </Card.Title>
+                <Form className="align-items-center" onSubmit={saveFormData}>
+                  <TextField {...nameField} />
+                  <TextArea {...descriptionField} />
+                  <h2>Kysymykset</h2>
+                  
+                  <QuestionList/>
 
-              <Form className="align-items-center" onSubmit={saveGameData}>
+                  <Form.Group controlId="submit">
+                    <Button variant="primary" type="submit" block>
+                      <span>Tallenna lomake</span>
+                    </Button>
+                  </Form.Group>
 
-                <TextField {...nameField} />
-                <Row className="my-2">
-                  <DateField {...startDateField} />
-                  <DateField {...endDateField} />
-                </Row>
-                <TextField {...placeField} />
-                <TextField {...priceField} />
-                <TextArea {...descriptionField} />
+                  <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+                    {message}
+                  </Alert>
 
-                <Form.Group controlId="submit">
-                  <Button variant="primary" type="submit" block>
-                    <span>Tallenna uusi peli</span>
-                  </Button>
-                </Form.Group>
-
-                <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
-                  {message}
-                </Alert>
-
-              </Form>
-            </Card.Body>
+                </Form>
+              </Card.Body>
+            {/* ) : (
+              <Card.Body className="m-auto">
+                <Spinner animation="border" role="status" />
+              </Card.Body>
+            )} */}
           </Card>
         </Col>
         <Col sm="1"></Col>
       </Row>
-
-      {redirect && (
-        <Redirect to={{ pathname: '/portal/organiser' }} />
-      )
-      }
     </Container>
   );
 };

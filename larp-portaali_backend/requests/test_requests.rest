@@ -239,56 +239,106 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTY
 
 PUT http://localhost:8080/api/form/1/update HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MjI3OTc2LCJleHAiOjE2MTUzMTQzNzZ9.gMk9EJKLqsabG2CH1ofaj8JvfLzqLRqKaP-0LcE095s
 
 {
     "data": {
         "game_id": 1,
-        "name": "Testilomake 2",
+        "name": "Testilomake 1 (muokattu)",
         "description": "Tämä on testipeliä varten luotu ja muokattu ilmoittautumislomake.",
         "questions": [
-            {
-            "question_id": 1,
-            "position": 3
-            },
-            {
-            "question_id": 2,
-            "position": 2
-            },
-            {
-            "question_id": 3,
-            "position": 1
-            },
-            {
-            "question_id": 4,
-            "position": 4
-            },
-            {
-            "question_id": 5,
-            "position": 5
-            },
-            {
-            "question_id": 6,
-            "position": 6
-            },
-            {
-            "question_id": 7,
-            "position": 7
-            },
-            {
-            "question_id": 10,
-            "position": 8
-            },
-            {
-            "question_id": 9,
-            "position": 9
-            },
-            {
-            "question_id": 8,
-            "position": 10
-            }
+        {
+        "question_id": 2,
+        "question_type": "text",
+        "question_text": "Sähköposti",
+        "description": "Sähköpostiosoite johon peliin liittyvät tiedotteet lähetetään.",
+        "is_optional": false,
+        "prefill_tag": "email",
+        "position": 2
+      },
+      {
+        "question_id": 1,
+        "question_type": "text",
+        "question_text": "Nimi",
+        "description": "Ilmoittautujan koko nimi.",
+        "is_optional": false,
+        "prefill_tag": "name",
+        "position": 1
+      },
+      {
+        "question_id": 3,
+        "question_type": "text",
+        "question_text": "Puhelinnumero",
+        "description": "Puhelinnumero, josta ilmoittautujan tavoittaa tarvittaessa.",
+        "is_optional": true,
+        "prefill_tag": "phone",
+        "position": 3
+      },
+      {
+        "question_id": 4,
+        "question_type": "integer",
+        "question_text": "Ikä",
+        "description": "Ilmoittautujan ikä pelin aikaan.",
+        "is_optional": true,
+        "prefill_tag": "age",
+        "position": 4
+      },
+      {
+        "question_id": 5,
+        "question_type": "textarea",
+        "question_text": "Kuvaile itseäsi pelaajana",
+        "description": "Kuvaile pelityyliäsi ja -mieltymyksiäsi, minkä tyyppisestä pelisisällöstä yleensä nautit, oletko enemmän aktiivinen vai reaktiivinen pelaaja, jne.",
+        "is_optional": true,
+        "prefill_tag": "player_profile",
+        "position": 5
+      },
+      {
+        "question_id": 6,
+        "question_type": "radio",
+        "question_text": "Hahmon toivottu sukupuoli",
+        "description": "Sukupuoli jota edustavaa hahmoa haluat pelata (ei välttämättä sama kuin pelaajan sukupuoli).",
+        "is_optional": true,
+        "prefill_tag": null,
+        "position": 6,
+        "options": [
+          {
+            "number": 1,
+            "text": "Mies"
+          },
+          {
+            "number": 2,
+            "text": "Nainen"
+          },
+          {
+            "number": 3,
+            "text": "Muu"
+          },
+          {
+            "number": 4,
+            "text": "Ei väliä"
+          }
         ]
-    }
+      },
+            {
+        "question_id": 10,
+        "question_type": "textarea",
+        "question_text": "Minkä tyyppisiä juonikuvioita tai teemoja toivoisit peliisi?",
+        "description": "Kuvaile minkä tyyppistä pelisisältöä haluaisit pelata ja kerro mahdollisista juoni-ideoista jollaisia haluaisit pelata.",
+        "is_optional": true,
+        "prefill_tag": null,
+        "position": 10
+      },
+      {
+        "question_id": 9,
+        "question_type": "textarea",
+        "question_text": "Minkä tyyppistä hahmoa haluaisit pelata tässä pelissä?",
+        "description": "Kuvaile vapaasti, minkälaisia ominaisuuksia, luonteenpiirteitä, tms. toivoisit hahmollesi, minkälaisessa asemassa toivoisit hahmon olevan, jne.",
+        "is_optional": true,
+        "prefill_tag": null,
+        "position": 9
+      }
+    ]
+  }
 }
 
 ####

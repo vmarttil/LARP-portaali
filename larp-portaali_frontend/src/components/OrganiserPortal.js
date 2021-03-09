@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
+import FormService from "../services/form.service";
 import { formatDateRange } from "../utils/formatters"
 import { errorMessage } from "../utils/messages"
 
@@ -11,13 +12,13 @@ const OrganiserPortal = (props) => {
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
+  const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
     const fetchGames = async () => {
       try {
         let response = await GameService.getOrganiserGames();
         setGameList(response.data.games);
-        console.log(response.data.games);
       } catch (error) {
         setMessage(errorMessage(error));
       };
@@ -39,7 +40,6 @@ const OrganiserPortal = (props) => {
       let newGameList = [...gameList];
       let newGame = { ...newGameList[index] };
       newGame.is_open = response.data.is_open;
-      console.log(newGame);
       newGameList[index] = newGame;
       setGameList(newGameList);
     } catch (error) {
@@ -47,12 +47,31 @@ const OrganiserPortal = (props) => {
     }
   };
 
+  const createNewForm = async (e) => {
+    let game_id = e.currentTarget.parentNode.parentNode.id.split("_")[1]
+    console.log(game_id);
+    console.log(gameList);
+    let form_game = gameList.find(game => game.id == game_id);
+    console.log(form_game);
+    let formData = {
+      game_id: form_game.id,
+      name: form_game.name + ": Ilmoittautuminen",
+      description: "Tämä on " + formatDateRange(form_game.start_date, form_game.end_date) + " pidettävää " + form_game.name + " -larppia varten luotu ilmoittautumislomake."
+    }
+    let response = await FormService.createForm(formData);
+    let formId = response.data.form_id;
+    let redirectPath = "/game/" + form_game.id + "/form/" + formId + "/edit"
+    console.log(redirectPath)
+    setRedirect(redirectPath)
+    console.log(redirect)
+  };
+
   const GameList = () => {
     return (
       <>
         {gameList.map(row => {
           return (
-            <Card className="my-3" key={`game_${row.id}`}>
+            <Card className="my-3" key={row.id} id={`game_${row.id}`}>
               <Card.Body>
                 <Card.Title>{row.name}</Card.Title>
                 <Card.Subtitle>{formatDateRange(row.start_date, row.end_date)}, {row.place} ({row.price} €)</Card.Subtitle>
@@ -64,9 +83,7 @@ const OrganiserPortal = (props) => {
                   <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
                 </Link>
                 {!row.form_id && (
-                  <Link to={`/game/${row.id}/createForm`}>
-                    <Button variant="primary" role="button" size="sm" className="mx-1">Luo lomake</Button>
-                  </Link>
+                  <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo lomake</Button>
                 )}
                 {(row.form_id && !row.open && row.registrations === 0) && (
                   <Link to={`/game/${row.id}/editForm`}>
@@ -113,6 +130,11 @@ const OrganiserPortal = (props) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
+
+      {redirect && (
+            <Redirect to={redirect} />
+            )
+          }
     </Container>
   );
 };

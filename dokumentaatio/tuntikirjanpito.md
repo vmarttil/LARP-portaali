@@ -35,6 +35,8 @@
 | 06032021 | 12,0 | Ilmoittautumislomakkeiden tietokantarakenteen ja niiden luonnin ja muokkauksen backend-toiminnallisuus tehty lähes valmiiksi ja testattu |
 | 07032021 | 2,0 | Ilmoittautumislomakkeiden ja kysymysten luonnin ja muokkauksen backend-toiminnallisuus valmis ja testattu |
 |          | 3,0 | Ilmoittautumislomakkeen luonti- ja muokkaussivun toteutus aloitettu |
+| 08032021 | 2,0 | Ilmoittautumislomakkeiden backed-toiminnallisuuden muokkausta |
+|          | 5,0 | Ilmoittautumislomakkeiden staattinen luonti- ja muokkaussivu valmis |
 
-| **Yhteensä** | **135,0** | |
+| **Yhteensä** | **142,0** | |
 

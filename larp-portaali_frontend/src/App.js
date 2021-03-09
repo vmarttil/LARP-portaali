@@ -14,6 +14,7 @@ import MainPage from "./components/MainPage";
 import Game from "./components/Game";
 import EditGame from "./components/EditGame";
 import NewGame from "./components/NewGame";
+import EditForm from "./components/EditForm";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
@@ -130,17 +131,17 @@ const App = () => {
             <Route exact path="/profile">
               <Profile/>  
             </Route>
-            <Route path="/game/new">
+            <Route exact path="/game/new">
               <NewGame />  
+            </Route>
+            <Route path="/game/:game_id/form/:form_id/edit">
+              <EditForm />  
             </Route>
             <Route path="/game/:id/edit">
               <EditGame />  
             </Route>
             <Route path="/game/:id">
               <Game />  
-            </Route>
-            <Route path="/game/:game_id/form/:form_id/edit">
-              <EditForm />  
             </Route>
             <Route path="/portal/player">
               <PlayerPortal />  

@@ -14,9 +14,9 @@ exports.createForm = async (req, res) => {
     // Save the new form to the database and populate it with the default questions
     try {
       let form = await Form.createForm(req.body.data);
-      let available = await Question.getAvailableQuestions(req.userId);
       if (form.id) {
-        res.status(201).send({ form: form, available_questions: available });
+        console.log(form)
+        res.status(201).send({ form_id: form.id });
       } else {
         res.status(500).send({ message: "Uuden lomakkeen luonti ei onnistunut." });
       }
@@ -47,8 +47,8 @@ exports.editForm = async (req, res) => {
   // Check whether the form is open and whether there are answers for it
   if (await Form.isOpen(req.params.form_id) === false && await Form.countRegistrations(req.params.form_id) === 0) {
     try {
-      let form = await Form.editForm(req.params.form_id);
-      let available = await Question.getAvailableQuestions(req.userId);
+      let form = await Form.getForm(req.params.form_id);
+      let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
       if (form) {
         res.status(200).send({ form: form, available_questions: available });
       } else {
@@ -69,9 +69,10 @@ exports.updateForm = async (req, res) => {
     if (await Form.isOpen(req.params.form_id) === false && await Form.countRegistrations(req.params.form_id) === 0) {
       // Updates the content and structure of the form
       try {
-        let result = await Form.updateForm(req.params.form_id, req.body.data);
-        if (result) {
-          res.status(200).send({ message: "Lomakkeen tallennus onnistui." });
+        let updatedForm = await Form.updateForm(req.params.form_id, req.body.data);
+        let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
+        if (updatedForm) {
+          res.status(200).send({ message: "Lomakkeen tallennus onnistui.", form: updatedForm, available_questions: available });
         } else {
           res.status(404).send({ message: "Lomakkeen tallennus ei onnistunut." });
         }

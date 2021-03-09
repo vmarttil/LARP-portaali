@@ -21,20 +21,9 @@ createForm = async (formData) => {
   }
 }
 
-editForm = async (formId) => {
-  let { rows } = await db.query(queries.getForm, [formId]);
-  if (rows.length > 0) {
-    let form = rows[0];
-    form.questions = await getFormQuestionList(formId);
-    return form;
-  } else {
-    return null;
-  }
-}
-
 getFormQuestionList = async (formId) => {
   let { rows } = await db.query(queries.getFormQuestionList, [formId]);
-  return rows.length > 0 ? rows : null;
+  return rows.length > 0 ? rows : [];
 }
 
 getForm = async (formId) => {
@@ -60,7 +49,7 @@ getFormQuestions = async (formId) => {
     }
     return questions
   } else {
-    return null;
+    return [];
   }
 }
 
@@ -71,22 +60,37 @@ updateForm = async (formId, formData) => {
     formData.description
     ]
   await db.query(queries.updateFormData, parameters);
-  
+  let newQuestions = formData.questions
   let oldQuestions = await getFormQuestionList(formId);
-  let newQuestions = formData.questions;
-  for (question of newQuestions) {
-    if (!oldQuestions.map(q => q.question_id).includes(question.question_id)) {
-      // Add the new question
-      await db.query(queries.addQuestion, [formId, question.question_id, question.position]);
+
+  for (const [index, question] of newQuestions.entries()) {
+    let question_id = null;
+    if (question.question_id === null) {
+      // If the id of a question is null, i.e. it is a new question, create it in the database
+      let newQuestion = await Question.createQuestion(question);
+      // Link the question to the form using the ID and setting the position
+      await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
     } else {
-      if (oldQuestions.find(q => q.question_id === question.question_id).position !== question.position) {
-        // Update the position of the existing question and remove it from the list of old questions
-        await db.query(queries.updateQuestionPosition, [formId, question.question_id, question.position]);
-        oldQuestions = oldQuestions.filter(q => q.question_id !== question._question_id);
+      if (await Question.isChanged(question)) {
+        // If the question is an existing question that has been edited
+        if (await Question.isEditable(question.question_id)) {  
+          // If the question is unique to this form, update the question in the database
+          let updatedQuestion = await Question.updateQuestion(question.question_id, question);
+          // Update the position of the question in the form
+          await db.query(queries.updateQuestionPosition, [formId, updatedQuestion.question_id, (index + 1)]);
+        } else {
+          // If the question is a default question or question used also elsewhere, create a new question in the database
+          let newQuestion = await Question.createQuestion(question);
+          // Remove the old question from the form and link the new version to the form using the ID and setting the position
+          await db.query(queries.removeQuestion, [formId, question.question_id]);
+          await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
+        }
       } else {
-        // Just remove the question from the list of old questions
-        oldQuestions = oldQuestions.filter(q => q.question_id !== question.question_id);
+        // If the question is identical to an existing question, just update its position
+        await db.query(queries.updateQuestionPosition, [formId, question.question_id, (index + 1)]);
       }
+      // Remove the question from the list of old questions
+      oldQuestions = oldQuestions.filter(q => q.question_id !== question.question_id);
     }
   }
   // Finally remove the old questions that were no longer in the new questions
@@ -97,6 +101,7 @@ updateForm = async (formId, formData) => {
       await db.query(queries.deleteQuestion, [question.question_id])
     }
   }
+  // Get and return the updated form
   return await getForm(formId);
 }
 
@@ -106,6 +111,7 @@ getFormGameId = async (formId) => {
 }
 
 isOpen = async (formId) => {
+  console.log("Form id: ", formId)
   let { rows } = await db.query(queries.isOpen, [formId]);
   return rows.length > 0 ? rows[0].is_open : null;
 }
@@ -122,7 +128,6 @@ countRegistrations = async (formId) => {
 
 module.exports = {
   createForm, 
-  editForm,
   getForm,
   getFormQuestions,
   updateForm,

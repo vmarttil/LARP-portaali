@@ -88,11 +88,11 @@ const TextArea = ({ id, label, rows, value, error, onChange, onBlur, validate, k
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
     return (
-      <Row>
-        <Col sm={labelWidth}>
-          <Form.Label>{label}</Form.Label>
+      <Row className="my-2">
+        <Col sm={labelWidth} className="pr-1">
+          <Form.Label className="mt-2">{label}</Form.Label>
         </Col>
-        <Col sm={inputWidth}>
+        <Col sm={inputWidth} className="pl-1">
           <Form.Control
             as="textarea"
             rows={rows}
@@ -285,9 +285,114 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
   }
 };
 
+
+const DummyField = ({ id, type, text, description, options=[] }) => {
+  if (type === "text") {
+    return (
+      <Row className="my-1">
+        <Col sm={3} className="pr-1">
+          <Form.Label className="mt-2">{text}</Form.Label>
+        </Col>
+        <Col sm={9} className="pl-1">
+          <Form.Control type="text" disabled className="bg-white"/>
+          <Form.Text className="text-muted">{description}</Form.Text>
+        </Col>
+      </Row>
+    )
+    } else if (type === "integer") {
+      return (
+        <>
+        <Row className="mt-1 mb-0">
+          <Col sm={3} className="pr-1">
+            <Form.Label className="mt-2">{text}</Form.Label>
+          </Col>
+          <Col sm={2} className="pl-1">
+            <Form.Control type="number" disabled className="bg-white"/>
+          </Col>
+        </Row>
+        <Row className="mt-0 mb-1">
+        <Col sm={3} className="pr-1"></Col>
+        <Col sm={9} className="pl-1">
+          <Form.Text className="text-muted mt-0">{description}</Form.Text>
+        </Col>
+      </Row>
+      </>
+      )
+    } else if (type === "textarea") {
+      return (
+        <>
+        <Row>
+          <Col sm={12}>
+            <Form.Label className="mt-2 mb-0">{text}</Form.Label>
+            <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
+          </Col>
+        </Row>
+        <Row>
+        <Col sm={12}>
+          <Form.Control as="textarea" disabled className="bg-white" rows="4"/>
+        </Col>
+      </Row>
+      </>
+      )
+  } else if (type === "radio") {
+    return (
+      <>
+      <Row>
+        <Col sm={12}>
+          <Form.Label className="mt-2 mb-0">{text}</Form.Label>
+          <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
+        </Col>
+      </Row>
+      <Row>
+      <Col sm={12}>
+        {options.map(option => {
+          return (
+            <Form.Check type="radio" id={`${id}_${option.number}`} className="ml-3" disabled>
+              <Form.Check.Input type="radio" disabled/>
+              <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
+            </Form.Check>
+          )
+        })}
+      </Col>
+    </Row>
+    </>
+    )
+  } else if (type === "checkbox") {
+    return (
+      <>
+      <Row>
+        <Col sm={12}>
+          <Form.Label className="mt-2 mb-0">{text}</Form.Label>
+          <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
+        </Col>
+      </Row>
+      <Row>
+      <Col sm={12}>
+        {options.map(option => {
+          return (
+            <Form.Check type="checkbox" id={`${id}_${option.number}`} className="ml-3" disabled>
+              <Form.Check.Input type="checkbox" disabled/>
+              <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
+            </Form.Check>
+          )
+        })}
+      </Col>
+    </Row>
+    </>
+    )
+  } else {
+    return (
+      <>
+      {text}
+      </>
+    )
+  }
+}
+
 export {
   TextField,
   TextArea,
   RadioField,
-  DateField
+  DateField,
+  DummyField
 }
