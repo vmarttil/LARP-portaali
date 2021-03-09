@@ -24,6 +24,21 @@ const Game = (props) => {
     fetchGame();
   }, [id]);
 
+  const RegistrationButtons = () => {
+    let openForms = game.forms.filter(form => form.is_open)
+    return (
+      <>
+        {openForms.map(form => {
+          return (
+            <Link to={`/game/${id}/form/${form.id}/register`}>
+              <Button key={form.id} variant="primary" type="button" size="sm">{form.button_text}</Button>
+            </Link>
+          )
+        })}
+      </>
+    )
+  };
+
   return (
     <Container>
       <Row>
@@ -59,6 +74,9 @@ const Game = (props) => {
                   <Col sm="12">
                     {game.description}
                   </Col>
+                </Row>
+                <Row>
+                  <RegistrationButtons/>
                 </Row>
               </Card.Body>
             ) :

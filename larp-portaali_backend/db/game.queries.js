@@ -48,10 +48,19 @@ const removeOrganiser = `
   FROM game_organiser 
   WHERE game_id = $1 AND person_id = $2; 
 `
-const getForms = `
-  SELECT id, name, description, is_open
-  FROM form 
-  WHERE game_id = $1; 
+const getGameForms = `
+  SELECT 
+    f.id, 
+    f.name, 
+    f.description, 
+    f.is_open,
+    fc.name AS form_class,
+    fc.button_text
+  FROM form AS f
+  JOIN form_class AS fc
+    ON f.form_class_id = fc.id
+  WHERE game_id = $1
+  ORDER BY f.form_class_id; 
 `
 
 module.exports = {
@@ -64,5 +73,5 @@ module.exports = {
   getOrganisers,
   addOrganiser,
   removeOrganiser,
-  getForms
+  getGameForms
 };

@@ -1,7 +1,7 @@
 import { concat } from "lodash";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Card, Button, Alert, Jumbotron, Container, Row, Col } from 'react-bootstrap';
+import { Card, Button, Alert, Jumbotron, Container, Row, Col, Table } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
 import { formatDateRange } from "../utils/formatters"
@@ -34,29 +34,29 @@ const MainPage = (props) => {
 
   const GameTable = () => {
     return (
-      <table id="games" style={{ width: "100%" }}>
+      <Table id="games" size="sm" className="mt-3">
         <thead>
-          <tr>
-            <th>Nimi</th>
-            <th>Ajankohta</th>
-            <th>Paikka</th>
+          <tr className="d-flex">
+            <th className="col-7">Nimi</th>
+            <th className="col-2">Ajankohta</th>
+            <th className="col-3">Paikka</th>
           </tr>
         </thead>
         <tbody>
           {gameList.map(row => {
             return (
-              <tr key={`game_${row.id}`} >
-                <td>
+              <tr key={`game_${row.id}`} className="d-flex">
+                <td className="col-7">
                   <Link to={`/game/${row.id}`}>
                     {row.name}
                   </Link>
                 </td>
-                <td>{formatDateRange(row.start_date, row.end_date)}</td>
-                <td>{row.place}</td>
+                <td className="col-2">{formatDateRange(row.start_date, row.end_date)}</td>
+                <td className="col-3">{row.place}</td>
               </tr>)
           })}
         </tbody>
-      </table>
+      </Table>
     )
   }
 

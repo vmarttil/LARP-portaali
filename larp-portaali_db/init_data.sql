@@ -112,15 +112,26 @@ INSERT INTO game_organiser (
     (1, 1);
 
 
+INSERT INTO form_class (
+  name, 
+  button_text
+  )
+  VALUES 
+    ('player', 'Ilmoittaudu pelaajaksi'),
+    ('npc', 'Ilmoittaudu ei-pelaajahahmoksi'),
+    ('helper', 'Ilmoittaudu avustajaksi');
+
 
 INSERT INTO form (
 	game_id,
   name, 
 	description,
-  is_open
+  	is_open,
+	form_class_id
   ) 
   VALUES
-    (1, 'Oletuslomake', 'Uudelle pelille käytettävä oletuslomakepohja.', false);
+    (1, 'Oletuslomake', 'Uudelle pelille käytettävä oletuslomakepohja.', false, 1);
+
 
 
 

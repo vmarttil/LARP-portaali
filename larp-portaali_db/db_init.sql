@@ -2,6 +2,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 DROP TABLE IF EXISTS game CASCADE;
 DROP TABLE IF EXISTS game_organiser CASCADE;
+DROP TABLE IF EXISTS form_class CASCADE;
 DROP TABLE IF EXISTS form CASCADE;
 DROP TABLE IF EXISTS game_form CASCADE;
 DROP TABLE IF EXISTS question_type CASCADE;
@@ -44,16 +45,28 @@ CREATE TABLE IF NOT EXISTS game_organiser (
     ON DELETE CASCADE
 );
 
+CREATE TABLE form_class (
+  id int GENERATED ALWAYS AS IDENTITY,
+  name varchar(32) NOT NULL,
+  button_text varchar(64) NOT NULL,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS form (
   id int GENERATED ALWAYS AS IDENTITY,
   game_id int NOT NULL,
   name varchar(64) NOT NULL,
   description varchar(256) NOT NULL,
   is_open boolean NOT NULL DEFAULT FALSE,
+  form_class_id int NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_form_game
     FOREIGN KEY (game_id) 
 	  REFERENCES game(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_form_form_class
+    FOREIGN KEY (form_class_id)
+	  REFERENCES form_class(id)
     ON DELETE CASCADE
 );
 

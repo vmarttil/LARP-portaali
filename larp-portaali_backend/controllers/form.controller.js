@@ -45,7 +45,7 @@ exports.getForm = async (req, res) => {
 exports.editForm = async (req, res) => {
   // Return the form for editing with its associated array of questions and a list of all questions available for the user
   // Check whether the form is open and whether there are answers for it
-  if (await Form.isOpen(req.params.form_id) === false && await Form.countRegistrations(req.params.form_id) === 0) {
+  if (await Form.isEditable(req.params.form_id)) {
     try {
       let form = await Form.getForm(req.params.form_id);
       let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
@@ -171,15 +171,30 @@ exports.updateQuestion = async (req, res) => {
 exports.toggleRegistration = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
   let gameId = await Form.getFormGameId(req.params.form_id);
+
   if (await Game.checkOrganiserStatus(gameId, req.userId)) {
     // Toggles the status of the form
     try {
-      let formStatus = await Form.toggleRegistration(req.params.form_id);
-      res.status(200).send({ is_open: formStatus });
+      let formToggle = await Form.toggleRegistration(req.params.form_id, gameId);
+      if (formToggle.success) {
+        res.status(200).send({ message: "Ilmoittautuminen " + formToggle.target ? "avattu" : "suljettu" + "." });
+      } else {
+        res.status(404).send({ message: "Ilmoittautumisen " + formToggle.target ? "avaaminen" : "sulkeminen" + " ei onnistunut." });
+      }
     } catch (err) {
       res.status(500).send({ message: err.message });
     }
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
+  }
+}
+
+exports.checkStatus = async (req, res) => {
+  // Checks whether the form is editable
+  try {
+    let formStatus = await Form.isEditable(req.params.form_id);
+    res.status(200).send({ is_editable: formStatus });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 }

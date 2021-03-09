@@ -1,6 +1,17 @@
 const createForm = `
-  INSERT INTO form (game_id, name, description)
-    VALUES ($1, $2, $3) RETURNING *;
+  INSERT INTO form (
+    game_id, 
+    name, 
+    description, 
+    is_open, 
+    form_class_id
+  ) VALUES (
+    $1, 
+    $2, 
+    $3, 
+    FALSE, 
+    (SELECT id FROM form_class WHERE name = $4)
+    ) RETURNING game_id, name, description, is_open, $4;
 `
 const addDefaultQuestions = `
   INSERT INTO form_question (form_id, question_id, position)
@@ -9,9 +20,18 @@ const addDefaultQuestions = `
   WHERE is_default = TRUE;
 `
 const getForm = `
-  SELECT id AS form_id, game_id, name, description, is_open
-  FROM form
-  WHERE id = $1;
+  SELECT 
+    f.id AS form_id, 
+    f.game_id, 
+    f.name, 
+    f.description, 
+    f.is_open, 
+    fc.name AS form_class,
+    fc.button_text
+  FROM form As f
+  JOIN form_class AS fc
+    ON f.form_class_id = fc.id
+  WHERE f.id = $1;
 `
 const getFormQuestionList = `
   SELECT question_id, position
@@ -39,6 +59,7 @@ const updateFormData = `
   SET 
     name = $2,
     description = $3
+    form_class_id = (SELECT id FROM form_class WHERE name = $4)
   WHERE id = $1;
 `
 const addQuestion = `
@@ -55,15 +76,16 @@ const removeQuestion = `
   WHERE form_id = $1 AND question_id = $2; 
 `
 const toggleRegistration = `
-  UPDATE form SET 
-    is_open = NOT is_open 
+  UPDATE form SET is_open = NOT is_open 
   WHERE id = $1
   RETURNING is_open;
 `
 const isOpen = `
   SELECT is_open FROM form WHERE id = $1;
 `
-
+const getFormGame = `
+  SELECT game_id FROM form WHERE id = $1;
+`
 
 module.exports = {
   createForm,
@@ -76,6 +98,7 @@ module.exports = {
   updateQuestionPosition,
   removeQuestion,
   toggleRegistration,
-  isOpen
+  isOpen,
+  getFormGame
 };
 

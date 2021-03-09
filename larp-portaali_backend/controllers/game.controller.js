@@ -14,7 +14,7 @@ exports.gameList = async (req, res) => {
 exports.createGame = async (req, res) => {
   // Save the game to the database
   try {
-    let game = await Game.create(req.userId, req.body.data);
+    let game = await Game.createGame(req.userId, req.body.data);
     if (game.id && game.organisers) {
       res.status(201).send({ message: "Uuden pelin luominen onnistui."});
     } else {
@@ -28,7 +28,7 @@ exports.createGame = async (req, res) => {
 exports.gameInfo = async (req, res) => {
   // Return the full information of the game
   try {
-    let game = await Game.get(req.params.game_id);
+    let game = await Game.getGame(req.params.game_id);
     if (game) {
       res.status(200).send({ game: game });
     } else {
@@ -58,7 +58,7 @@ exports.updateGame = async (req, res) => {
   if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
     // Updates the information of the game
     try {
-      let result = await Game.update(req.params.game_id, req.body.data);
+      let result = await Game.updateGame(req.params.game_id, req.body.data);
       if (result) {
         res.status(200).send({ message: "Pelin tiedot päivitetty." });
       } else {

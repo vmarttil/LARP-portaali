@@ -2,13 +2,15 @@ require('dotenv').config()
 var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./form.queries.js")
+const Game = require("./game.db.js")
 const Question = require("./question.db.js")
 
 createForm = async (formData) => {
   let parameters = [
     formData.game_id,
     formData.name,
-    formData.description
+    formData.description,
+    formData.form_class
   ];
   let { rows } = await db.query(queries.createForm, parameters);
   if (rows.length > 0) {
@@ -57,7 +59,8 @@ updateForm = async (formId, formData) => {
   let parameters = [
     formId, 
     formData.name,
-    formData.description
+    formData.description,
+    formData.form_class
     ]
   await db.query(queries.updateFormData, parameters);
   let newQuestions = formData.questions
@@ -116,14 +119,32 @@ isOpen = async (formId) => {
   return rows.length > 0 ? rows[0].is_open : null;
 }
 
-toggleRegistration = async (formId) => {
-  let { rows } = await db.query(queries.toggleRegistration, [formId]);
-  return rows.length > 0 ? rows[0].is_open : null;
+toggleRegistration = async (formId, gameId) => {
+  let gameForms = await Game.getGameForms(gameId);
+  let toggledForm = gameForms.find(form => form.id == formId)
+  let sameClassForms = gameForms.filter(form => form.form_class === toggledForm.form_class)
+  // If the toggled form is open or none of the forms of the same type are open, allow the toggleand return true, else return false
+  if (toggledForm.is_open || sameClassForms.every(form => !form.is_open)) {
+    console.log(queries.toggleRegistration)
+    console.log(formId)
+    let { rows } = await db.query(queries.toggleRegistration, [formId]);
+    if (rows.length > 0) {
+      return {success: true, target: !toggledForm.is_open};
+    } else {
+      return {success: false, target: !toggledForm.is_open};
+    }
+  }
 }
 
 countRegistrations = async (formId) => {
   // To be implemented with registrations
   return 0;
+}
+
+isEditable = async (formId) => {
+  let open = await isOpen(formId);
+  let registrations = await countRegistrations(formId);
+  return !open && registrations == 0;
 }
 
 module.exports = {
@@ -134,5 +155,6 @@ module.exports = {
   getFormGameId,
   isOpen,
   toggleRegistration,
-  countRegistrations
+  countRegistrations,
+  isEditable
 };

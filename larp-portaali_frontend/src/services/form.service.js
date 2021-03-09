@@ -23,11 +23,21 @@ const updateForm = async (formData) => {
   return form;
 };
 
+const toggleRegistration = async (formId) => {
+  return await axios.get(API_URL + "form/" + formId + "/toggle", { headers: authHeader() });
+};
+
+const checkStatus = async (formId) => {
+  return await axios.get(API_URL + "form/" + formId + "/status");
+};
+
 let FormService = {
   getForm,
   createForm,
   editForm,
-  updateForm
+  updateForm,
+  toggleRegistration,
+  checkStatus
 };
 
 export default FormService;

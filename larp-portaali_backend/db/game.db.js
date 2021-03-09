@@ -5,7 +5,7 @@ const queries = require("./game.queries.js")
 const Person = require("./person.db.js")
 
 
-create = async (organiserId, gameData) => {
+createGame = async (organiserId, gameData) => {
   let parameters = [
     gameData.name,
     gameData.start_date,
@@ -25,18 +25,19 @@ create = async (organiserId, gameData) => {
   }
 }
 
-get = async (gameId) => {
+getGame = async (gameId) => {
   let { rows } = await db.query(queries.getGame, [gameId]);
   if (rows.length > 0) {
     let game = rows[0];
     game.organisers = await getOrganisers(gameId);
+    game.forms = await getGameForms(gameId);
     return game;
   } else {
     return null;
   }
 }
 
-update = async (gameId, gameData) => {
+updateGame = async (gameId, gameData) => {
   let parameters = [
     gameId,
     gameData.name,
@@ -54,6 +55,7 @@ getOpenGames = async () => {
   let { rows } = await db.query(queries.getOpenGames, []);
   for (row of rows) {
     row.organisers = await getOrganisers(row.id);
+    row.forms = await getGameForms(row.id);
   }
   return rows;
 }
@@ -99,14 +101,14 @@ removeOrganiser = async (gameId, organiserId) => {
 }
 
 getGameForms = async (gameId) => {
-  let { rows } = await db.query(queries.getForms, [gameId]);
+  let { rows } = await db.query(queries.getGameForms, [gameId]);
   return rows.length > 0 ? rows : null;
 }
 
 module.exports = {
-  create, 
-  get,
-  update,
+  createGame, 
+  getGame,
+  updateGame,
   getOpenGames,
   getOrganiserGames,
   checkOrganiserStatus, 

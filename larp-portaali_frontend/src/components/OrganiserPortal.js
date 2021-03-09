@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { Card, Button, Alert, Container, Row, Col } from 'react-bootstrap';
+import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
 import FormService from "../services/form.service";
@@ -12,17 +12,10 @@ const OrganiserPortal = (props) => {
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
+  const [successful, setSuccessful] = useState(false);
   const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        let response = await GameService.getOrganiserGames();
-        setGameList(response.data.games);
-      } catch (error) {
-        setMessage(errorMessage(error));
-      };
-    };
     fetchGames();
   }, []);
 
@@ -33,68 +26,92 @@ const OrganiserPortal = (props) => {
     return () => clearTimeout(timer);
   }, [message]);
 
-  const toggleRegistration = async (event) => {
-    let index = gameList.map(game => game.id).indexOf(parseInt(event.target.value));
+  const fetchGames = async () => {
     try {
-      let response = await GameService.toggleRegistration(event.target.value);
-      let newGameList = [...gameList];
-      let newGame = { ...newGameList[index] };
-      newGame.is_open = response.data.is_open;
-      newGameList[index] = newGame;
-      setGameList(newGameList);
+      let response = await GameService.getOrganiserGames();
+      setGameList(response.data.games);
+    } catch (error) {
+      setMessage(errorMessage(error));
+    };
+  };
+
+  const createNewForm = async (e) => {
+    let game_id = e.currentTarget.parentNode.parentNode.parentNode.id.split("_")[1]
+    let form_game = gameList.find(game => game.id == game_id);
+    let formData = {
+      game_id: form_game.id,
+      name: form_game.name + ": Ilmoittautuminen",
+      description: "Tämä on " + formatDateRange(form_game.start_date, form_game.end_date) + " pidettävää " + form_game.name + " -larppia varten luotu ilmoittautumislomake.",
+      form_class: "player"
+    }
+    try {
+      let response = await FormService.createForm(formData);
+      let formId = response.data.form_id;
+      let redirectPath = "/game/" + form_game.id + "/form/" + formId + "/edit"
+      setRedirect(redirectPath)
     } catch (error) {
       setMessage(errorMessage(error));
     }
   };
 
-  const createNewForm = async (e) => {
-    let game_id = e.currentTarget.parentNode.parentNode.id.split("_")[1]
-    console.log(game_id);
-    console.log(gameList);
-    let form_game = gameList.find(game => game.id == game_id);
-    console.log(form_game);
-    let formData = {
-      game_id: form_game.id,
-      name: form_game.name + ": Ilmoittautuminen",
-      description: "Tämä on " + formatDateRange(form_game.start_date, form_game.end_date) + " pidettävää " + form_game.name + " -larppia varten luotu ilmoittautumislomake."
+  const toggleRegistration = async (e) => {
+    setSuccessful(false);
+    let formId = e.target.value;
+    try {
+      await FormService.toggleRegistration(formId);
+      await fetchGames();
+      setSuccessful(true);
+    } catch (error) {
+      setMessage(errorMessage(error));
     }
-    let response = await FormService.createForm(formData);
-    let formId = response.data.form_id;
-    let redirectPath = "/game/" + form_game.id + "/form/" + formId + "/edit"
-    console.log(redirectPath)
-    setRedirect(redirectPath)
-    console.log(redirect)
   };
 
   const GameList = () => {
     return (
       <>
-        {gameList.map(row => {
+        {gameList.map(game => {
           return (
-            <Card className="my-3" key={row.id} id={`game_${row.id}`}>
+            <Card className="my-3" key={game.id} id={`game_${game.id}`}>
               <Card.Body>
-                <Card.Title>{row.name}</Card.Title>
-                <Card.Subtitle>{formatDateRange(row.start_date, row.end_date)}, {row.place} ({row.price} €)</Card.Subtitle>
+                <Card.Title>{game.name}</Card.Title>
+                <Card.Subtitle>{formatDateRange(game.start_date, game.end_date)}, {game.place} ({game.price} €)</Card.Subtitle>
                 <Card.Text className="mt-3">
-                  {row.description}
+                  {game.description}
                 </Card.Text>
-
-                <Link to={`/game/${row.id}/edit`}>
-                  <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
-                </Link>
-                {!row.form_id && (
-                  <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo lomake</Button>
-                )}
-                {(row.form_id && !row.open && row.registrations === 0) && (
-                  <Link to={`/game/${row.id}/editForm`}>
-                    <Button variant="primary" role="button" size="sm" className="mx-1">Muokkaa lomaketta</Button>
+                <Row className="m-0">
+                  <Link to={`/game/${game.id}/edit`}>
+                    <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
                   </Link>
-                )}
-                {(row.form_id) &&
-                  <Button variant="primary" role="button" size="sm" className="mx-1" onClick={toggleRegistration} value={row.id}>
-                    {row.open ? "Sulje ilmoittautuminen" : "Avaa ilmoittautuminen"}
-                  </Button>
-                }
+                  <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
+                </Row>
+                <Table size="sm" className="mt-3">
+                  <thead>
+                    <tr>
+                      <th>Lomake:</th>
+                      <th>Ilmoittautumisia</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {game.forms.map(form => {
+                      return (
+                        <tr key={form.id}>
+                          <td>{form.name}</td>
+                          <td>
+
+                            <Link to={`/game/${game.id}/form/${form.id}/edit`}>
+                              <Button role="button" variant="primary" size="sm" className="mx-1">Muokkaa lomaketta</Button>
+                            </Link>
+
+                            <Button role="button" variant="primary" size="sm" onClick={toggleRegistration} value={form.id}>
+                              {form.is_open ? "Sulje ilmoittautuminen" : "Avaa ilmoittautuminen"}
+                            </Button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </Table>
               </Card.Body>
             </Card>)
         })}
@@ -124,7 +141,7 @@ const OrganiserPortal = (props) => {
         <Col sm="1"></Col>
         <Col sm="10">
           <GameList />
-          <Alert show={message !== ""} variant="danger">
+          <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
             {message}
           </Alert>
         </Col>
@@ -132,9 +149,9 @@ const OrganiserPortal = (props) => {
       </Row>
 
       {redirect && (
-            <Redirect to={redirect} />
-            )
-          }
+        <Redirect to={redirect} />
+      )
+      }
     </Container>
   );
 };

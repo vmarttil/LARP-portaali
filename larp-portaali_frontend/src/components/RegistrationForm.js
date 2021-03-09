@@ -13,7 +13,7 @@ import { getQueriesForElement } from "@testing-library/react";
 import { Trash, PencilSquare } from 'react-bootstrap-icons';
 
 
-const EditForm = (props) => {
+const RegistrationForm = (props) => {
 
   const { game_id, form_id } = useParams();
 
@@ -24,7 +24,6 @@ const EditForm = (props) => {
   const [availableQuestions, setAvailableQuestions] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [isOpen, setOpen] = useState(false);
-  const [busy, setBusy] = useState(true);
 
 
   /* Fields for form data */
@@ -32,7 +31,6 @@ const EditForm = (props) => {
   const descriptionField = useTextArea("description", "Lomakkeen kuvaus:", 256, validateRequired, "", ["horizontal_3-9"], 4);
 
   useEffect(() => {
-    console.log("At least the effect triggers")
     fetchForm();
   }, [form_id]);
 
@@ -46,7 +44,7 @@ const EditForm = (props) => {
   useEffect(() => {
     setHasChanged(true);
   }, [questions, nameField.value, descriptionField.value]
-  )
+  )        
 
   const fetchForm = async () => {
     try {
@@ -61,7 +59,6 @@ const EditForm = (props) => {
       setQuestions(questions);
       setOpen(formData.form.is_open);
       setHasChanged(false);
-      setBusy(false);
     } catch (error) {
       setMessage(errorMessage(error));
     };
@@ -102,20 +99,20 @@ const EditForm = (props) => {
   const QuestionList = () => {
     return (
       <div>
-        {questions.map((question, index) => {
-          return (
-            <Card key={question.question_id} className="mx-0 my-3 p-0 bg-white">
-              <Card.Header className="d-flex justify-content-end p-1" style={{ backgroundColor: "#e9ecef" }}>
-                <PencilSquare className="lead mx-1" />
-                <Button variant="outline-dark" size="sm"><Trash className="lead mx-1" /></Button>
-              </Card.Header>
-              <Card.Body className="p-2">
-                <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []} />
-              </Card.Body>
+          {questions.map((question, index) => {
+            return (
+              <Card key={question.question_id} className="mx-0 my-3 p-0 bg-white">
+                <Card.Header className="d-flex justify-content-end p-1" style={{ backgroundColor: "#e9ecef" }}>
+                  <PencilSquare className="lead mx-1"/>
+                  <Button variant="outline-dark" size="sm"><Trash className="lead mx-1"/></Button>
+                </Card.Header>
+                <Card.Body className="p-2">
+                  <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []}/>
+                </Card.Body>
 
-            </Card>
-          )
-        })}
+              </Card>
+            )
+          })}
       </div>
     )
   }
@@ -150,17 +147,16 @@ const EditForm = (props) => {
         <Col sm="1"></Col>
         <Col sm="10">
           <Card className="my-3">
-            <Card.Body>
-              <Card.Title>
-                <h2>Lomakkeen tiedot</h2>
-              </Card.Title>
-              {!busy &&
+              <Card.Body>
+                <Card.Title>
+                  <h2>Lomakkeen tiedot</h2>
+                </Card.Title>
                 <Form className="align-items-center" onSubmit={saveFormData}>
                   <TextField {...nameField} />
                   <TextArea {...descriptionField} />
                   <h2>Kysymykset</h2>
-
-                  <QuestionList />
+                  
+                  <QuestionList/>
 
                   <Form.Group controlId="submit">
                     <Button variant="primary" type="submit" disabled={!hasChanged} block>
@@ -173,8 +169,7 @@ const EditForm = (props) => {
                   </Alert>
 
                 </Form>
-              }
-            </Card.Body>
+              </Card.Body>
           </Card>
         </Col>
         <Col sm="1"></Col>
@@ -183,4 +178,4 @@ const EditForm = (props) => {
   );
 };
 
-export default EditForm;
+export default RegistrationForm;

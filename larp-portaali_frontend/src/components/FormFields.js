@@ -286,7 +286,7 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
 };
 
 
-const DummyField = ({ id, type, text, description, options=[] }) => {
+const DummyField = ({ id, type, text, description, options  }) => {
   if (type === "text") {
     return (
       <Row className="my-1">

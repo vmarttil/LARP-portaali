@@ -28,10 +28,15 @@ module.exports = function(app) {
     controller.updateForm
   );
 
-  app.post(
+  app.get(
     "/api/form/:form_id/toggle", 
     [authJwt.verifyToken],
     controller.toggleRegistration
+  );
+
+  app.get(
+    "/api/form/:form_id/status", 
+    controller.checkStatus
   );
 
   app.get(
