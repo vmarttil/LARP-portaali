@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Modal } from 'react-bootstrap';
-import { Redirect, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormService from "../services/form.service";
 import { useTextField, useTextArea, useSelectField, useRadioField } from "../utils/hooks"
 import { TextField, TextArea, DummyField, SelectField, RadioField } from "./FormFields"
@@ -92,6 +93,14 @@ const EditForm = (props) => {
     } catch (error) {
       setMessage(errorMessage(error));
     };
+  };
+
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const reorderedQuestions = Array.from(questions);
+    const [reorderedQuestion] = reorderedQuestions.splice(result.source.index, 1);
+    reorderedQuestions.splice(result.destination.index, 0, reorderedQuestion);
+    setQuestions(reorderedQuestions);
   };
 
   const removeQuestion = (e) => {
@@ -247,23 +256,33 @@ const EditForm = (props) => {
 
   const QuestionList = () => {
     return (
-      <>
-      <div>
-        {questions.map((question, index) => {
-          return (
-            <Card key={question.question_id} className="mx-0 my-3 p-0">
-              <Card.Header className="d-flex justify-content-end p-1">
-                <Button variant="outline-dark" size="xs" onClick={openModal} disabled={!question.is_optional} value={question.question_id}><PencilSquare className="lead mx-1" /></Button>
-                <Button variant="outline-dark" size="xs" onClick={removeQuestion} disabled={!question.is_optional} value={question.question_id}><Trash className="lead mx-1" /></Button>
-              </Card.Header>
-              <Card.Body className="p-2">
-                <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []} />
-              </Card.Body>
-
-            </Card>
-          )
-        })}
-      </div>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="questions">
+          {(provided) => (
+            <ul {...provided.droppableProps} ref={provided.innerRef} className="list-unstyled">
+              {questions.map((question, index) => {
+                return (
+                  <Draggable key={question.question_id} draggableId={question.question_id.toString()} index={index}>
+                    {(provided) => (
+                      <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <Card className="mx-0 my-3 p-0">
+                          <Card.Header className="d-flex justify-content-end p-1">
+                            <Button variant="outline-dark" size="xs" onClick={openModal} disabled={!question.is_optional} value={question.question_id}><PencilSquare className="lead mx-1" /></Button>
+                            <Button variant="outline-dark" size="xs" onClick={removeQuestion} disabled={!question.is_optional} value={question.question_id}><Trash className="lead mx-1" /></Button>
+                          </Card.Header>
+                          <Card.Body className="p-2">
+                            <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []} />
+                          </Card.Body>
+                        </Card>
+                      </li>
+                    )}
+                  </Draggable>
+                )
+              })}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
         <Card className="mx-0 my-3 p-0">
           <Card.Header className="py-1 px-2 lead align-items-center"><PlusSquare className="mb-1 mr-1" /> Lisää kysymys</Card.Header>
           <Card.Body className="p-2">
@@ -281,8 +300,7 @@ const EditForm = (props) => {
             </Row>
           </Card.Body>
         </Card>
-
-      </>
+      </DragDropContext>
     )
   }
 
@@ -360,34 +378,36 @@ const EditForm = (props) => {
                   <Form.Label>Valinnat: </Form.Label>
                 </Col>
                 <Col sm={9}>
-                  <ul className="list-unstyled">
-                    {editQuestionOptions.map((option, index) => {
-                      return (
-                        <li key={`${editQuestion.question_id}_${index}`}>
-                          <Form.Check type="radio" id={`${editQuestion.id}_${index}`} disabled>
-                            <Form.Check.Input type="radio" disabled />
-                            <Form.Check.Label className="text-dark">{option}</Form.Check.Label>
-                            <Button variant="link" size="xs" value={index} onClick={removeOption} className="ml-2"><XSquare className="lead mx-1 mb-1" /></Button>
-                          </Form.Check>
-                        </li>
-                      )
-                    })}
-                    <li>
-                      <Row>
-                        <Col sm={9} className="pl-1">
-                          <Form.Control
-                            id="newOptionText"
-                            type="text"
-                            value={newOptionText}
-                            onChange={onNewOptionTextChange}
-                            size="sm" />
-                        </Col>
-                        <Col sm={2}>
-                          <Button variant="primary" onClick={addOption} size="sm" className="w-100">Lisää</Button>
-                        </Col>
-                      </Row>
-                    </li>
-                  </ul>
+                  <DragDropContext>
+                    <ul className="list-unstyled">
+                      {editQuestionOptions.map((option, index) => {
+                        return (
+                          <li key={`${editQuestion.question_id}_${index}`}>
+                            <Form.Check type="radio" id={`${editQuestion.id}_${index}`} disabled>
+                              <Form.Check.Input type="radio" disabled />
+                              <Form.Check.Label className="text-dark">{option}</Form.Check.Label>
+                              <Button variant="link" size="xs" value={index} onClick={removeOption} className="ml-2"><XSquare className="lead mx-1 mb-1" /></Button>
+                            </Form.Check>
+                          </li>
+                        )
+                      })}
+                      <li>
+                        <Row>
+                          <Col sm={9} className="pl-1">
+                            <Form.Control
+                              id="newOptionText"
+                              type="text"
+                              value={newOptionText}
+                              onChange={onNewOptionTextChange}
+                              size="sm" />
+                          </Col>
+                          <Col sm={2}>
+                            <Button variant="primary" onClick={addOption} size="sm" className="w-100">Lisää</Button>
+                          </Col>
+                        </Row>
+                      </li>
+                    </ul>
+                  </DragDropContext>
                 </Col>
               </Row>)
               :
