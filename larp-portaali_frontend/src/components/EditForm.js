@@ -4,13 +4,14 @@ import { Redirect, useParams } from "react-router-dom";
 import UserService from "../services/user.service";
 import GameService from "../services/game.service";
 import FormService from "../services/form.service";
-import { useTextField, useTextArea } from "../utils/hooks"
-import { TextField, TextArea, DummyField } from "./FormFields"
-import { validateRequired, validateDate } from "../utils/validate"
+import { useTextField, useTextArea, useSelectField, useRadioField } from "../utils/hooks"
+import { TextField, TextArea, DummyField, SelectField } from "./FormFields"
+import { validateRequired, noValidate } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 import { formatDateRange } from "../utils/formatters";
 import { getQueriesForElement } from "@testing-library/react";
-import { Trash, PencilSquare } from 'react-bootstrap-icons';
+import { Trash, PencilSquare, PlusSquare } from 'react-bootstrap-icons';
+import "../css/Button.css";
 
 
 const EditForm = (props) => {
@@ -21,7 +22,10 @@ const EditForm = (props) => {
   const [message, setMessage] = useState("");
   const [hasChanged, setHasChanged] = useState(false);
   const [formId, setFormId] = useState(null);
+  const [formClasses, setformClasses] = useState({});
+  const [questionTypes, setQuestionTypes] = useState({});
   const [availableQuestions, setAvailableQuestions] = useState([]);
+  const [addableQuestions, setAddableQuestions] = useState({});
   const [questions, setQuestions] = useState([]);
   const [isOpen, setOpen] = useState(false);
   const [busy, setBusy] = useState(true);
@@ -30,11 +34,24 @@ const EditForm = (props) => {
   /* Fields for form data */
   const nameField = useTextField("name", "Lomakkeen nimi:", "text", 64, validateRequired, "", ["horizontal_3-9"]);
   const descriptionField = useTextArea("description", "Lomakkeen kuvaus:", 256, validateRequired, "", ["horizontal_3-9"], 4);
+  const formClassField = useRadioField("form_class", "Ilmoittautumisen tyyppi:", true, formClasses, null, ["inline", "horizontal_3-9"]);
+  const addQuestionField = useSelectField("addQuestion", "Valmiit kysymykset:", false, addableQuestions, "Valitse...", ["horizontal_3-8", "partialRow"]);
+  const createQuestionField = useSelectField("createQuestion", "Luo uusi kysymys:", false, questionTypes, "Valitse tyyppi...", ["horizontal_3-6", "partialRow"]);
 
   useEffect(() => {
-    console.log("At least the effect triggers")
+    console.log("Triggeröityykö tämä?")
     fetchForm();
+    setBusy(false);
   }, [form_id]);
+
+  useEffect(() => {
+    let selectItems = {};
+    for (const question of availableQuestions) {
+      selectItems[question.question_id] = questionTypes[question.question_type]  + ": " + question.question_text; 
+    }
+    setAddableQuestions(selectItems);
+    console.log(addQuestionField.value)
+  }, [availableQuestions]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,6 +62,7 @@ const EditForm = (props) => {
 
   useEffect(() => {
     setHasChanged(true);
+    console.log(questions);
   }, [questions, nameField.value, descriptionField.value]
   )
 
@@ -53,6 +71,12 @@ const EditForm = (props) => {
       let response = await FormService.editForm(form_id);
       let formData = response.data;
       let questions = formData.form.questions.sort((a, b) => a.position - b.position);
+      questions = questions.map(({ position, ...others }) => others)
+
+      let questionTypeList = response.data.types.map(type => [type.name, type.display_text] );
+      let questionTypes = Object.fromEntries(questionTypeList);
+      console.log(questionTypes);
+      setQuestionTypes(questionTypes);
 
       nameField.setValue(formData.form.name);
       descriptionField.setValue(formData.form.description);
@@ -67,6 +91,37 @@ const EditForm = (props) => {
     };
   };
 
+  const removeQuestion = (e) => {
+      let question_id = e.currentTarget.value;
+      let question = questions.find(q => q.question_id == question_id);
+    if (question.is_optional) {  
+      let newQuestions = [...questions];
+      newQuestions = newQuestions.filter(q => q.question_id != question_id);
+      setQuestions(newQuestions);
+      let newAvailableQuestions = [...availableQuestions];
+      newAvailableQuestions.push(question);
+      newAvailableQuestions.sort(((a, b) => a.question_id - b.question_id))
+      console.log(newAvailableQuestions)
+      setAvailableQuestions(newAvailableQuestions);
+    }
+  };
+
+  const addQuestion = () => {
+    let question_id = addQuestionField.value;
+    let question = availableQuestions.find(q => q.question_id == question_id);
+    let newQuestions = [...questions];
+    newQuestions.push(question);
+    setQuestions(newQuestions);
+    let newAvailableQuestions = [...availableQuestions];
+    newAvailableQuestions = newAvailableQuestions.filter(q => q.question_id != question_id);
+    setAvailableQuestions(newAvailableQuestions);
+  };
+
+  const createQuestion = () => {
+
+
+  };
+
   const saveFormData = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -75,6 +130,7 @@ const EditForm = (props) => {
     let formData = {
       game_id: game_id,
       form_id: formId,
+      form_class: formClassField.value,
       name: nameField.value,
       description: descriptionField.value,
       questions: questions
@@ -97,17 +153,15 @@ const EditForm = (props) => {
     };
   };
 
-
-
   const QuestionList = () => {
     return (
       <div>
         {questions.map((question, index) => {
           return (
-            <Card key={question.question_id} className="mx-0 my-3 p-0 bg-white">
-              <Card.Header className="d-flex justify-content-end p-1" style={{ backgroundColor: "#e9ecef" }}>
-                <PencilSquare className="lead mx-1" />
-                <Button variant="outline-dark" size="sm"><Trash className="lead mx-1" /></Button>
+            <Card key={question.question_id} className="mx-0 my-3 p-0">
+              <Card.Header className="d-flex justify-content-end p-1">
+                <Button variant="outline-dark" size="xs" value={question.question_id}><PencilSquare className="lead mx-1" /></Button>
+                <Button variant="outline-dark" size="xs" value={question.question_id} onClick={removeQuestion} disabled={!question.is_optional}><Trash className="lead mx-1" /></Button>
               </Card.Header>
               <Card.Body className="p-2">
                 <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []} />
@@ -116,12 +170,26 @@ const EditForm = (props) => {
             </Card>
           )
         })}
+
+
+        <Card className="mx-0 my-3 p-0">
+          <Card.Header className="py-1 px-2 lead align-items-center"><PlusSquare className="mb-1 mr-1"/> Lisää kysymys</Card.Header>
+          <Card.Body className="p-2">
+
+          <Row className="my-2">
+            <SelectField {...addQuestionField} />
+              <Button variant="primary" size="sm" onClick={addQuestion}>Lisää</Button> 
+          </Row>
+          <Row className="my-2">
+            <SelectField {...createQuestionField} />
+              <Button variant="primary" size="sm" onClick={createQuestion}>Luo kysymys</Button> 
+          </Row>
+
+          </Card.Body>
+        </Card>
       </div>
     )
   }
-
-
-
 
   return (
     <Container>
@@ -162,7 +230,7 @@ const EditForm = (props) => {
 
                   <QuestionList />
 
-                  <Form.Group controlId="submit">
+                  <Form.Group controlId="submit" className="mb-0 mt-3">
                     <Button variant="primary" type="submit" disabled={!hasChanged} block>
                       <span>Tallenna lomake</span>
                     </Button>

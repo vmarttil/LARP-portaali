@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import UserService from "../services/user.service";
 import { useTextField, useTextArea, useRadioField, useDateField } from "../utils/hooks"
 import { TextField, TextArea, RadioField, DateField } from "./FormFields"
@@ -92,14 +93,14 @@ const Profile = (props) => {
     };
 
     if (firstNameField.validate() &&
-        lastNameField.validate() &&
-        nicknameField.validate() &&
-        phoneField.validate() &&
-        hometownField.validate() &&
-        genderField.validate() &&
-        birthdateField.validate() &&
-        dietaryRestrictionsField.validate() &&
-        healthInformationField.validate()) {
+      lastNameField.validate() &&
+      nicknameField.validate() &&
+      phoneField.validate() &&
+      hometownField.validate() &&
+      genderField.validate() &&
+      birthdateField.validate() &&
+      dietaryRestrictionsField.validate() &&
+      healthInformationField.validate()) {
       currentUser.personal_data = updateData.personal_data;
       UserService.updateCurrentUser(currentUser);
       setSaveType("personal");
@@ -146,75 +147,103 @@ const Profile = (props) => {
   }
 
   return (
-    <>
-      <Card style={{ width: "48rem" }}>
-        <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
-        <h2>Käyttäjätilin tiedot</h2>
-        <Form className="align-items-center" onSubmit={saveAccountData}>
+    <Container>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+          <Card.Body>
+            <Card.Title>
+            <h2>Käyttäjätilin tiedot</h2>
+            </Card.Title>
+            
+            <Form className="align-items-center" onSubmit={saveAccountData}>
+              
+              <TextField {...emailField} />
+              <TextField {...passwordField} />
+              <Form.Group controlId="submit" className="mb-0 mt-3">
+                <Button variant="primary" type="submit" block>
+                  <span>Tallenna käyttäjätilin tiedot</span>
+                </Button>
+              </Form.Group>
+            
+              <Alert show={message !== "" && saveType === "account"} variant={successful ? "success" : "danger"}>
+                {message}
+              </Alert>
+            
+            </Form>
+            
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+          <Card.Body>
+            <Card.Title>
+            <h2>Henkilökohtaiset tiedot</h2>
+            </Card.Title>
+            
+            <Form className="align-items-center" onSubmit={savePersonalData}>
+              
+              <TextField {...firstNameField} />
+              <TextField {...lastNameField} />
+              <TextField {...nicknameField} />
+              <TextField {...phoneField} />
+              <TextField {...hometownField} />
+              <RadioField {...genderField} />
+              <DateField {...birthdateField} />
+              <TextArea {...dietaryRestrictionsField} />
+              <TextArea {...healthInformationField} />
+              <Form.Group controlId="submit" className="mb-0 mt-3">
+                <Button variant="primary" type="submit" block>
+                  <span>Tallenna henkilökohtaiset tiedot</span>
+                </Button>
+              </Form.Group>
 
-          <TextField {...emailField} />
-          <TextField {...passwordField} />
+              <Alert show={message !== "" && (saveType === "personal")} variant={successful ? "success" : "danger"}>
+                {message}
+              </Alert>
 
-          <Form.Group controlId="submit">
-            <Button variant="primary" type="submit" block>
-              <span>Tallenna käyttäjätilin tiedot</span>
-            </Button>
-          </Form.Group>
+            </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+            <h2>Profiilitiedot</h2>
+            </Card.Title>
 
-          <Alert show={message !== "" && saveType === "account"} variant={successful ? "success" : "danger"}>
-            {message}
-          </Alert>
+            <Form className="align-items-center" onSubmit={saveProfileData}>
 
-        </Form>
-      </Card>
+              <TextArea {...playerProfileField} />
+              <TextArea {...plotPreferencesField} />
 
-      <Card style={{ width: "48rem" }}>
-        <h2>Henkilökohtaiset tiedot</h2>
-        <Form className="align-items-center" onSubmit={savePersonalData}>
+              <Form.Group controlId="submit" className="mb-0 mt-3">
+                <Button variant="primary" type="submit" block>
+                  <span>Tallenna profiilitiedot</span>
+                </Button>
+              </Form.Group>
 
-          <TextField {...firstNameField} />
-          <TextField {...lastNameField} />
-          <TextField {...nicknameField} />
-          <TextField {...phoneField} />
-          <TextField {...hometownField} />
-          <RadioField {...genderField} />
-          <DateField {...birthdateField} />
-          <TextArea {...dietaryRestrictionsField} />
-          <TextArea {...healthInformationField} />
+              <Alert show={message !== "" && (saveType === "profile")} variant={successful ? "success" : "danger"}>
+                {message}
+              </Alert>
 
-          <Form.Group controlId="submit">
-            <Button variant="primary" type="submit" block>
-              <span>Tallenna henkilökohtaiset tiedot</span>
-            </Button>
-          </Form.Group>
-
-          <Alert show={message !== "" && (saveType === "personal")} variant={successful ? "success" : "danger"}>
-            {message}
-          </Alert>
-
-        </Form>
-      </Card>
-
-      <Card style={{ width: "48rem" }}>
-        <h2>Profiilitiedot</h2>
-        <Form className="align-items-center" onSubmit={saveProfileData}>
-
-          <TextArea {...playerProfileField} />
-          <TextArea {...plotPreferencesField} />
-
-          <Form.Group controlId="submit">
-            <Button variant="primary" type="submit" block>
-              <span>Tallenna profiilitiedot</span>
-            </Button>
-          </Form.Group>
-
-          <Alert show={message !== "" && (saveType === "profile")} variant={successful ? "success" : "danger"}>
-            {message}
-          </Alert>
-
-        </Form>
-      </Card>
-    </>
+            </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

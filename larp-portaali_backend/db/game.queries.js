@@ -55,12 +55,13 @@ const getGameForms = `
     f.description, 
     f.is_open,
     fc.name AS form_class,
-    fc.button_text
+    fc.button_text,
+    0 AS registrations
   FROM form AS f
   JOIN form_class AS fc
     ON f.form_class_id = fc.id
   WHERE game_id = $1
-  ORDER BY f.form_class_id; 
+  ORDER BY f.form_class_id, f.id; 
 `
 
 module.exports = {

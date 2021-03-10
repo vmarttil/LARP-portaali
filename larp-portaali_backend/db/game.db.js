@@ -102,6 +102,7 @@ removeOrganiser = async (gameId, organiserId) => {
 
 getGameForms = async (gameId) => {
   let { rows } = await db.query(queries.getGameForms, [gameId]);
+  console.log(rows)
   return rows.length > 0 ? rows : null;
 }
 

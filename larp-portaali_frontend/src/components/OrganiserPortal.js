@@ -6,6 +6,7 @@ import GameService from "../services/game.service";
 import FormService from "../services/form.service";
 import { formatDateRange } from "../utils/formatters"
 import { errorMessage } from "../utils/messages"
+import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
 const OrganiserPortal = (props) => {
@@ -84,26 +85,27 @@ const OrganiserPortal = (props) => {
                   </Link>
                   <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
                 </Row>
-                <Table size="sm" className="mt-3">
+                <Table borderless size="sm" className="mt-3">
                   <thead>
-                    <tr>
-                      <th>Lomake:</th>
-                      <th>Ilmoittautumisia</th>
-                      <th></th>
+                    <tr className="d-flex">
+                      <th className="col-7">Lomake</th>
+                      <th className="d-flex col-1 justify-content-center">Ilm. #</th>
+                      <th className="col-4"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {game.forms.map(form => {
                       return (
-                        <tr key={form.id}>
-                          <td>{form.name}</td>
-                          <td>
-
+                        <tr key={form.id} className="d-flex align-items-center">
+                          <td className="col-7">
+                            {form.is_open ? (<><CheckCircleFill className="text-success mb-1"/> {form.name}</>) : (<><XCircleFill className="text-danger mb-1"/> <span className="text-muted">{form.name}</span></>)}
+                            </td>
+                          <td className="d-flex col-1 justify-content-center">{form.registrations}</td>
+                          <td className="d-flex col-4 justify-content-end">
                             <Link to={`/game/${game.id}/form/${form.id}/edit`}>
-                              <Button role="button" variant="primary" size="sm" className="mx-1">Muokkaa lomaketta</Button>
+                              <Button role="button" variant="primary" size="sm" className="mx-1">Muokkaa</Button>
                             </Link>
-
-                            <Button role="button" variant="primary" size="sm" onClick={toggleRegistration} value={form.id}>
+                            <Button role="button" variant="primary" size="sm" onClick={toggleRegistration} className="mx-1" value={form.id}>
                               {form.is_open ? "Sulje ilmoittautuminen" : "Avaa ilmoittautuminen"}
                             </Button>
                           </td>

@@ -35,8 +35,13 @@
 | 06032021 | 12,0 | Ilmoittautumislomakkeiden tietokantarakenteen ja niiden luonnin ja muokkauksen backend-toiminnallisuus tehty lähes valmiiksi ja testattu |
 | 07032021 | 2,0 | Ilmoittautumislomakkeiden ja kysymysten luonnin ja muokkauksen backend-toiminnallisuus valmis ja testattu |
 |          | 3,0 | Ilmoittautumislomakkeen luonti- ja muokkaussivun toteutus aloitettu |
-| 08032021 | 2,0 | Ilmoittautumislomakkeiden backed-toiminnallisuuden muokkausta |
+| 08032021 | 2,0 | Ilmoittautumislomakkeiden backend-toiminnallisuuden muokkausta |
 |          | 5,0 | Ilmoittautumislomakkeiden staattinen luonti- ja muokkaussivu lataus- ja tallennustoiminnoilla valmis |
+| 09032021 | 1,0 | Lomakeluettelot peleille järjestäjänäkymän peliluettelossa |
+|          | 2,0 | Lomaketyyppien implementointi tietokannass, backendissä ja frontendissä |
+|          | 2,0 | Lomakkeiden avaamisen ja sulkemisen toteutus |
+|          | 5,0 | Kysymysten poistaminen lomakkeesta ja lisääminen lomakkeeseen |
+|          | 1,0 | Ulkoasun muotoilua |
 
-| **Yhteensä** | **142,0** | |
+| **Yhteensä** | **153,0** | |
 

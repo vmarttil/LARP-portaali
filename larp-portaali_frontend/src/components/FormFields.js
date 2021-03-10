@@ -19,7 +19,7 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
             <Form.Label className="mt-2">{label}</Form.Label>
           </Col>
           <Col sm={inputWidth} className="pl-1">
-            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
+            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} />
             {error && (
               <Form.Text className="text-danger">{error}</Form.Text>
             )}
@@ -33,10 +33,10 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
             <Form.Label className="mt-2">{label}</Form.Label>
           </Col>
           <Col sm={inputWidth} className="pl-1">
-          <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
-          {error && (
-            <Form.Text className="text-danger">{error}</Form.Text>
-          )}
+            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} />
+            {error && (
+              <Form.Text className="text-danger">{error}</Form.Text>
+            )}
           </Col>
         </Row>
       )
@@ -45,7 +45,7 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
     return (
       <Form.Group controlId={id}>
         <Form.Label>{label}</Form.Label>
-        <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords}/>
+        <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} />
         {error && (
           <Form.Text className="text-danger">{error}</Form.Text>
         )}
@@ -57,24 +57,24 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
 const TextFieldControl = ({ type, value, onChange, onBlur, keywords }) => {
   if (type === "number" && keywords.includes("currency")) {
     return (
-        <InputGroup>
-          <Form.Control
-            type={type}
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur} />
-          <InputGroup.Append>
-            <InputGroup.Text>€</InputGroup.Text>
-          </InputGroup.Append>
-        </InputGroup>
-    )
-  } else {
-    return (
+      <InputGroup>
         <Form.Control
           type={type}
           value={value}
           onChange={onChange}
           onBlur={onBlur} />
+        <InputGroup.Append>
+          <InputGroup.Text>€</InputGroup.Text>
+        </InputGroup.Append>
+      </InputGroup>
+    )
+  } else {
+    return (
+      <Form.Control
+        type={type}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur} />
     )
   }
 }
@@ -191,7 +191,7 @@ const RadioField = ({ id, label, options, value, error, onChange, onClick, valid
 const CustomDateInput = ({ value, onClick, onChange }) => {
   return (
     <InputGroup onClick={onClick}>
-      <FormControl value={value} onChange={onChange}/>
+      <FormControl value={value} onChange={onChange} />
       <InputGroup.Append>
         <InputGroup.Text><Calendar /></InputGroup.Text>
       </InputGroup.Append>
@@ -285,8 +285,79 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
   }
 };
 
+const SelectField = ({ id, label, options, value, error, onChange, validate, keywords, initialSelection }) => {
 
-const DummyField = ({ id, type, text, description, options  }) => {
+  const asRow = keywords.filter(item => item.includes("horizontal"))[0]
+  keywords = keywords.filter(item => !item.includes("horizontal"))
+
+  const optionItems = Object.entries(options).map((values, idx) => {
+    return (
+      <option key={idx} value={values[0]}>{values[1]}</option>
+    )
+  });
+
+  if (asRow && asRow.length > 0) {
+    const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
+    const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
+    if (keywords.includes("partialRow")) {
+      return (
+        <>
+          <Col sm={labelWidth} className="pr-1">
+            <Form.Label className="mt-2">{label}</Form.Label>
+          </Col>
+          <Col sm={inputWidth} className="pl-1">
+            <Form.Control
+              as="select"
+              onChange={onChange}
+              value={value}>
+              <option value="0">{initialSelection}</option>
+              {optionItems}
+            </Form.Control>
+            {error && (
+              <Form.Text className="text-danger">{error}</Form.Text>
+            )}
+          </Col>
+        </>
+      )
+    } else {
+      return (
+        <Form.Group controlId={id} as={Row} className="align-items-center my-2">
+          <Form.Label column sm={labelWidth} className="pr-1">{label}</Form.Label>
+          <Col sm={inputWidth} className="pl-1">
+            <Form.Control
+              as="select"
+              onChange={onChange}
+              value={value}>
+              <option value="0">Valitse...</option>
+              {optionItems}
+            </Form.Control>
+            {error && (
+              <Form.Text className="text-danger">{error}</Form.Text>
+            )}
+          </Col>
+        </Form.Group>
+      )
+    }
+  } else {
+    return (
+      <Form.Group controlId={id}>
+        <Form.Label>{label}</Form.Label>
+        <Form.Control
+          as="select"
+          onChange={onChange}
+          placeholder="Valitse...">
+          {optionItems}
+        </Form.Control>
+        {error && (
+          <Form.Text className="text-danger">{error}</Form.Text>
+        )}
+      </Form.Group>
+    )
+  }
+};
+
+
+const DummyField = ({ id, type, text, description, options }) => {
   if (type === "text") {
     return (
       <Row className="my-1">
@@ -294,33 +365,33 @@ const DummyField = ({ id, type, text, description, options  }) => {
           <Form.Label className="mt-2">{text}</Form.Label>
         </Col>
         <Col sm={9} className="pl-1">
-          <Form.Control type="text" disabled className="bg-white"/>
+          <Form.Control type="text" disabled className="bg-white" />
           <Form.Text className="text-muted">{description}</Form.Text>
         </Col>
       </Row>
     )
-    } else if (type === "integer") {
-      return (
-        <>
+  } else if (type === "integer") {
+    return (
+      <>
         <Row className="mt-1 mb-0">
           <Col sm={3} className="pr-1">
             <Form.Label className="mt-2">{text}</Form.Label>
           </Col>
           <Col sm={2} className="pl-1">
-            <Form.Control type="number" disabled className="bg-white"/>
+            <Form.Control type="number" disabled className="bg-white" />
           </Col>
         </Row>
         <Row className="mt-0 mb-1">
-        <Col sm={3} className="pr-1"></Col>
-        <Col sm={9} className="pl-1">
-          <Form.Text className="text-muted mt-0">{description}</Form.Text>
-        </Col>
-      </Row>
+          <Col sm={3} className="pr-1"></Col>
+          <Col sm={9} className="pl-1">
+            <Form.Text className="text-muted mt-0">{description}</Form.Text>
+          </Col>
+        </Row>
       </>
-      )
-    } else if (type === "textarea") {
-      return (
-        <>
+    )
+  } else if (type === "textarea") {
+    return (
+      <>
         <Row>
           <Col sm={12}>
             <Form.Label className="mt-2 mb-0">{text}</Form.Label>
@@ -328,62 +399,62 @@ const DummyField = ({ id, type, text, description, options  }) => {
           </Col>
         </Row>
         <Row>
-        <Col sm={12}>
-          <Form.Control as="textarea" disabled className="bg-white" rows="4"/>
-        </Col>
-      </Row>
+          <Col sm={12}>
+            <Form.Control as="textarea" disabled className="bg-white" rows="4" />
+          </Col>
+        </Row>
       </>
-      )
+    )
   } else if (type === "radio") {
     return (
       <>
-      <Row>
-        <Col sm={12}>
-          <Form.Label className="mt-2 mb-0">{text}</Form.Label>
-          <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
-        </Col>
-      </Row>
-      <Row>
-      <Col sm={12}>
-        {options.map(option => {
-          return (
-            <Form.Check type="radio" id={`${id}_${option.number}`} className="ml-3" disabled>
-              <Form.Check.Input type="radio" disabled/>
-              <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
-            </Form.Check>
-          )
-        })}
-      </Col>
-    </Row>
-    </>
+        <Row>
+          <Col sm={12}>
+            <Form.Label className="mt-2 mb-0">{text}</Form.Label>
+            <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
+            {options.map(option => {
+              return (
+                <Form.Check key={`${id}_${option.number}`} type="radio" id={`${id}_${option.number}`} className="ml-3" disabled>
+                  <Form.Check.Input type="radio" disabled />
+                  <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
+                </Form.Check>
+              )
+            })}
+          </Col>
+        </Row>
+      </>
     )
   } else if (type === "checkbox") {
     return (
       <>
-      <Row>
-        <Col sm={12}>
-          <Form.Label className="mt-2 mb-0">{text}</Form.Label>
-          <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
-        </Col>
-      </Row>
-      <Row>
-      <Col sm={12}>
-        {options.map(option => {
-          return (
-            <Form.Check type="checkbox" id={`${id}_${option.number}`} className="ml-3" disabled>
-              <Form.Check.Input type="checkbox" disabled/>
-              <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
-            </Form.Check>
-          )
-        })}
-      </Col>
-    </Row>
-    </>
+        <Row>
+          <Col sm={12}>
+            <Form.Label className="mt-2 mb-0">{text}</Form.Label>
+            <Form.Text className="text-muted mt-0 mb-1">{description}</Form.Text>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
+            {options.map(option => {
+              return (
+                <Form.Check key={`${id}_${option.number}`} type="checkbox" id={`${id}_${option.number}`} className="ml-3" disabled>
+                  <Form.Check.Input type="checkbox" disabled />
+                  <Form.Check.Label className="text-dark">{option.text}</Form.Check.Label>
+                </Form.Check>
+              )
+            })}
+          </Col>
+        </Row>
+      </>
     )
   } else {
     return (
       <>
-      {text}
+        {text}
       </>
     )
   }
@@ -394,5 +465,6 @@ export {
   TextArea,
   RadioField,
   DateField,
+  SelectField,
   DummyField
 }

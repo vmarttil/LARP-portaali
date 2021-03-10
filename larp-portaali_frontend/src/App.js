@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useL
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import fi from 'date-fns/locale/fi';
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+// import "./App.css";
 
 import AuthService from "./services/auth.service";
 import UserService from "./services/user.service";

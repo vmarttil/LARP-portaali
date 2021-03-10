@@ -34,7 +34,7 @@ const MainPage = (props) => {
 
   const GameTable = () => {
     return (
-      <Table id="games" size="sm" className="mt-3">
+      <Table borderless id="games" size="sm" className="mt-3">
         <thead>
           <tr className="d-flex">
             <th className="col-7">Nimi</th>
@@ -78,7 +78,7 @@ const MainPage = (props) => {
                 liittyviä tilastotietoja. Pelaajan käyttöliittymän kautta on mahdollista tarkastella tarjolla olevia pelejä ja niihin
                 liittyviä julkisia tietoja sekä täyttää pelien ilmoittautumislomakkeita ja tarkastella ilmoittautumiseen liittyviä
                 tilannetietoja.
-          </Card.Text>
+              </Card.Text>
             </Card.Body>
           </Card>
         </Col>

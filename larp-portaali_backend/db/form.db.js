@@ -5,6 +5,11 @@ const queries = require("./form.queries.js")
 const Game = require("./game.db.js")
 const Question = require("./question.db.js")
 
+getQuestionTypes = async () => {
+  let { rows } = await db.query(queries.getQuestionTypes, []);
+  return rows.length > 0 ? rows : [];
+}
+
 createForm = async (formData) => {
   let parameters = [
     formData.game_id,
@@ -131,8 +136,10 @@ toggleRegistration = async (formId, gameId) => {
     if (rows.length > 0) {
       return {success: true, target: !toggledForm.is_open};
     } else {
-      return {success: false, target: !toggledForm.is_open};
+      return {success: null, target: !toggledForm.is_open};
     }
+  } else {
+    return {success: false, target: !toggledForm.is_open};
   }
 }
 
@@ -148,6 +155,7 @@ isEditable = async (formId) => {
 }
 
 module.exports = {
+  getQuestionTypes,
   createForm, 
   getForm,
   getFormQuestions,

@@ -47,10 +47,11 @@ exports.editForm = async (req, res) => {
   // Check whether the form is open and whether there are answers for it
   if (await Form.isEditable(req.params.form_id)) {
     try {
+      let types = await Form.getQuestionTypes();
       let form = await Form.getForm(req.params.form_id);
       let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
       if (form) {
-        res.status(200).send({ form: form, available_questions: available });
+        res.status(200).send({ form: form, available_questions: available, types: types });
       } else {
         res.status(404).send({ message: "Lomaketta ei löytynyt." });
       }
@@ -176,10 +177,12 @@ exports.toggleRegistration = async (req, res) => {
     // Toggles the status of the form
     try {
       let formToggle = await Form.toggleRegistration(req.params.form_id, gameId);
-      if (formToggle.success) {
-        res.status(200).send({ message: "Ilmoittautuminen " + formToggle.target ? "avattu" : "suljettu" + "." });
+      if (formToggle.success == null) {
+        res.status(404).send({ message: "Ilmoittautumisen ".concat(formToggle.target ? "avaaminen" : "sulkeminen", " ei onnistunut.") });
+      } else if (formToggle.success) {
+        res.status(200).send({ message: "Ilmoittautuminen ".concat(formToggle.target ? "avattu" : "suljettu", ".") });
       } else {
-        res.status(404).send({ message: "Ilmoittautumisen " + formToggle.target ? "avaaminen" : "sulkeminen" + " ei onnistunut." });
+        res.status(404).send({ message: "Pelille ei voi avata useampaa saman tyyppistä ilmoittautumista." });
       }
     } catch (err) {
       res.status(500).send({ message: err.message });

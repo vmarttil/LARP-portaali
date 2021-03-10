@@ -159,9 +159,41 @@ const useDateField = (id, label, min, max, validator, initialValue, keywords) =>
 };
 
 
+const useSelectField = (id, label, required, options, initialSelection, keywords) => {
+  const [value, setValue] = useState(0)
+  const [error, setError] = useState("")
+
+  const onChange = (event) => { 
+    setValue(event.target.value)
+    console.log(event.target.value)
+    setError(false)
+  };
+
+  const validate = () => {
+    required && !value ? setError("Valitse jokin vaihtoehto.") : setError("")
+    return required && !value ? false : true
+  }
+
+  
+
+  return {
+    id,
+    label,
+    options,
+    value,
+    error,
+    onChange,
+    validate,
+    keywords,
+    setValue,
+    initialSelection
+  }
+};
+
 export {
   useTextField,
   useTextArea,
   useRadioField,
-  useDateField
+  useDateField,
+  useSelectField
 }
