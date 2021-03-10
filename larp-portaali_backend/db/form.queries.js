@@ -1,6 +1,9 @@
 const getQuestionTypes = `
   SELECT name, display_text FROM question_type;
 `
+const getFormClasses = `
+  SELECT name, button_text FROM form_class;
+`
 const createForm = `
   INSERT INTO form (
     game_id, 
@@ -61,7 +64,7 @@ const updateFormData = `
   UPDATE form 
   SET 
     name = $2,
-    description = $3
+    description = $3,
     form_class_id = (SELECT id FROM form_class WHERE name = $4)
   WHERE id = $1;
 `
@@ -92,6 +95,7 @@ const getFormGame = `
 
 module.exports = {
   getQuestionTypes,
+  getFormClasses,
   createForm,
   addDefaultQuestions,
   getForm,

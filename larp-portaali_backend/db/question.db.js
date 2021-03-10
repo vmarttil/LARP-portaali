@@ -4,7 +4,7 @@ const db = require("./index.js");
 const queries = require("./question.queries.js")
 
 
-createQuestion = async (questionData) => {
+createQuestion = async (formId, questionData) => {
   let parameters = [
     questionData.question_type,
     questionData.question_text,
@@ -12,9 +12,6 @@ createQuestion = async (questionData) => {
   ];
   let { rows } = await db.query(queries.createQuestion, parameters);
   let newQuestion = rows[0];
-  let association = await db.query(queries.associateToForm, [questionData.form_id, newQuestion.question_id]);
-  newQuestion.position = association.rows[0].position
-  console.log(questionData)
   if (questionData.hasOwnProperty('options')) {
     for (option of questionData.options) {
       await db.query(queries.addOption, [newQuestion.question_id, option.number, option.text]);

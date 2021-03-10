@@ -165,93 +165,91 @@ const EditGame = (props) => {
 
 
   return (
-      <>
-        <Container>
-          <Row>
-            <Col sm="1"></Col>
-            <Col sm="10">
-              <Card className="my-3">
-                <Card.Body>
-                  <Card.Title>
-                    <h2>Pelin tiedot</h2>
-                  </Card.Title>
+    <Container>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+                <h2>Pelin tiedot</h2>
+              </Card.Title>
 
-                  <Form className="align-items-center" onSubmit={saveGameData}>
+              <Form className="align-items-center" onSubmit={saveGameData}>
 
-                    <TextField {...nameField} />
-                    <Row className="my-2">
-                      <DateField {...startDateField} />
-                      <DateField {...endDateField} />
-                    </Row>
-                    <TextField {...placeField} />
-                    <TextField {...priceField} />
-                    <TextArea {...descriptionField} />
+                <TextField {...nameField} />
+                <Row className="my-2">
+                  <DateField {...startDateField} />
+                  <DateField {...endDateField} />
+                </Row>
+                <TextField {...placeField} />
+                <TextField {...priceField} />
+                <TextArea {...descriptionField} />
 
-                    <Form.Group controlId="submit">
-                      <Button variant="primary" type="submit" block>
-                        <span>Päivitä pelin tiedot</span> 
-                      </Button>
-                    </Form.Group>
+                <Form.Group controlId="submit">
+                  <Button variant="primary" type="submit" block>
+                    <span>Päivitä pelin tiedot</span>
+                  </Button>
+                </Form.Group>
 
-                    <Row>
-                      <Col sm="2"><span>Järjestäjät: </span></Col>
-                      <Col sm="10">
-                        <ul className="list-unstyled">
-                          {organisers.map(org => <li key={org.id} id={org.id}>{org.name}&nbsp;&nbsp;<a href="#" onClick={removeOrganiser}><XSquare className="align-text-top" /></a></li>)}
-                          <li>
-                            <a href="#" onClick={openModal}><PlusSquare className="align-text-top" /></a>
-                          </li>
-                        </ul>
-                      </Col>
-                    </Row>
+                <Row>
+                  <Col sm="2"><span>Järjestäjät: </span></Col>
+                  <Col sm="10">
+                    <ul className="list-unstyled">
+                      {organisers.map(org => <li key={org.id} id={org.id}>{org.name}&nbsp;&nbsp;<a href="#" onClick={removeOrganiser}><XSquare className="align-text-top" /></a></li>)}
+                      <li>
+                        <a href="#" onClick={openModal}><PlusSquare className="align-text-top" /></a>
+                      </li>
+                    </ul>
+                  </Col>
+                </Row>
 
-                    <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
-                      {message}
-                    </Alert>
+                <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+                  {message}
+                </Alert>
 
-                  </Form>
-                </Card.Body>
-              </Card>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
-              <Modal show={showModal} onHide={closeModal} animation={false} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Lisää järjestäjä</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>Anna järjestäjäksi lisättävän henkilön sähköpostiosoite:</p>
-                  <Form onSubmit={findPerson}>
-                    <Row>
-                      <Col sm="10">
-                        <Form.Control type="text" value={newOrganiserEmail} onChange={(e) => { setNewOrganiserEmail(e.target.value) }} />
-                      </Col>
-                      <Col sm="2">
-                        <Button variant="secondary" type="submit">Hae</Button>
-                      </Col>
-                    </Row>
-                  </Form>
-                  <Alert show={message !== ""} variant={successful ? "success" : "danger"} className="mt-4">
-                    {message}
-                  </Alert>
-                  {(newOrganiser &&
-                    <Alert variant={successful ? "success" : "danger"} className="text-center mt-4">
-                      <span className="lead">{newOrganiser.name}</span>
-                    </Alert>)}
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={closeModal}>Peruuta</Button>
-                  <Button variant="primary" onClick={addOrganiser} disabled={!newOrganiser}>Lisää järjestäjäksi</Button>
-                </Modal.Footer>
-              </Modal>
+      <Modal show={showModal} onHide={closeModal} animation={false} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Lisää järjestäjä</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Anna järjestäjäksi lisättävän henkilön sähköpostiosoite:</p>
+          <Form onSubmit={findPerson}>
+            <Row>
+              <Col sm="10">
+                <Form.Control type="text" value={newOrganiserEmail} onChange={(e) => { setNewOrganiserEmail(e.target.value) }} />
+              </Col>
+              <Col sm="2">
+                <Button variant="secondary" type="submit">Hae</Button>
+              </Col>
+            </Row>
+          </Form>
+          <Alert show={message !== ""} variant={successful ? "success" : "danger"} className="mt-4">
+            {message}
+          </Alert>
+          {(newOrganiser &&
+            <Alert variant={successful ? "success" : "danger"} className="text-center mt-4">
+              <span className="lead">{newOrganiser.name}</span>
+            </Alert>)}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModal}>Peruuta</Button>
+          <Button variant="primary" onClick={addOrganiser} disabled={!newOrganiser}>Lisää järjestäjäksi</Button>
+        </Modal.Footer>
+      </Modal>
 
-              {redirect && (
-                <Redirect to={{ pathname: '/portal/organiser' }} />
-              )
-              }
-            </Col>
-            <Col sm="1"></Col>
-          </Row>
-        </Container>
-      </>
+      {redirect && (
+        <Redirect to={{ pathname: '/portal/organiser' }} />
+      )}
+
+    </Container>
   );
 };
 

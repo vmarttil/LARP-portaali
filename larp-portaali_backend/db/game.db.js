@@ -51,8 +51,8 @@ updateGame = async (gameId, gameData) => {
   return rows.length > 0;
 }
 
-getOpenGames = async () => {
-  let { rows } = await db.query(queries.getOpenGames, []);
+getFutureGames = async () => {
+  let { rows } = await db.query(queries.getFutureGames, []);
   for (row of rows) {
     row.organisers = await getOrganisers(row.id);
     row.forms = await getGameForms(row.id);
@@ -110,7 +110,7 @@ module.exports = {
   createGame, 
   getGame,
   updateGame,
-  getOpenGames,
+  getFutureGames,
   getOrganiserGames,
   checkOrganiserStatus, 
   getOrganisers, 

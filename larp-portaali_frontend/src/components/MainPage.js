@@ -1,7 +1,7 @@
 import { concat } from "lodash";
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Card, Button, Alert, Jumbotron, Container, Row, Col, Table } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import { Card, Alert, Container, Row, Col, Table, Badge } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
 import { formatDateRange } from "../utils/formatters"
@@ -43,13 +43,14 @@ const MainPage = (props) => {
           </tr>
         </thead>
         <tbody>
-          {gameList.map(row => {
+          {gameList.filter(row => row.is_open).map(row => {
             return (
               <tr key={`game_${row.id}`} className="d-flex">
                 <td className="col-7">
                   <Link to={`/game/${row.id}`}>
-                    {row.name}
-                  </Link>
+                    {row.name} 
+                    {row.is_open && <Badge variant="primary" className="ml-3">Ilmoittaudu!</Badge>}
+                  </Link> 
                 </td>
                 <td className="col-2">{formatDateRange(row.start_date, row.end_date)}</td>
                 <td className="col-3">{row.place}</td>
@@ -89,7 +90,7 @@ const MainPage = (props) => {
           <Card className="my-3">
             <Card.Body>
               <Card.Title>
-                <h2>Avoimet pelit</h2>
+                <h2>Tulevat pelit</h2>
               </Card.Title>
               <GameTable />
 

@@ -15,7 +15,6 @@ exports.createForm = async (req, res) => {
     try {
       let form = await Form.createForm(req.body.data);
       if (form.id) {
-        console.log(form)
         res.status(201).send({ form_id: form.id });
       } else {
         res.status(500).send({ message: "Uuden lomakkeen luonti ei onnistunut." });
@@ -48,10 +47,11 @@ exports.editForm = async (req, res) => {
   if (await Form.isEditable(req.params.form_id)) {
     try {
       let types = await Form.getQuestionTypes();
+      let classes = await Form.getFormClasses();
       let form = await Form.getForm(req.params.form_id);
       let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
       if (form) {
-        res.status(200).send({ form: form, available_questions: available, types: types });
+        res.status(200).send({ form_classes: classes, form: form, available_questions: available, types: types });
       } else {
         res.status(404).send({ message: "Lomaketta ei löytynyt." });
       }
@@ -70,6 +70,7 @@ exports.updateForm = async (req, res) => {
     if (await Form.isOpen(req.params.form_id) === false && await Form.countRegistrations(req.params.form_id) === 0) {
       // Updates the content and structure of the form
       try {
+        console.log(req.body.data)
         let updatedForm = await Form.updateForm(req.params.form_id, req.body.data);
         let available = await Question.getAvailableQuestions(req.userId, req.params.form_id);
         if (updatedForm) {
@@ -116,58 +117,55 @@ exports.getQuestion = async (req, res) => {
   }
 }
 
-exports.createQuestion = async (req, res) => {
-  // Check whether the user is an organiser of the game for which the question is being created
-  if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
-    // Save the new question to the database and associate it with the current form
-    try {
-      let question = await Question.createQuestion(req.body.data);
-      console.log(question)
-      if (question.question_id) {
-        res.status(201).send({ message: "Uuden kysymyksen luonti onnistui.", question: question });
-      } else {
-        res.status(500).send({ message: "Uuden kysymyksen luonti ei onnistunut." });
-      }
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
-  } else {
-    res.status(403).send({ message: "Et ole kyseisen pelin järjestäjä." });
-  }
-}
+// exports.createQuestion = async (req, res) => {
+//   // Check whether the user is an organiser of the game for which the question is being created
+//   if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
+//     // Save the new question to the database and associate it with the current form
+//     try {
+//       let question = await Question.createQuestion(req.body.data);
+//       if (question.question_id) {
+//         res.status(201).send({ message: "Uuden kysymyksen luonti onnistui.", question: question });
+//       } else {
+//         res.status(500).send({ message: "Uuden kysymyksen luonti ei onnistunut." });
+//       }
+//     } catch (err) {
+//       res.status(500).send({ message: err.message });
+//     }
+//   } else {
+//     res.status(403).send({ message: "Et ole kyseisen pelin järjestäjä." });
+//   }
+// }
 
-exports.updateQuestion = async (req, res) => {
-  // Check whether the user is an organiser of the game for which the question is being edited
-  if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
-    try {
-      let question = null;
-      // Check that the question is optional
-      if (await Question.isOptional(req.params.question_id)) {
-        // Check that the question is not default or used in another form
-        if (await Question.isEditable(req.params.question_id)) {
-          // Update the existing question
-          console.log("Is editable")
-          question = await Question.updateQuestion(req.params.question_id, req.body.data);
-        } else {
-          // Create a copy of the question
-          console.log("Is not editable")
-          question = await Question.createQuestion(req.body.data);
-        }
-        if (question.question_id) {
-          res.status(201).send({ message: "Kysymyksen tallennus onnistui.", question: question });
-        } else {
-          res.status(500).send({ message: "Kysymyksen tallennus ei onnistunut." });
-        }
-      } else {
-        res.status(403).send({ message: "Pakollista kysymystä ei voi muokata." });
-      }
-    } catch (err) {
-      res.status(500).send({ message: err.message });
-    }
-  } else {
-    res.status(403).send({ message: "Et ole kyseisen pelin järjestäjä." });
-  }
-}
+// exports.updateQuestion = async (req, res) => {
+//   // Check whether the user is an organiser of the game for which the question is being edited
+//   if (await Game.checkOrganiserStatus(req.body.data.game_id, req.userId)) {
+//     try {
+//       let question = null;
+//       // Check that the question is optional
+//       if (await Question.isOptional(req.params.question_id)) {
+//         // Check that the question is not default or used in another form
+//         if (await Question.isEditable(req.params.question_id)) {
+//           // Update the existing question
+//           question = await Question.updateQuestion(req.params.question_id, req.body.data);
+//         } else {
+//           // Create a copy of the question
+//           question = await Question.createQuestion(req.body.data);
+//         }
+//         if (question.question_id) {
+//           res.status(201).send({ message: "Kysymyksen tallennus onnistui.", question: question });
+//         } else {
+//           res.status(500).send({ message: "Kysymyksen tallennus ei onnistunut." });
+//         }
+//       } else {
+//         res.status(403).send({ message: "Pakollista kysymystä ei voi muokata." });
+//       }
+//     } catch (err) {
+//       res.status(500).send({ message: err.message });
+//     }
+//   } else {
+//     res.status(403).send({ message: "Et ole kyseisen pelin järjestäjä." });
+//   }
+// }
 
 exports.toggleRegistration = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game

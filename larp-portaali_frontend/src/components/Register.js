@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
 import AuthService from "../services/auth.service";
-import { useTextField } from "../utils/hooks"
+import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"
 import { validateEmail, validatePassword } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
@@ -17,7 +17,7 @@ const Register = (props) => {
 
   const [login, setLogin] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  
+
   useEffect(() => {
     const loginUser = async () => {
       if (login) {
@@ -53,33 +53,47 @@ const Register = (props) => {
   };
 
   return (
-      <Card style={{ width: "24rem" }}>
-        <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
-        
-        <Form className="align-items-center" onSubmit={handleRegister}>
-          
-          {!successful && (
-            <>
-              <TextField {...emailField} />
-              <TextField {...passwordField} />
 
-              <Form.Group controlId="submit">
-                <Button variant="primary" type="submit" block>Rekisteröidy</Button>
-              </Form.Group>
-            </>
-          )}
+    <Container>
+      <Row>
+        <Col sm="4"></Col>
+        <Col sm="4">
+          <Card className="my-3">
+            <Card.Img variant="top" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
+            <Card.Header>
+              <h4 className="mb-0">Rekisteröityminen</h4>
+            </Card.Header>
+            <Card.Body>
 
-          <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
-            {message}
-          </Alert>
+              <Form className="align-items-center" onSubmit={handleRegister}>
 
-          {redirect && (
-            <Redirect to={{pathname: '/profile'}} />
-            )
-          }
+                {!successful && (
+                  <>
+                    <TextField {...emailField} />
+                    <TextField {...passwordField} />
 
-        </Form>
-      </Card>
+                    <Form.Group controlId="submit">
+                      <Button variant="primary" type="submit" block>Rekisteröidy</Button>
+                    </Form.Group>
+                  </>
+                )}
+
+                <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+                  {message}
+                </Alert>
+
+                {redirect && (
+                  <Redirect to={{ pathname: '/profile' }} />
+                )
+                }
+
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="4"></Col>
+      </Row>
+    </Container>
   );
 };
 

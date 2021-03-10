@@ -8,6 +8,8 @@ import "../css/custom.css";
 const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, keywords }) => {
   const asRow = keywords.filter(item => item.includes("horizontal"))[0]
   keywords = keywords.filter(item => !item.includes("horizontal"))
+  let size = keywords.filter(item => item.includes("size"))[0]?.split("_")[1]
+  keywords = keywords.filter(item => !item.includes("size"))
 
   if (asRow && asRow.length > 0) {
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
@@ -15,11 +17,13 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
     if (keywords.includes("partialRow")) {
       return (
         <>
-          <Col sm={labelWidth} className="pr-1">
-            <Form.Label className="mt-2">{label}</Form.Label>
-          </Col>
+          {labelWidth > 0 ? (
+            <Col sm={labelWidth} className="pr-1">
+              <Form.Label className="mt-2">{label}</Form.Label>
+            </Col>
+            ): <></>}
           <Col sm={inputWidth} className="pl-1">
-            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} />
+            <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} size={size ? size : ""}/>
             {error && (
               <Form.Text className="text-danger">{error}</Form.Text>
             )}
@@ -29,9 +33,11 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
     } else {
       return (
         <Row className="my-2">
-          <Col sm={labelWidth} className="pr-1">
-            <Form.Label className="mt-2">{label}</Form.Label>
-          </Col>
+          {labelWidth > 0 ? (
+            <Col sm={labelWidth} className="pr-1">
+              <Form.Label className="mt-2">{label}</Form.Label>
+            </Col>
+          ): <></>}
           <Col sm={inputWidth} className="pl-1">
             <TextFieldControl type={type} value={value} onChange={onChange} onBlur={onBlur} keywords={keywords} />
             {error && (
@@ -54,7 +60,7 @@ const TextField = ({ id, label, type, value, error, onChange, onBlur, validate, 
   }
 };
 
-const TextFieldControl = ({ type, value, onChange, onBlur, keywords }) => {
+const TextFieldControl = ({ type, value, onChange, onBlur, keywords, size }) => {
   if (type === "number" && keywords.includes("currency")) {
     return (
       <InputGroup>
@@ -62,7 +68,8 @@ const TextFieldControl = ({ type, value, onChange, onBlur, keywords }) => {
           type={type}
           value={value}
           onChange={onChange}
-          onBlur={onBlur} />
+          onBlur={onBlur}
+          size={size} />
         <InputGroup.Append>
           <InputGroup.Text>€</InputGroup.Text>
         </InputGroup.Append>
@@ -74,7 +81,8 @@ const TextFieldControl = ({ type, value, onChange, onBlur, keywords }) => {
         type={type}
         value={value}
         onChange={onChange}
-        onBlur={onBlur} />
+        onBlur={onBlur}
+        size={size} />
     )
   }
 }
@@ -89,9 +97,11 @@ const TextArea = ({ id, label, rows, value, error, onChange, onBlur, validate, k
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
     return (
       <Row className="my-2">
-        <Col sm={labelWidth} className="pr-1">
-          <Form.Label className="mt-2">{label}</Form.Label>
-        </Col>
+        {labelWidth > 0 ? (
+          <Col sm={labelWidth} className="pr-1">
+            <Form.Label className="mt-2">{label}</Form.Label>
+          </Col>
+        ): <></>}
         <Col sm={inputWidth} className="pl-1">
           <Form.Control
             as="textarea"
@@ -164,9 +174,11 @@ const RadioField = ({ id, label, options, value, error, onChange, onClick, valid
     const labelWidth = parseInt(asRow.split("_")[1].split("-")[0])
     const inputWidth = parseInt(asRow.split("_")[1].split("-")[1])
     return (
-      <Form.Group controlId={id} as={Row} className="align-items-center">
-        <Form.Label column sm={labelWidth}>{label}</Form.Label>
-        <Col sm={inputWidth}>
+      <Form.Group controlId={id} as={Row} className={keywords.includes("inline") ? "align-items-center" : "align-items-start"}>
+        {labelWidth > 0 ? (
+          <Form.Label column sm={labelWidth}>{label}</Form.Label>
+        ): <></>}
+        <Col sm={inputWidth} className={keywords.includes("inline") ? "mt-0" : "mt-2"}>
           {optionButtons}
           {error && (
             <Form.Text className="text-danger">{error}</Form.Text>
@@ -210,9 +222,11 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
     if (keywords.includes("partialRow")) {
       return (
         <>
-          <Col sm={labelWidth} className="pr-1">
-            <Form.Label className="mt-2">{label}</Form.Label>
-          </Col>
+          {labelWidth > 0 ? (
+            <Col sm={labelWidth} className="pr-1">
+              <Form.Label className="mt-2">{label}</Form.Label>
+            </Col>
+          ): <></>}
           <Col sm={inputWidth} className="pl-1">
             <div className="customDatePickerWidth">
               <DatePicker
@@ -236,9 +250,11 @@ const DateField = ({ id, label, minDate, updateMinDate, maxDate, updateMaxDate, 
     } else {
       return (
         <Row className="my-2">
-          <Col sm={labelWidth} className="pr-1">
-            <Form.Label className="mt-2">{label}</Form.Label>
-          </Col>
+          {labelWidth > 0 ? (
+            <Col sm={labelWidth} className="pr-1">
+              <Form.Label className="mt-2">{label}</Form.Label>
+            </Col>
+          ): <></>}
           <Col sm={inputWidth} className="pl-1">
             <div className="customDatePickerWidth">
               <DatePicker
@@ -289,6 +305,8 @@ const SelectField = ({ id, label, options, value, error, onChange, validate, key
 
   const asRow = keywords.filter(item => item.includes("horizontal"))[0]
   keywords = keywords.filter(item => !item.includes("horizontal"))
+  let size = keywords.filter(item => item.includes("size"))[0]?.split("_")[1]
+  keywords = keywords.filter(item => !item.includes("size"))
 
   const optionItems = Object.entries(options).map((values, idx) => {
     return (
@@ -302,14 +320,17 @@ const SelectField = ({ id, label, options, value, error, onChange, validate, key
     if (keywords.includes("partialRow")) {
       return (
         <>
-          <Col sm={labelWidth} className="pr-1">
-            <Form.Label className="mt-2">{label}</Form.Label>
-          </Col>
+          {labelWidth > 0 ? (
+            <Col sm={labelWidth} className="pr-1">
+              <Form.Label className="mt-1">{label}</Form.Label>
+            </Col>
+          ): <></>}
           <Col sm={inputWidth} className="pl-1">
             <Form.Control
               as="select"
               onChange={onChange}
-              value={value}>
+              value={value}
+              size={size ? size: ""}>
               <option value="0">{initialSelection}</option>
               {optionItems}
             </Form.Control>
@@ -322,7 +343,9 @@ const SelectField = ({ id, label, options, value, error, onChange, validate, key
     } else {
       return (
         <Form.Group controlId={id} as={Row} className="align-items-center my-2">
-          <Form.Label column sm={labelWidth} className="pr-1">{label}</Form.Label>
+          {labelWidth > 0 ? (
+            <Form.Label column sm={labelWidth} className="pr-1">{label}</Form.Label>
+          ): <></>}
           <Col sm={inputWidth} className="pl-1">
             <Form.Control
               as="select"

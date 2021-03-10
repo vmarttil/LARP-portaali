@@ -170,8 +170,8 @@ const useSelectField = (id, label, required, options, initialSelection, keywords
   };
 
   const validate = () => {
-    required && !value ? setError("Valitse jokin vaihtoehto.") : setError("")
-    return required && !value ? false : true
+    required && value == 0 ? setError("Valitse jokin vaihtoehto.") : setError("")
+    return required && value == 0 ? false : true
   }
 
   

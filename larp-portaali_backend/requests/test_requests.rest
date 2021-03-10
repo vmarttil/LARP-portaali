@@ -35,7 +35,7 @@ content-type: application/json
 
 ####
 
-GET http://www.localhost:8080/api/mainPage HTTP/1.1
+GET http://www.localhost:8080/api/gameList HTTP/1.1
 content-type: application/json
 
 ####
@@ -48,7 +48,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 GET http://www.localhost:8080/api/portal/organiser HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1NDA0NjQyLCJleHAiOjE2MTU0OTEwNDJ9.m3BIzAEAsZstnrkE-mSIpJomy51-qZ9IkGhD-SIaCDQ
 
 ####
 
@@ -206,7 +206,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 GET http://localhost:8080/api/organiserGameList HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MzE2NTkzLCJleHAiOjE2MTU0MDI5OTN9.KMLBICHMPPdJgv4GxOTSVCT0bJ3bsHDx8EBZQ9XOpSk
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1NDA0NjQyLCJleHAiOjE2MTU0OTEwNDJ9.m3BIzAEAsZstnrkE-mSIpJomy51-qZ9IkGhD-SIaCDQ
 
 
 ####

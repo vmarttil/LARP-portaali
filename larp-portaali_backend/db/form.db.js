@@ -2,11 +2,17 @@ require('dotenv').config()
 var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./form.queries.js")
+const question_queries = require("./question.queries.js")
 const Game = require("./game.db.js")
 const Question = require("./question.db.js")
 
 getQuestionTypes = async () => {
   let { rows } = await db.query(queries.getQuestionTypes, []);
+  return rows.length > 0 ? rows : [];
+}
+
+getFormClasses = async () => {
+  let { rows } = await db.query(queries.getFormClasses, []);
   return rows.length > 0 ? rows : [];
 }
 
@@ -67,19 +73,21 @@ updateForm = async (formId, formData) => {
     formData.description,
     formData.form_class
     ]
+  console.log(parameters)
   await db.query(queries.updateFormData, parameters);
   let newQuestions = formData.questions
   let oldQuestions = await getFormQuestionList(formId);
 
   for (const [index, question] of newQuestions.entries()) {
-    let question_id = null;
-    if (question.question_id === null) {
-      // If the id of a question is null, i.e. it is a new question, create it in the database
+    if (question.question_id.toString().includes("new_")) {
+      // If the id of a question contains 'new_', i.e. it is a new question, create it in the database, ignoring the temporary id
       let newQuestion = await Question.createQuestion(question);
       // Link the question to the form using the ID and setting the position
       await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
     } else {
       if (await Question.isChanged(question)) {
+        console.log("Changed question")
+        console.log(question)
         // If the question is an existing question that has been edited
         if (await Question.isEditable(question.question_id)) {  
           // If the question is unique to this form, update the question in the database
@@ -87,8 +95,9 @@ updateForm = async (formId, formData) => {
           // Update the position of the question in the form
           await db.query(queries.updateQuestionPosition, [formId, updatedQuestion.question_id, (index + 1)]);
         } else {
+          console.log("Is not editable")
           // If the question is a default question or question used also elsewhere, create a new question in the database
-          let newQuestion = await Question.createQuestion(question);
+          let newQuestion = await Question.createQuestion(formId, question);
           // Remove the old question from the form and link the new version to the form using the ID and setting the position
           await db.query(queries.removeQuestion, [formId, question.question_id]);
           await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
@@ -106,7 +115,7 @@ updateForm = async (formId, formData) => {
     await db.query(queries.removeQuestion, [formId, question.question_id]);
     // If they are not default questions and no longer used anywhere, remove them from the database
     if (await Question.isRemovable(question.question_id)) {
-      await db.query(queries.deleteQuestion, [question.question_id])
+      await db.query(question_queries.deleteQuestion, [question.question_id])
     }
   }
   // Get and return the updated form
@@ -119,7 +128,6 @@ getFormGameId = async (formId) => {
 }
 
 isOpen = async (formId) => {
-  console.log("Form id: ", formId)
   let { rows } = await db.query(queries.isOpen, [formId]);
   return rows.length > 0 ? rows[0].is_open : null;
 }
@@ -130,8 +138,6 @@ toggleRegistration = async (formId, gameId) => {
   let sameClassForms = gameForms.filter(form => form.form_class === toggledForm.form_class)
   // If the toggled form is open or none of the forms of the same type are open, allow the toggleand return true, else return false
   if (toggledForm.is_open || sameClassForms.every(form => !form.is_open)) {
-    console.log(queries.toggleRegistration)
-    console.log(formId)
     let { rows } = await db.query(queries.toggleRegistration, [formId]);
     if (rows.length > 0) {
       return {success: true, target: !toggledForm.is_open};
@@ -156,6 +162,7 @@ isEditable = async (formId) => {
 
 module.exports = {
   getQuestionTypes,
+  getFormClasses,
   createForm, 
   getForm,
   getFormQuestions,

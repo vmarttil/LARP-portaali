@@ -30,7 +30,7 @@ const Game = (props) => {
       <>
         {openForms.map(form => {
           return (
-            <Link to={`/game/${id}/form/${form.id}/register`}>
+            <Link to={`/game/${id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
               <Button key={form.id} variant="primary" type="button" size="sm">{form.button_text}</Button>
             </Link>
           )
@@ -76,7 +76,7 @@ const Game = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <RegistrationButtons/>
+                  <RegistrationButtons />
                 </Row>
               </Card.Body>
             ) :

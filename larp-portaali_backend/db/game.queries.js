@@ -7,14 +7,33 @@ const getGame = `
   FROM game
   WHERE id = $1;
 `
-const getOpenGames = `
-  SELECT *
-  FROM game
-  WHERE start_date > NOW()
-  ORDER BY start_date ASC;
+const getFutureGames = `
+  SELECT 
+    g.id, 
+    g.name, 
+    g.start_date, 
+    g.end_date, 
+    g.place, 
+    g.price, 
+    g.description,
+    CASE 
+      WHEN ((SELECT COUNT(*) FROM form AS f WHERE f.game_id = g.id AND is_open = true) > 0)
+      THEN true
+      ELSE false
+    END AS is_open
+  FROM game AS g
+  WHERE g.start_date > NOW()
+  ORDER BY g.start_date ASC;
 `
 const getOrganiserGames = `
-  SELECT g.id, g.name, g.start_date, g.end_date, g.place, g.price, g.description
+  SELECT 
+    g.id, 
+    g.name, 
+    g.start_date, 
+    g.end_date, 
+    g.place, 
+    g.price, 
+    g.description
   FROM game AS g
   JOIN game_organiser AS go ON g.id = go.game_id
   WHERE go.person_id = $1
@@ -67,7 +86,7 @@ const getGameForms = `
 module.exports = {
   createGame,
   getGame,
-  getOpenGames,
+  getFutureGames,
   getOrganiserGames,
   updateGame,
   checkOrganiserStatus,

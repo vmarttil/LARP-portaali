@@ -60,20 +60,20 @@ const createQuestion = `
     is_optional,
     prefill_tag;
 `
-const associateToForm = `
-  INSERT INTO form_question (
-    form_id, 
-    question_id, 
-    position
-    )
-  VALUES
-    (
-    $1,
-    $2,
-    (SELECT MAX(position) FROM form_question WHERE form_id = $1) + 1
-    )
-  RETURNING position;
-`
+// const associateToForm = `
+//   INSERT INTO form_question (
+//     form_id, 
+//     question_id, 
+//     position
+//     )
+//   VALUES
+//     (
+//     $1,
+//     $2,
+//     (SELECT MAX(position) FROM form_question WHERE form_id = $1) + 1
+//     )
+//   RETURNING position;
+// `
 const updateQuestionData = `
   UPDATE question SET
     question_text = $2,
@@ -130,7 +130,6 @@ module.exports = {
   getAvailableQuestions,
   getQuestion,
   createQuestion,
-  associateToForm,
   updateQuestionData,
   deleteQuestion,
   getOptions,

@@ -102,8 +102,8 @@ const OrganiserPortal = (props) => {
                             </td>
                           <td className="d-flex col-1 justify-content-center">{form.registrations}</td>
                           <td className="d-flex col-4 justify-content-end">
-                            <Link to={`/game/${game.id}/form/${form.id}/edit`}>
-                              <Button role="button" variant="primary" size="sm" className="mx-1">Muokkaa</Button>
+                            <Link to={`/game/${game.id}/form/${form.id}/edit`} disabled={form.is_open}>
+                              <Button role="button" variant="primary" size="sm" className="mx-1" disabled={form.is_open}>Muokkaa</Button>
                             </Link>
                             <Button role="button" variant="primary" size="sm" onClick={toggleRegistration} className="mx-1" value={form.id}>
                               {form.is_open ? "Sulje ilmoittautuminen" : "Avaa ilmoittautuminen"}
