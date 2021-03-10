@@ -25,6 +25,7 @@ const useTextField = (id, label, type, maxlength, validator, initialValue, keywo
       setValue(event.target.value)
       setError("")
     }
+    console.log(value)
   };
 
   const onBlur = validator ? (event) => {setError(validator(event.target.value))} : (event) => {}
@@ -62,6 +63,7 @@ const useTextArea = (id, label, maxlength, validator, initialValue, keywords, ro
       setValue(event.target.value)
       setError("")
     }
+    console.log(value)
   };
 
   const onBlur = validator ? (event) => {setError(validator(event.target.value))} : (event) => {}
@@ -165,7 +167,6 @@ const useSelectField = (id, label, required, options, initialSelection, keywords
 
   const onChange = (event) => { 
     setValue(event.target.value)
-    console.log(event.target.value)
     setError(false)
   };
 

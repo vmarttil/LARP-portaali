@@ -42,6 +42,10 @@
 |          | 2,0 | Lomakkeiden avaamisen ja sulkemisen toteutus |
 |          | 5,0 | Kysymysten poistaminen lomakkeesta ja lisääminen lomakkeeseen |
 |          | 1,0 | Ulkoasun muotoilua |
+| 10032021 | 7,0 | Tehty modaali ja toiminnallisuus kysymysten luontiin, muokkaukseen ja tallennukseen (ml. valintakysymysten vaihtoehtojen muokkaus) |
+|          | 1,0 | Lisätty suodatus pääsivun peliluetteloon |
+|          | 1,0 | Parannettu käytettävyyttä ja käyttöliittymää |
 
-| **Yhteensä** | **153,0** | |
+
+| **Yhteensä** | **162,0** | |
 

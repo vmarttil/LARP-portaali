@@ -78,7 +78,6 @@ const EditForm = (props) => {
 
       let formClassList = response.data.form_classes.map(c => [c.name, c.button_text]);
       let formClasses = Object.fromEntries(formClassList);
-      console.log(formClasses)
       setFormClasses(formClasses);
 
       nameField.setValue(formData.form.name);
@@ -102,10 +101,12 @@ const EditForm = (props) => {
       let newQuestions = [...questions];
       newQuestions = newQuestions.filter(q => q.question_id != question_id);
       setQuestions(newQuestions);
-      let newAvailableQuestions = [...availableQuestions];
-      newAvailableQuestions.push(question);
-      newAvailableQuestions.sort(((a, b) => a.question_id - b.question_id))
-      setAvailableQuestions(newAvailableQuestions);
+      if (!question_id.includes("new_")) {
+        let newAvailableQuestions = [...availableQuestions];
+        newAvailableQuestions.push(question);
+        newAvailableQuestions.sort(((a, b) => a.question_id - b.question_id))
+        setAvailableQuestions(newAvailableQuestions);
+      }
     }
   };
 
@@ -121,7 +122,6 @@ const EditForm = (props) => {
   };
 
   const openModal = (e) => {
-    console.log(e.currentTarget.value)
     let blankQuestion = {
       question_id: e.target.value,
       question_type: 0,
@@ -132,7 +132,6 @@ const EditForm = (props) => {
     }
 
     let editedQuestion = questions.find(q => q.question_id == e.currentTarget.value) ?? blankQuestion;
-    console.log(editedQuestion)
     setEditQuestion({ ...editedQuestion });
 
     questionTypeField.setValue(editedQuestion.question_type);
@@ -151,12 +150,6 @@ const EditForm = (props) => {
     let maxId = Math.max(createdQuestions.map(q => parseInt(q.question_id.split("_")[1])));
     return "new_".concat(maxId + 1);
   };
-
-  const handleKeyPress = (e) => {
-    if (e.keyCode === 13) {
-      addOption();
-    }
-  }
 
   const removeOption = (e) => {
     let optionIndex = e.currentTarget.value;
@@ -209,9 +202,7 @@ const EditForm = (props) => {
       let newQuestions = [...questions]
 
       let questionIndex = questions.findIndex(q => q.question_id == newQuestion.question_id);
-      console.log(questionIndex)
       if (questionIndex >= 0) {
-        console.log("Does this trigger?")
         newQuestions.splice(questionIndex, 1, newQuestion);
       } else {
         newQuestions.push(newQuestion);
@@ -256,6 +247,7 @@ const EditForm = (props) => {
 
   const QuestionList = () => {
     return (
+      <>
       <div>
         {questions.map((question, index) => {
           return (
@@ -271,7 +263,7 @@ const EditForm = (props) => {
             </Card>
           )
         })}
-
+      </div>
         <Card className="mx-0 my-3 p-0">
           <Card.Header className="py-1 px-2 lead align-items-center"><PlusSquare className="mb-1 mr-1" /> Lisää kysymys</Card.Header>
           <Card.Body className="p-2">
@@ -290,12 +282,68 @@ const EditForm = (props) => {
           </Card.Body>
         </Card>
 
-      </div>
+      </>
     )
   }
 
-  const QuestionModal = () => {
-    return (
+  return (
+    <Container>
+      <Row>
+        <Col sm="12">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+                <h1>Ilmoittautumislomakkeen muokkaus</h1>
+              </Card.Title>
+              <Card.Text>
+                Tällä sivulla voit muokata peliin ilmoittautumiseen käytettävää lomaketta poistamalla tai muokkaamalla
+                oletuskysymyksiä, lisäämällä uusia kysymyksiä ja muuttamalla kysymysten järjestystä. Kokonaan uusien kysymysten
+                luomisen lisäksi voit myös lisätä peliin kysymyksiä mahdollisista muista peleistä, joissa olet järjestäjänä ja
+                muokata niitä tarvittaessa. Myös uusille lomakkeille määritetyt oletuskysymykset ja muokattavasta lomakkeesta poistamasi
+                kysymykset ovat aina lisättävissä (kunnes tallennat lomakkeen, jolloin poistetut kysymykset poistuvat pysyvästi elleivät
+                ne ole oletuskysymyksiä tai käytössä jollakiin muulla lomakkeella). Ainoat pakolliset kysymykset ovat ilmoittautujan nimi
+                ja sähköpostiosoite. Voit myös luoda useita lomakkeita samalle pelille (esim. avustaja- tai NPC-ilmoittautumisia varten)
+                ja hallinnoida niitä erikseen.
+          </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Card className="my-3">
+            <Card.Body>
+              <Card.Title>
+                <h2>Lomakkeen tiedot</h2>
+              </Card.Title>
+              {!busy &&
+                <Form className="align-items-center" onSubmit={saveFormData}>
+                  <TextField {...nameField} />
+                  <TextArea {...descriptionField} />
+                  <RadioField {...formClassField} />
+                  <h2>Kysymykset</h2>
+
+                  <QuestionList />
+
+                  <Form.Group controlId="submit" className="mb-0 mt-3">
+                    <Button variant="primary" type="submit" disabled={!hasChanged} className="mb-2 mt-4" size="lg" block>
+                      <span>Tallenna lomake</span>
+                    </Button>
+                  </Form.Group>
+
+                  <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+                    {message}
+                  </Alert>
+
+                </Form>
+              }
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+
       <Modal show={showModal} onHide={closeModal} animation={false} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>Luo uusi kysymys</Modal.Title>
@@ -362,68 +410,6 @@ const EditForm = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    )
-  }
-
-  return (
-    <Container>
-      <Row>
-        <Col sm="12">
-          <Card className="my-3">
-            <Card.Body>
-              <Card.Title>
-                <h1>Ilmoittautumislomakkeen muokkaus</h1>
-              </Card.Title>
-              <Card.Text>
-                Tällä sivulla voit muokata peliin ilmoittautumiseen käytettävää lomaketta poistamalla tai muokkaamalla
-                oletuskysymyksiä, lisäämällä uusia kysymyksiä ja muuttamalla kysymysten järjestystä. Kokonaan uusien kysymysten
-                luomisen lisäksi voit myös lisätä peliin kysymyksiä mahdollisista muista peleistä, joissa olet järjestäjänä ja
-                muokata niitä tarvittaessa. Myös uusille lomakkeille määritetyt oletuskysymykset ja muokattavasta lomakkeesta poistamasi
-                kysymykset ovat aina lisättävissä (kunnes tallennat lomakkeen, jolloin poistetut kysymykset poistuvat pysyvästi elleivät
-                ne ole oletuskysymyksiä tai käytössä jollakiin muulla lomakkeella). Ainoat pakolliset kysymykset ovat ilmoittautujan nimi
-                ja sähköpostiosoite. Voit myös luoda useita lomakkeita samalle pelille (esim. avustaja- tai NPC-ilmoittautumisia varten)
-                ja hallinnoida niitä erikseen.
-          </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm="1"></Col>
-        <Col sm="10">
-          <Card className="my-3">
-            <Card.Body>
-              <Card.Title>
-                <h2>Lomakkeen tiedot</h2>
-              </Card.Title>
-              {!busy &&
-                <Form className="align-items-center" onSubmit={saveFormData}>
-                  <TextField {...nameField} />
-                  <TextArea {...descriptionField} />
-                  <RadioField {...formClassField} />
-                  <h2>Kysymykset</h2>
-
-                  <QuestionList />
-
-                  <Form.Group controlId="submit" className="mb-0 mt-3">
-                    <Button variant="primary" type="submit" disabled={!hasChanged} className="mb-2 mt-4" size="lg" block>
-                      <span>Tallenna lomake</span>
-                    </Button>
-                  </Form.Group>
-
-                  <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
-                    {message}
-                  </Alert>
-
-                </Form>
-              }
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col sm="1"></Col>
-      </Row>
-
-      <QuestionModal />
 
     </Container>
   );
