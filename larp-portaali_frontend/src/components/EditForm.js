@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button, Alert, Container, Row, Col, Modal } from 'react-bootstrap';
-import { useParams } from "react-router-dom";
+import { Card, Form, Button, Alert, Container, Row, Col, Modal, InputGroup } from 'react-bootstrap';
+import { useParams, Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormService from "../services/form.service";
 import { useTextField, useTextArea, useSelectField, useRadioField } from "../utils/hooks"
@@ -95,7 +95,7 @@ const EditForm = (props) => {
     };
   };
 
-  const handleOnDragEnd = (result) => {
+  const handleOnQuestionDragEnd = (result) => {
     if (!result.destination) return;
     const reorderedQuestions = Array.from(questions);
     const [reorderedQuestion] = reorderedQuestions.splice(result.source.index, 1);
@@ -160,6 +160,14 @@ const EditForm = (props) => {
     return "new_".concat(maxId + 1);
   };
 
+  const handleOnOptionDragEnd = (result) => {
+    if (!result.destination) return;
+    const reorderedOptions = Array.from(editQuestionOptions);
+    const [reorderedOption] = reorderedOptions.splice(result.source.index, 1);
+    reorderedOptions.splice(result.destination.index, 0, reorderedOption);
+    setEditQuestionOptions(reorderedOptions);
+  };
+
   const removeOption = (e) => {
     let optionIndex = e.currentTarget.value;
     let newOptions = [...editQuestionOptions];
@@ -171,7 +179,8 @@ const EditForm = (props) => {
     setNewOptionText(e.target.value);
   };
 
-  const addOption = () => {
+  const addOption = (e) => {
+    e.preventDefault();
     let newOptions = [...editQuestionOptions];
     newOptions.push(newOptionText);
     setEditQuestionOptions(newOptions);
@@ -256,7 +265,7 @@ const EditForm = (props) => {
 
   const QuestionList = () => {
     return (
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+      <DragDropContext onDragEnd={handleOnQuestionDragEnd}>
         <Droppable droppableId="questions">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef} className="list-unstyled">
@@ -270,7 +279,7 @@ const EditForm = (props) => {
                             <Button variant="outline-dark" size="xs" onClick={openModal} disabled={!question.is_optional} value={question.question_id}><PencilSquare className="lead mx-1" /></Button>
                             <Button variant="outline-dark" size="xs" onClick={removeQuestion} disabled={!question.is_optional} value={question.question_id}><Trash className="lead mx-1" /></Button>
                           </Card.Header>
-                          <Card.Body className="p-2">
+                          <Card.Body className="p-2 no-pointer-events">
                             <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []} />
                           </Card.Body>
                         </Card>
@@ -361,14 +370,22 @@ const EditForm = (props) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Link to={`/portal/organiser`}>
+            <Button variant="primary" type="button" size="sm">Takaisin omiin peleihin</Button>
+          </Link>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
       <Modal show={showModal} onHide={closeModal} animation={false} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>Luo uusi kysymys</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
-          <Form>
+          <Form onSubmit={addOption}>
             <SelectField {...questionTypeField} />
             <TextArea {...questionTextField} />
             <TextArea {...questionDescriptionField} />
@@ -378,36 +395,48 @@ const EditForm = (props) => {
                   <Form.Label>Valinnat: </Form.Label>
                 </Col>
                 <Col sm={9}>
-                  <DragDropContext>
-                    <ul className="list-unstyled">
-                      {editQuestionOptions.map((option, index) => {
-                        return (
-                          <li key={`${editQuestion.question_id}_${index}`}>
-                            <Form.Check type="radio" id={`${editQuestion.id}_${index}`} disabled>
-                              <Form.Check.Input type="radio" disabled />
-                              <Form.Check.Label className="text-dark">{option}</Form.Check.Label>
-                              <Button variant="link" size="xs" value={index} onClick={removeOption} className="ml-2"><XSquare className="lead mx-1 mb-1" /></Button>
-                            </Form.Check>
-                          </li>
-                        )
-                      })}
-                      <li>
-                        <Row>
-                          <Col sm={9} className="pl-1">
-                            <Form.Control
-                              id="newOptionText"
-                              type="text"
-                              value={newOptionText}
-                              onChange={onNewOptionTextChange}
-                              size="sm" />
-                          </Col>
-                          <Col sm={2}>
-                            <Button variant="primary" onClick={addOption} size="sm" className="w-100">Lisää</Button>
-                          </Col>
-                        </Row>
-                      </li>
-                    </ul>
+                  <DragDropContext onDragEnd={handleOnOptionDragEnd}>
+                    <Droppable droppableId="options">
+                      {(provided) => (
+
+                        <ul className="list-unstyled mb-1" {...provided.droppableProps} ref={provided.innerRef}>
+                          {editQuestionOptions.map((option, index) => {
+                            return (
+                              <Draggable key={`${editQuestion.question_id}_${index}`} draggableId={`${editQuestion.question_id}_${index}`} index={index}>
+                                {(provided) => (
+                                  <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                    <Form.Check type={editQuestion.question_type} id={`${editQuestion.id}_${index}`} disabled >
+                                      <Form.Check.Input type={editQuestion.question_type} disabled className="no-pointer-events" />
+                                      <Form.Check.Label className="text-dark no-pointer-events">{option}</Form.Check.Label>
+                                      <Button variant="link" size="xs" type="button" value={index} onClick={removeOption} className="ml-2"><XSquare className="lead mx-1 mb-1" /></Button>
+                                    </Form.Check>
+                                  </li>
+                                )}
+                              </Draggable>
+                            )
+                          })}
+                          {provided.placeholder}
+                        </ul>
+                      )}
+                    </Droppable>
                   </DragDropContext>
+                  <ul className="list-unstyled">
+                    <li>
+                      <InputGroup className="w-100">
+                        <Form.Control
+                          className="ml-3"
+                          id="newOptionText"
+                          type="text"
+                          value={newOptionText}
+                          onChange={onNewOptionTextChange}
+                          size="sm" />
+                        <InputGroup.Append>
+                          <Button variant="primary" type="submit" size="sm">Lisää</Button>
+                        </InputGroup.Append>
+                      </InputGroup>
+                    </li>
+                  </ul>
+
                 </Col>
               </Row>)
               :
@@ -423,7 +452,7 @@ const EditForm = (props) => {
 
         <Modal.Footer>
           <Button variant="secondary" onClick={closeModal}>Peruuta</Button>
-          <Button variant="primary" onClick={saveQuestion} disabled={!questionTypeField.validate ||
+          <Button variant="primary" type="button" onClick={saveQuestion} disabled={!questionTypeField.validate ||
             !questionTextField.validate ||
             !questionDescriptionField.validate}>
             {editQuestion.question_id == 0 ? "Lisää kysymys" : "Tallenna kysymys"}

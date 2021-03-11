@@ -4,7 +4,8 @@ const db = require("./index.js");
 const queries = require("./question.queries.js")
 
 
-createQuestion = async (formId, questionData) => {
+createQuestion = async (questionData) => {
+  console.log("New question data: ", questionData)
   let parameters = [
     questionData.question_type,
     questionData.question_text,

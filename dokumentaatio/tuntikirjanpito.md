@@ -45,7 +45,8 @@
 | 10032021 | 7,0 | Tehty modaali ja toiminnallisuus kysymysten luontiin, muokkaukseen ja tallennukseen (ml. valintakysymysten vaihtoehtojen muokkaus) |
 |          | 1,0 | Lisätty suodatus pääsivun peliluetteloon |
 |          | 1,0 | Parannettu käytettävyyttä ja käyttöliittymää |
+|          | 1,0 | Toteutettu kysymysten järjestyksen muuttaminen vetämällä ja pudottamalla käyttäen React Beautiful DnD -kirjastoa |
 
 
-| **Yhteensä** | **162,0** | |
+| **Yhteensä** | **163,0** | |
 

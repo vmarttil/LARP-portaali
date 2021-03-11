@@ -133,7 +133,8 @@ const OrganiserPortal = (props) => {
               <Card.Text>
                 Tällä sivulla näet luettelon peleistä, joissa olet järjestäjänä, ja voit muokata niiden tietoja, hallinnoida niiden
                 ilmoittautumislomakkeita ja muita asetuksia. Pääset tarkastelemaan pelin tietoja ja siihen tehtyjä ilmoittautumisia
-                valitsemalla pelin nimen luettelosta.
+                valitsemalla pelin nimen luettelosta. Ilmoittautumakkeita on mahdollista muokata vain jos ne eivät ole avattuina 
+                ilmoittautumiselle ja niihin ei vielä ole tehty ilmoittautumisia.
           </Card.Text>
             </Card.Body>
           </Card>
