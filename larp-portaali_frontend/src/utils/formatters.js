@@ -15,4 +15,9 @@ export const formatDateRange = (start_date, end_date) => {
     dateString += "–" + end.getDate().toString() + "." + (end.getMonth() + 1).toString() + "." + end.getFullYear().toString();
   }
   return dateString;
-}
+};
+
+
+export const formatName = (firstName, lastName, nickname) => {
+  return nickname == "" ? firstName + " " + lastName : firstName + ' "' + nickname + '" ' + lastName;
+};

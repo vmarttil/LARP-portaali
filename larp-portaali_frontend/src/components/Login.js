@@ -29,8 +29,6 @@ const Login = ({ setCurrentUser }) => {
         let response = await AuthService.login(emailField.value, passwordField.value)
         setCurrentUser(response);
         setRedirect(true);
-        // props.history.push("/portal/player");
-        // window.location.reload();
       } catch (error) {
         setLoading(false);
         setMessage(errorMessage(error));

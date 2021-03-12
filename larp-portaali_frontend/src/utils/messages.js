@@ -6,4 +6,4 @@ export const errorMessage = (error) => {
           error.message ||
           error.toString();
   return message
-}
+};

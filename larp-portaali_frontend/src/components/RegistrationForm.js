@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Spinner } from 'react-bootstrap';
 import { Redirect, useParams } from "react-router-dom";
-import UserService from "../services/user.service";
-import GameService from "../services/game.service";
+import RegistrationService from "../services/registration.service";
 import FormService from "../services/form.service";
-import { useTextField, useTextArea } from "../utils/hooks"
+import { TextQuestion, IntegerQuestion, CheckQuestion, TextAreaQuestion } from "./Question";
 import { TextField, TextArea, DummyField } from "./FormFields"
-import { validateRequired, validateDate } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
-import { formatDateRange } from "../utils/formatters";
-import { getQueriesForElement } from "@testing-library/react";
-import { Trash, PencilSquare } from 'react-bootstrap-icons';
+import { prefill } from "../utils/prefill";
+import { isEmpty } from "../utils/utilities";
 
 
 const RegistrationForm = (props) => {
@@ -20,15 +17,13 @@ const RegistrationForm = (props) => {
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
   const [hasChanged, setHasChanged] = useState(false);
-  const [formId, setFormId] = useState(null);
-  const [availableQuestions, setAvailableQuestions] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [isOpen, setOpen] = useState(false);
+  const [answers, setAnswers] = useState({});
+  const [redirect, setRedirect] = useState(false);
+  const [gameId, setGameId] = useState();
+  const [formName, setFormName] = useState("");
+  const [formDescription, setFormDescription] = useState("");
 
-
-  /* Fields for form data */
-  const nameField = useTextField("name", "Lomakkeen nimi:", "text", 64, validateRequired, "", ["horizontal_3-9"]);
-  const descriptionField = useTextArea("description", "Lomakkeen kuvaus:", 256, validateRequired, "", ["horizontal_3-9"], 4);
 
   useEffect(() => {
     fetchForm();
@@ -42,49 +37,106 @@ const RegistrationForm = (props) => {
   }, [message]);
 
   useEffect(() => {
-    setHasChanged(true);
-  }, [questions, nameField.value, descriptionField.value]
-  )        
+    if (!isEmpty(answers)) {
+      sessionStorage.setItem(`answers_${form_id}`, JSON.stringify(answers));
+    }
+  }, [answers]);
+
 
   const fetchForm = async () => {
     try {
-      let response = await FormService.editForm(form_id);
-      let formData = response.data;
-      let questions = formData.form.questions.sort((a, b) => a.position - b.position);
+      let response = await FormService.getForm(form_id);
+      let questions = response.data.form.questions.sort((a, b) => a.position - b.position);
 
-      nameField.setValue(formData.form.name);
-      descriptionField.setValue(formData.form.description);
-      setFormId(formData.form.form_id);
-      setAvailableQuestions(formData.available_questions);
+      setGameId(response.data.form.game_id);
+      setFormName(response.data.form.name);
+      setFormDescription(response.data.form.description);
       setQuestions(questions);
-      setOpen(formData.form.is_open);
+      if (!isEmpty(sessionStorage.getItem(`answers_${form_id}`))) {
+        let storedAnswers = JSON.parse(sessionStorage.getItem(`answers_${form_id}`));
+        setAnswers(storedAnswers);
+      } else {
+        prefillForm(questions);
+      }
       setHasChanged(false);
+      
     } catch (error) {
       setMessage(errorMessage(error));
     };
   };
 
-  const saveFormData = async (e) => {
+  const prefillForm = async (questions) => {
+    let prefilledAnswers = {};
+    for (const question of questions) {
+      if (question.prefill_tag !== null) {
+        prefilledAnswers[question.question_id] = await prefill(question.prefill_tag);
+      }
+    }
+    setAnswers(prefilledAnswers);
+  };
+
+  const onAnswerChange = (event) => {
+    let question_id = event.target.id.split("_")[1];
+    let answer = event.target.value;
+    setAnswers({ ...answers, [question_id]: answer });
+  };
+
+  const onSelectionChange = (event) => {
+    if (event.target.type === "radio") {
+      setAnswers({ ...answers, [event.target.value.split("_")[0]]: event.target.value.split("_")[1] })
+    } else {
+      setAnswers({ ...answers, [event.target.value]: event.currentTarget.checked });
+    }
+  };
+
+  const validateAnswers = () => {
+    for (const question of questions) {
+      if (!answers.hasOwnProperty(question.question_id) ||
+        answers[question.question_id] == "" ||
+        answers[question.question_id] == "0") {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const exportAnswers = () => {
+    let exportAnswers = {};
+    for (const [key, value] of Object.entries(answers)) {
+      if (key.contains("_")) {
+        if (value == "true") {
+          let answerKey = key.split("_")[0];
+          let answerValue = key.split("_")[1];
+          if (exportAnswers.hasOwnProperty(answerKey)) {
+            exportAnswers[answerKey] = [...exportAnswers[answerKey], answerValue];
+          } else {
+            exportAnswers[answerKey] = [answerValue]
+          }
+        }
+      } else {
+        exportAnswers[key] = value;
+      }
+    }
+    return exportAnswers;
+  };
+
+  const submitRegistration = async (e) => {
     e.preventDefault();
     setMessage("");
     setSuccessful(false);
 
-    let formData = {
-      game_id: game_id,
-      form_id: formId,
-      name: nameField.value,
-      description: descriptionField.value,
-      questions: questions
-    };
-
-    if (nameField.validate() &&
-      descriptionField.validate()) {
+    if (validateAnswers()) {
+      let registration = {
+        form_id: form_id,
+        answers: exportAnswers()
+      }
       try {
-        let response = await FormService.updateForm(formData)
+        let response = await RegistrationService.submitRegistration(registration)
         setMessage(response.data.message);
         setSuccessful(true);
-        await fetchForm();
         setHasChanged(false);
+        sessionStorage.removeItem(`answers_${form_id}`);
+        setTimeout(() => setRedirect(true), 3000)
       } catch (error) {
         setMessage(errorMessage(error));
         setSuccessful(false);
@@ -95,85 +147,102 @@ const RegistrationForm = (props) => {
   };
 
 
-
-  const QuestionList = () => {
+  const questionList = () => {
     return (
-      <div>
-          {questions.map((question, index) => {
-            return (
-              <Card key={question.question_id} className="mx-0 my-3 p-0 bg-white">
-                <Card.Header className="d-flex justify-content-end p-1" style={{ backgroundColor: "#e9ecef" }}>
-                  <PencilSquare className="lead mx-1"/>
-                  <Button variant="outline-dark" size="sm"><Trash className="lead mx-1"/></Button>
-                </Card.Header>
-                <Card.Body className="p-2">
-                  <DummyField type={question.question_type} text={question.question_text} description={question.description} options={question.options ? question.options : []}/>
-                </Card.Body>
-
-              </Card>
-            )
-          })}
-      </div>
+      <>
+        {questions.map(question => {
+          return (
+            <>
+              {question.question_type === "text" && (
+                <TextQuestion
+                  key={question.question_id}
+                  question={question}
+                  value={answers[question.question_id]}
+                  onChange={onAnswerChange} />
+              )
+              }
+              {question.question_type === "integer" && (
+                <IntegerQuestion
+                  key={question.question_id}
+                  question={question}
+                  value={answers[question.question_id]}
+                  onChange={onAnswerChange} />
+              )
+              }
+              {(question.question_type === "radio" ||
+                question.question_type === "checkbox") && (
+                  <CheckQuestion
+                    key={`question_${question.question_id}`}
+                    question={question}
+                    value={answers}
+                    onChange={onSelectionChange} />
+                )
+              }
+              {question.question_type === "textarea" && (
+                <TextAreaQuestion
+                  key={question.question_id}
+                  question={question}
+                  value={answers[question.question_id]}
+                  onChange={onAnswerChange} />
+              )
+              }
+            </>
+          )
+        })}
+      </>
     )
-  }
-
+  };
 
 
 
   return (
     <Container>
       <Row>
-        <Col sm="12">
-          <Card className="my-3">
-            <Card.Body>
-              <Card.Title>
-                <h1>Ilmoittautumislomakkeen muokkaus</h1>
-              </Card.Title>
-              <Card.Text>
-                Tällä sivulla voit muokata peliin ilmoittautumiseen käytettävää lomaketta poistamalla tai muokkaamalla
-                oletuskysymyksiä, lisäämällä uusia kysymyksiä ja muuttamalla kysymysten järjestystä. Kokonaan uusien kysymysten
-                luomisen lisäksi voit myös lisätä peliin kysymyksiä mahdollisista muista peleistä, joissa olet järjestäjänä ja
-                muokata niitä tarvittaessa. Myös uusille lomakkeille määritetyt oletuskysymykset ja muokattavasta lomakkeesta poistamasi
-                kysymykset ovat aina lisättävissä (kunnes tallennat lomakkeen, jolloin poistetut kysymykset poistuvat pysyvästi elleivät
-                ne ole oletuskysymyksiä tai käytössä jollakiin muulla lomakkeella). Ainoat pakolliset kysymykset ovat ilmoittautujan nimi
-                ja sähköpostiosoite. Voit myös luoda useita lomakkeita samalle pelille (esim. avustaja- tai NPC-ilmoittautumisia varten)
-                ja hallinnoida niitä erikseen.
-          </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
         <Col sm="1"></Col>
         <Col sm="10">
           <Card className="my-3">
-              <Card.Body>
-                <Card.Title>
-                  <h2>Lomakkeen tiedot</h2>
-                </Card.Title>
-                <Form className="align-items-center" onSubmit={saveFormData}>
-                  <TextField {...nameField} />
-                  <TextArea {...descriptionField} />
-                  <h2>Kysymykset</h2>
-                  
-                  <QuestionList/>
+            <Card.Body>
+              <Card.Title>
+                <h2>{formName}</h2>
+              </Card.Title>
+              <Card.Text>
+                {formDescription}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <Card className="my-3">
+            <Card.Body>
+              <Form className="align-items-center" onSubmit={submitRegistration}>
+                <Container>
 
-                  <Form.Group controlId="submit">
-                    <Button variant="primary" type="submit" disabled={!hasChanged} block>
-                      <span>Tallenna lomake</span>
-                    </Button>
-                  </Form.Group>
+                  {questionList()}
+
+                  <Row>
+                    <Col sm={12}>
+                      <Form.Group controlId="submit">
+                        <Button variant="primary" type="submit" block>
+                          <span>Lähetä ilmoittautuminen</span>
+                        </Button>
+                      </Form.Group>
+                    </Col>
+                  </Row>
 
                   <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
                     {message}
                   </Alert>
 
-                </Form>
-              </Card.Body>
+                </Container>
+              </Form>
+            </Card.Body>
           </Card>
         </Col>
         <Col sm="1"></Col>
       </Row>
+
+      {redirect && (
+        <Redirect to={{ pathname: '/portal/player' }} />
+      )}
+
     </Container>
   );
 };

@@ -15,8 +15,8 @@ const getAdminPortal = async () => {
   return await axios.get(API_URL + "portal/admin", { headers: authHeader() });
 };
 
-const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+const getCurrentUser = async () => {
+  return await JSON.parse(localStorage.getItem("user"));
 };
 
 const updateCurrentUser = (newUser) => {
