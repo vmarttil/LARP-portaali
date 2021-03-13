@@ -46,7 +46,14 @@
 |          | 1,0 | Lisätty suodatus pääsivun peliluetteloon |
 |          | 1,0 | Parannettu käytettävyyttä ja käyttöliittymää |
 |          | 1,0 | Toteutettu kysymysten järjestyksen muuttaminen vetämällä ja pudottamalla käyttäen React Beautiful DnD -kirjastoa |
+| 11032021 | 6,0 | Ilmoittautumislomakkeen toteutus frontissa; kysymysten renderöinti ja vastausten tallennus tilaan |
+|          | 2,0 | Ilmoittautumislomakkeen esitäyttö käyttäjän profiilitietojen perusteella |
+| 12032021 | 1,5 | Debugattu lomakkeen esitäyttö ja lisätty tallennus sessionStorageen ja nouto sieltä |
+|          | 1,5 | Ilmoittautumislomakkeen validointi ja lähetys frontendissä |
+|          | 3,0 | Ilmoittautumisen vastaanotto backendissä |
+|          | 2,0 | Pelin ja henkilön ilmoittautumisluetteloiden haku backendistä ja lähetys frontendiin |
+|          | 2,0 | Ilmoittautumisen vastausten purku ja tallennus tietokantaan |
+| 13032021 | 1,5 | Ilmoittautumisen tietojen haku tietokannasta ja muotoilu objektiksi; rekisteröitymisobjektien refaktorointi front- ja backendissä |
 
-
-| **Yhteensä** | **163,0** | |
+| **Yhteensä** | **182,5** | |
 
