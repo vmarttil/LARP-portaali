@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { Card, Alert, Container, Row, Col, Table, Badge } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
+import PersonService from "../services/person.service";
 import { formatDateRange } from "../utils/formatters"
 import { errorMessage } from "../utils/messages"
 
 
-const MainPage = (props) => {
+const MainPage = ({ currentUser }) => {
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
@@ -49,7 +50,7 @@ const MainPage = (props) => {
                 <td className="col-7">
                   <Link to={`/game/${row.id}`}>
                     {row.name} 
-                    {row.is_open && <Badge variant="primary" className="ml-3">Ilmoittaudu!</Badge>}
+                    {row.is_open && currentUser && <Badge variant="primary" className="ml-3">Ilmoittaudu!</Badge>}
                   </Link> 
                 </td>
                 <td className="col-2">{formatDateRange(row.start_date, row.end_date)}</td>
@@ -74,11 +75,10 @@ const MainPage = (props) => {
                 LARP-portaali on verkkosovellus, joka tarjoaa liveroolipelien (LARP) järjestäjille ja osallistujille helppokäyttöisen ja
                 tarkoitusta varten suunnitellun ympäristön pelien ilmoittautumisten ja hahmojakojen toteutukseen ja hallintaan. Sovellus
                 tarjoaa peleihin liittyvän tiedon tarkasteluun ja käsittelyyn erilliset käyttöliittymät pelinjärjestäjille ja pelaajille.
-                Pelinjärjestäjän käyttöliittymän kautta on mahdollista tarkastella, määritellä, laskea ja hallinnoida peliin liittyviä
-                tietoja, kuten pelin julkisia tietoja, sen hahmoprofiileja, ilmoittautumislomaketta, ilmoittautumisia ja hahmojakoon
-                liittyviä tilastotietoja. Pelaajan käyttöliittymän kautta on mahdollista tarkastella tarjolla olevia pelejä ja niihin
-                liittyviä julkisia tietoja sekä täyttää pelien ilmoittautumislomakkeita ja tarkastella ilmoittautumiseen liittyviä
-                tilannetietoja.
+                LARP-portaalin tämänhetkisessä versiossa elinjärjestäjän käyttöliittymän kautta on mahdollista tarkastella, määritellä, ja hallinnoida peliin liittyviä
+                tietoja, kuten pelin julkisia tietoja, ilmoittautumislomaketta ja ilmoittautumisia. Pelaajan käyttöliittymän kautta on 
+                mahdollista tarkastella tarjolla olevia pelejä ja niihin liittyviä julkisia tietoja sekä täyttää pelien 
+                ilmoittautumislomakkeita ja tarkastella omia ilmoittautumisiaan.
               </Card.Text>
             </Card.Body>
           </Card>

@@ -58,7 +58,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-GET http://www.localhost:8080/api/user/profile HTTP/1.1
+GET http://www.localhost:8080/api/person/profile HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
@@ -70,7 +70,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+PUT http://www.localhost:8080/api/person/profile HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
@@ -86,7 +86,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+PUT http://www.localhost:8080/api/person/profile HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
@@ -109,7 +109,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 
 ####
 
-PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+PUT http://www.localhost:8080/api/person/profile HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
@@ -124,7 +124,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ
 ####
 
 
-PUT http://www.localhost:8080/api/user/profile HTTP/1.1
+PUT http://www.localhost:8080/api/person/profile HTTP/1.1
 content-type: application/json
 x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjEzOTQ5MzQ4LCJleHAiOjE2MTQwMzU3NDh9.e-OBtnomgUbQXXJIqVYbhcp23k97vRKjcd-cwD7z-q0
 
@@ -227,7 +227,7 @@ x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTY
 
 GET http://localhost:8080/api/form/1 HTTP/1.1
 content-type: application/json
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1MTA1MzM2LCJleHAiOjE2MTUxOTE3MzZ9.SXPP0BHD6HPqfRDVGddA9WNEq3Qno3faw5HVzfP7ZtM
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjE1NDkyNzUwLCJleHAiOjE2MTU1NzkxNTB9.gIOB4rIbxOh9G_r-WchEB9_wpWPu3NFGiq-jRjyUSB4
 
 ####
 

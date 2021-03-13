@@ -3,6 +3,7 @@ import { Card, Form, Button, Alert, Container, Row, Col, Spinner } from 'react-b
 import { Redirect, useParams } from "react-router-dom";
 import RegistrationService from "../services/registration.service";
 import FormService from "../services/form.service";
+import PersonService from "../services/person.service";
 import { TextQuestion, IntegerQuestion, CheckQuestion, TextAreaQuestion } from "./Question";
 import { TextField, TextArea, DummyField } from "./FormFields"
 import { errorMessage } from "../utils/messages";
@@ -10,7 +11,7 @@ import { prefill } from "../utils/prefill";
 import { isEmpty } from "../utils/utilities";
 
 
-const RegistrationForm = (props) => {
+const RegistrationForm = ({ currentUser }) => {
 
   const { game_id, form_id } = useParams();
 
@@ -23,7 +24,6 @@ const RegistrationForm = (props) => {
   const [gameId, setGameId] = useState();
   const [formName, setFormName] = useState("");
   const [formDescription, setFormDescription] = useState("");
-
 
   useEffect(() => {
     fetchForm();
@@ -52,11 +52,11 @@ const RegistrationForm = (props) => {
       setFormName(response.data.form.name);
       setFormDescription(response.data.form.description);
       setQuestions(questions);
-      if (!isEmpty(sessionStorage.getItem(`answers_${form_id}`))) {
+      if (sessionStorage.getItem(`answers_${form_id}`) == null || isEmpty(sessionStorage.getItem(`answers_${form_id}`))) {
+        prefillForm(questions);
+      } else {
         let storedAnswers = JSON.parse(sessionStorage.getItem(`answers_${form_id}`));
         setAnswers(storedAnswers);
-      } else {
-        prefillForm(questions);
       }
       setHasChanged(false);
       
@@ -83,41 +83,59 @@ const RegistrationForm = (props) => {
 
   const onSelectionChange = (event) => {
     if (event.target.type === "radio") {
-      setAnswers({ ...answers, [event.target.value.split("_")[0]]: event.target.value.split("_")[1] })
+      setAnswers({ ...answers, [event.target.value.split("_")[0].concat("?")]: event.target.value.split("_")[1] })
     } else {
       setAnswers({ ...answers, [event.target.value]: event.currentTarget.checked });
     }
   };
 
   const validateAnswers = () => {
-    for (const question of questions) {
-      if (!answers.hasOwnProperty(question.question_id) ||
-        answers[question.question_id] == "" ||
-        answers[question.question_id] == "0") {
+    let answered = Object.entries(answers).filter(e => (!e[0].includes("_") && !e[0].includes("?") && e[1] != "")).map(e => e[0]);
+    let choices = Object.entries(answers).filter(e => (!e[0].includes("_") && e[0].includes("?") && e[1] != "")).map(e => e[0]);
+    let selected = [...new Set(Object.entries(answers).filter(e => (e[0].includes("_") && e[1] == true)).map(e => e[0].split("_")[0]))];
+    let valid = answered.concat(choices, selected).map(v => parseInt(v)).sort();
+    let questionIds = questions.map(q => q.question_id).sort();
+    if (valid.length !== questionIds.length) {
+      return false;
+    }
+    for (let i = 0; i < valid.length; i++) {
+      if (valid[i] !== questionIds[i]) {
         return false;
       }
     }
     return true;
-  }
+  };
 
   const exportAnswers = () => {
     let exportAnswers = {};
     for (const [key, value] of Object.entries(answers)) {
-      if (key.contains("_")) {
-        if (value == "true") {
-          let answerKey = key.split("_")[0];
-          let answerValue = key.split("_")[1];
+      if (key.includes("_")) {
+        if (value == true) {
+          let questionId = key.split("_")[0];
+          let optionNumber = key.split("_")[1];
           if (exportAnswers.hasOwnProperty(answerKey)) {
             exportAnswers[answerKey] = [...exportAnswers[answerKey], answerValue];
           } else {
-            exportAnswers[answerKey] = [answerValue]
+            exportAnswers[answerKey] = [answerValue];
           }
         }
+      } else if (key.includes("?")) {
+        exportAnswers[key] = [value];
       } else {
         exportAnswers[key] = value;
       }
     }
-    return exportAnswers;
+    let answerList = [];
+    for (const [question_id, answerContent] of Object.entries(exportAnswers)) {
+      let answer = null;
+      if (Array.isArray(answerContent)) {
+        answer = {question_id: question_id, options: answerContent};
+      } else {
+        answer = {question_id: question_id, answer_text: answerContent};
+      }
+      answerList.push(answer);
+    }
+    return answerList;
   };
 
   const submitRegistration = async (e) => {
@@ -127,6 +145,7 @@ const RegistrationForm = (props) => {
 
     if (validateAnswers()) {
       let registration = {
+        user_id: currentUser.id,
         form_id: form_id,
         answers: exportAnswers()
       }
@@ -152,7 +171,7 @@ const RegistrationForm = (props) => {
       <>
         {questions.map(question => {
           return (
-            <>
+            <div key={question.question_id}>
               {question.question_type === "text" && (
                 <TextQuestion
                   key={question.question_id}
@@ -186,7 +205,7 @@ const RegistrationForm = (props) => {
                   onChange={onAnswerChange} />
               )
               }
-            </>
+            </div>
           )
         })}
       </>
@@ -242,6 +261,11 @@ const RegistrationForm = (props) => {
       {redirect && (
         <Redirect to={{ pathname: '/portal/player' }} />
       )}
+
+      {!currentUser && (
+        <Redirect to={{ pathname: '/' }} />
+      )
+      }
 
     </Container>
   );

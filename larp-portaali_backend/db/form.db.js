@@ -5,16 +5,17 @@ const queries = require("./form.queries.js")
 const question_queries = require("./question.queries.js")
 const Game = require("./game.db.js")
 const Question = require("./question.db.js")
+const Person = require("./person.db.js")
 
 getQuestionTypes = async () => {
   let { rows } = await db.query(queries.getQuestionTypes, []);
   return rows.length > 0 ? rows : [];
-}
+};
 
 getFormClasses = async () => {
   let { rows } = await db.query(queries.getFormClasses, []);
   return rows.length > 0 ? rows : [];
-}
+};
 
 createForm = async (formData) => {
   let parameters = [
@@ -32,12 +33,12 @@ createForm = async (formData) => {
   } else {
     return null;
   }
-}
+};
 
 getFormQuestionList = async (formId) => {
   let { rows } = await db.query(queries.getFormQuestionList, [formId]);
   return rows.length > 0 ? rows : [];
-}
+};
 
 getForm = async (formId) => {
   let { rows } = await db.query(queries.getForm, [formId]);
@@ -48,7 +49,7 @@ getForm = async (formId) => {
   } else {
     return null;
   }
-}
+};
 
 getFormQuestions = async (formId) => {
   let { rows } = await db.query(queries.getFormQuestions, [formId]);
@@ -64,7 +65,7 @@ getFormQuestions = async (formId) => {
   } else {
     return [];
   }
-}
+};
 
 updateForm = async (formId, formData) => {
   let parameters = [
@@ -139,23 +140,24 @@ updateForm = async (formId, formData) => {
   }
   // Get and return the updated form
   return await getForm(formId);
-}
+};
 
 getFormGameId = async (formId) => {
   let { rows } = await db.query(queries.getFormGame, [formId]);
   return rows[0].game_id;
-}
+};
 
 isOpen = async (formId) => {
   let { rows } = await db.query(queries.isOpen, [formId]);
   return rows.length > 0 ? rows[0].is_open : null;
-}
+};
 
-toggleRegistration = async (formId, gameId) => {
+toggleRegistration = async (formId) => {
+  let gameId = await getFormGameId(formId);
   let gameForms = await Game.getGameForms(gameId);
   let toggledForm = gameForms.find(form => form.id == formId)
   let sameClassForms = gameForms.filter(form => form.form_class === toggledForm.form_class)
-  // If the toggled form is open or none of the forms of the same type are open, allow the toggleand return true, else return false
+  // If the toggled form is open or none of the forms of the same type are open, allow the toggle and return true, else return false
   if (toggledForm.is_open || sameClassForms.every(form => !form.is_open)) {
     let { rows } = await db.query(queries.toggleRegistration, [formId]);
     if (rows.length > 0) {
@@ -166,18 +168,38 @@ toggleRegistration = async (formId, gameId) => {
   } else {
     return { success: false, target: !toggledForm.is_open };
   }
+};
+
+getFormRegistrations = async (form_id) => {
+  let { rows } = await db.query(queries.getFormRegistrations, [formId]);
+  if (rows.length > 0) {
+    registrations = [];
+    for (row of rows) {
+      let name = Person.getName(row.person_id);
+      let registration = {form_id: row.form_id, person_id: row.person_id, name: name, submitted: submitted};
+      registrations.push(registration);
+    }
+    return registrations;
+  } else {
+    return [];
+  }
+};
+
+checkOrganiserStatus = async (formId, personId) => {
+  let { rows } = await db.query(queries.checkOrganiserStatus, [formId, personId]);
+  return rows.length > 0;
 }
 
-countRegistrations = async (formId) => {
-  // To be implemented with registrations
-  return 0;
-}
+countFormRegistrations = async (formId) => {
+  let { rows } = await db.query(queries.countFormRegistrations, [formId]);
+  return rows[1].count;
+};
 
 isEditable = async (formId) => {
   let open = await isOpen(formId);
-  let registrations = await countRegistrations(formId);
+  let registrations = await countFormRegistrations(formId);
   return !open && registrations == 0;
-}
+};
 
 module.exports = {
   getQuestionTypes,
@@ -188,7 +210,9 @@ module.exports = {
   updateForm,
   getFormGameId,
   isOpen,
+  getFormRegistrations,
   toggleRegistration,
-  countRegistrations,
+  checkOrganiserStatus,
+  countFormRegistrations,
   isEditable
 };

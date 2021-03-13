@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import "./App.css";
 
 import AuthService from "./services/auth.service";
-import UserService from "./services/user.service";
+import PersonService from "./services/person.service";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -29,8 +29,7 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
-    const user = UserService.getCurrentUser();
-
+    const user = PersonService.getCurrentUser();
     if (user) {
       setCurrentUser(user);
       setShowAdminPortal(user.admin);
@@ -121,7 +120,7 @@ const App = () => {
         <div className="container mt-3">
           <Switch>
             <Route exact path={["/", "/home", "/mainPage"]}>
-              <MainPage />
+              <MainPage currentUser={currentUser}/>
             </Route>
             <Route exact path="/login">
               <Login setCurrentUser={setCurrentUser}/>
@@ -130,31 +129,31 @@ const App = () => {
               <Register />  
             </Route>
             <Route exact path="/profile">
-              <Profile/>  
+              <Profile currentUser={currentUser}/>  
             </Route>
             <Route exact path="/game/new">
-              <NewGame />  
+              <NewGame currentUser={currentUser}/>  
             </Route>
             <Route path="/game/:game_id/form/:form_id/edit">
-              <EditForm />  
+              <EditForm currentUser={currentUser}/>  
             </Route>
             <Route path="/game/:game_id/form/:form_id/register">
-              <RegistrationForm />
+              <RegistrationForm currentUser={currentUser}/>
             </Route>
             <Route path="/game/:id/edit">
-              <EditGame />  
+              <EditGame currentUser={currentUser}/>  
             </Route>
             <Route path="/game/:id">
-              <Game />  
+              <Game currentUser={currentUser}/>  
             </Route>
             <Route path="/portal/player">
-              <PlayerPortal />  
+              <PlayerPortal currentUser={currentUser}/>  
             </Route>
             <Route path="/portal/organiser">
-              <OrganiserPortal />  
+              <OrganiserPortal currentUser={currentUser}/>  
             </Route>
             <Route path="/portal/admin">
-              <AdminPortal />
+              <AdminPortal currentUser={currentUser}/>
             </Route>
           </Switch>
         </div>

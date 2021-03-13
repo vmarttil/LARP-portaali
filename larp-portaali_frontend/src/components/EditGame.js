@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Alert, Row, Col, Modal } from 'react-bootstrap';
 import { Redirect, useParams } from "react-router-dom";
-import UserService from "../services/user.service";
+import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import { useTextField, useTextArea, useDateField } from "../utils/hooks"
 import { TextField, TextArea, DateField } from "./FormFields"
@@ -9,7 +9,7 @@ import { validateRequired, noValidate } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 import { XSquare, PlusSquare } from 'react-bootstrap-icons';
 
-const EditGame = (props) => {
+const EditGame = ({ currentUser }) => {
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
@@ -76,7 +76,7 @@ const EditGame = (props) => {
       setSuccessful(true);
       setMessage(response.data.message);
 
-      if (parseInt(organiserId) === UserService.getCurrentUser().id) {
+      if (parseInt(organiserId) === PersonService.getCurrentUser().id) {
         setTimeout(() => setRedirect(true), 1000)
       }
     } catch (error) {
@@ -102,7 +102,7 @@ const EditGame = (props) => {
   const findPerson = async () => {
     setMessage("");
     try {
-      let response = await UserService.findPerson(newOrganiserEmail);
+      let response = await PersonService.findPerson(newOrganiserEmail);
       setNewOrganiser(response.data.person);
       setSuccessful(true);
     } catch (error) {
@@ -248,6 +248,11 @@ const EditGame = (props) => {
       {redirect && (
         <Redirect to={{ pathname: '/portal/organiser' }} />
       )}
+
+      {!currentUser && (
+        <Redirect to={{ pathname: '/' }} />
+      )
+      }
 
     </Container>
   );

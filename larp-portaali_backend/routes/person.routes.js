@@ -11,20 +11,26 @@ module.exports = function(app) {
   });
 
   app.get(
-    "/api/user/profile",
+    "/api/person/profile",
     [authJwt.verifyToken],
     controller.getProfile
   );
 
   app.put(
-    "/api/user/profile",
+    "/api/person/profile",
     [authJwt.verifyToken],  
     controller.updateProfile
   );
 
   app.post(
-    "/api/user",
+    "/api/person",
     controller.findPerson
+  );
+
+  app.get(
+    "/api/person/registrations",
+    [authJwt.verifyToken],
+    controller.getPersonRegistrations
   );
 
 };

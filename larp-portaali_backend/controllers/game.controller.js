@@ -4,8 +4,6 @@ const Form = require("../db/form.db");
 const Person = require("../db/person.db");
 
 
-// Pelien tietojen hallinta
-
 exports.gameList = async (req, res) => {
   let gameList = await Game.getFutureGames();
   res.status(200).send({ games: gameList });
@@ -54,11 +52,13 @@ exports.organiserGameList = async (req, res) => {
 }
 
 exports.updateGame = async (req, res) => {
+  let gameId = req.params.game_id;
+  let gameData = req.body.data;
   // Checks whether the logged in user is an organiser of the game
-  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+  if (await Game.checkOrganiserStatus(gameId, req.userId)) {
     // Updates the information of the game
     try {
-      let result = await Game.updateGame(req.params.game_id, req.body.data);
+      let result = await Game.updateGame(gameId, gameData);
       if (result) {
         res.status(200).send({ message: "Pelin tiedot päivitetty." });
       } else {
@@ -73,11 +73,12 @@ exports.updateGame = async (req, res) => {
 }
 
 exports.getOrganisers = async (req, res) => {
+  let gameId = req.params.game_id;
   // Checks whether the logged in user is an organiser of the game
-  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+  if (await Game.checkOrganiserStatus(gameId, req.userId)) {
     // Gets a list of organiser ids and names
     try {
-      let result = await Game.getOrganisers(req.params.game_id);
+      let result = await Game.getOrganisers(gameId);
       if (result) {
         res.status(200).send({ organisers: result });
       } else {
@@ -92,12 +93,13 @@ exports.getOrganisers = async (req, res) => {
 }
 
 exports.addOrganiser = async (req, res) => {
+  let gameId = req.params.game_id;
   // Checks whether the logged in user is an organiser of the game
-  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+  if (await Game.checkOrganiserStatus(gameId, req.userId)) {
     let newOrganiserId = req.body.data.id;
     // Checks whether the user is already an organiser
-    if (await Game.checkOrganiserStatus(req.params.game_id, newOrganiserId) === false) {
-      await Game.addOrganiser(req.params.game_id, newOrganiserId);
+    if (await Game.checkOrganiserStatus(gameId, newOrganiserId) === false) {
+      await Game.addOrganiser(gameId, newOrganiserId);
       res.status(200).send({ message: "Henkilö lisätty järjestäjäksi." });  
     } else {
       res.status(403).send({ message: "Henkilö on jo pelin järjestäjä." });  
@@ -108,14 +110,16 @@ exports.addOrganiser = async (req, res) => {
 }
 
 exports.removeOrganiser = async (req, res) => {
+  let gameId = req.params.game_id;
+  let organiserId = req.body.data.id;
   // Checks whether the logged in user is an organiser of the game
-  if (await Game.checkOrganiserStatus(req.params.game_id, req.userId)) {
+  if (await Game.checkOrganiserStatus(gameId, req.userId)) {
     // Checks whether the user to be removed is an organiser of the game
-    if (await Game.checkOrganiserStatus(req.params.game_id, req.body.data.id)) {
+    if (await Game.checkOrganiserStatus(gameId, organiserId)) {
       // Checks whether the removed user is the only organiser of the game
-      let organiserList = await Game.getOrganisers(req.params.game_id);
+      let organiserList = await Game.getOrganisers(gameId);
       if (organiserList.length > 1) {
-        let result = await Game.removeOrganiser(req.params.game_id, req.body.data.id);
+        let result = await Game.removeOrganiser(gameId, organiserId);
         res.status(200).send({ message: "Järjestäjä poistettu." });  
       } else {
         res.status(403).send({ message: "Pelin ainoaa järjestäjää ei voi poistaa." });

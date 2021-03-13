@@ -27,6 +27,7 @@ const Login = ({ setCurrentUser }) => {
     if (!emailField.error && !passwordField.error) {
       try {
         let response = await AuthService.login(emailField.value, passwordField.value)
+        console.log("Sisäänkirjautunut käyttäjä: ", response)
         setCurrentUser(response);
         setRedirect(true);
       } catch (error) {
@@ -78,7 +79,7 @@ const Login = ({ setCurrentUser }) => {
         <Col sm="4"></Col>
       </Row>
       {redirect && (
-        <Redirect to={{ pathname: '/portal/player' }} />
+        <Redirect to={{ pathname: '/' }} />
       )}
     </Container>
   );

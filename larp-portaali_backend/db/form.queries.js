@@ -86,11 +86,31 @@ const toggleRegistration = `
   WHERE id = $1
   RETURNING is_open;
 `
+const checkOrganiserStatus = `
+  SELECT * 
+  FROM game_organiser AS go
+  JOIN game AS g ON go.game_id = g.id
+  JOIN form AS f ON g.id = f.game_id
+  WHERE f.id = $1 AND go.person_id = $2;
+`
 const isOpen = `
   SELECT is_open FROM form WHERE id = $1;
 `
+const countFormRegistrations = `
+  SELECT COUNT(*)
+  FROM registrations
+  WHERE form_id = $1;
+`
 const getFormGame = `
   SELECT game_id FROM form WHERE id = $1;
+`
+const getFormRegistrations = `
+  SELECT 
+    form_id,
+    person_id,
+    submitted
+  FROM registration
+  WHERE form_id = $1;
 `
 
 module.exports = {
@@ -106,7 +126,10 @@ module.exports = {
   updateQuestionPosition,
   removeQuestion,
   toggleRegistration,
+  checkOrganiserStatus,
   isOpen,
-  getFormGame
+  countFormRegistrations,
+  getFormGame,
+  getFormRegistrations
 };
 

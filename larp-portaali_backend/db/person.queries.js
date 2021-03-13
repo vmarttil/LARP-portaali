@@ -67,6 +67,19 @@ const findPersonByEmail = `
   FROM person
   WHERE email = $1;
 `
+const getPersonRegistrations = `
+  SELECT 
+    r.person_id,
+    f.id AS form_id,
+    f.name AS form_name
+    g.id AS game_id,
+    g.name AS game_name,
+    r.submitted
+  FROM registration AS r
+  JOIN form AS f ON r.form_id = f.id
+  JOIN game AS g ON f.game_id ) g.id
+  WHERE r.person_id = $1;
+`
 
 module.exports = {
   checkAdminStatus,
@@ -78,5 +91,6 @@ module.exports = {
   updatePersonalData,
   updateProfileData,
   updateAdminData,
-  findPersonByEmail
+  findPersonByEmail,
+  getPersonRegistrations
 };

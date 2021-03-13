@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
-import UserService from "../services/user.service";
+import PersonService from "../services/person.service";
 import { useTextField, useTextArea, useRadioField, useDateField } from "../utils/hooks"
 import { TextField, TextArea, RadioField, DateField } from "./FormFields"
 import { noValidate, validateRequired, validateEmail, validatePassword, validatePhoneNumber, validateDate } from "../utils/validate"
@@ -11,10 +11,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const Profile = (props) => {
-
-  const currentUser = UserService.getCurrentUser();
-  const userId = currentUser.id;
+const Profile = ({ currentUser }) => {
 
   /* Fields for user profile data */
   const emailField = useTextField("email", "Sähköposti:", "email", 32, validateEmail, currentUser.email, ["horizontal_3-6"]);
@@ -48,22 +45,20 @@ const Profile = (props) => {
     return () => clearTimeout(timer);
   }, [message]);
 
-  // Form submission handlers
-
   const saveAccountData = async (e) => {
     e.preventDefault();
     setMessage("");
     setSuccessful(false);
 
     let updateData = {
-      id: userId,
+      id: currentUser.id,
       email: emailField.value,
       password: passwordField.value
     };
 
     if (emailField.validate() && passwordField.validate()) {
       currentUser.email = emailField.value;
-      UserService.updateCurrentUser(currentUser);
+      PersonService.updatecurrentUser(currentUser);
       setSaveType("account");
       saveData(updateData);
     } else {
@@ -78,7 +73,7 @@ const Profile = (props) => {
     setSuccessful(false);
 
     let updateData = {
-      id: userId,
+      id: currentUser.id,
       personal_data: {
         first_name: firstNameField.value,
         last_name: lastNameField.value,
@@ -102,7 +97,7 @@ const Profile = (props) => {
       dietaryRestrictionsField.validate() &&
       healthInformationField.validate()) {
       currentUser.personal_data = updateData.personal_data;
-      UserService.updateCurrentUser(currentUser);
+      PersonService.updatecurrentUser(currentUser);
       setSaveType("personal");
       saveData(updateData);
     } else {
@@ -117,7 +112,7 @@ const Profile = (props) => {
     setSuccessful(false);
 
     let updateData = {
-      id: userId,
+      id: currentUser.id,
       profile_data: {
         player_profile: playerProfileField.value,
         plot_preferences: plotPreferencesField.value
@@ -126,7 +121,7 @@ const Profile = (props) => {
 
     if (playerProfileField.validate() && plotPreferencesField.validate()) {
       currentUser.profile_data = updateData.profile_data;
-      UserService.updateCurrentUser(currentUser);
+      PersonService.updatecurrentUser(currentUser);
       setSaveType("profile");
       saveData(updateData);
     } else {
@@ -137,7 +132,7 @@ const Profile = (props) => {
 
   async function saveData(updateData) {
     try {
-      let response = await UserService.saveUserProfile(updateData)
+      let response = await PersonService.savePersonProfile(updateData)
       setMessage(response.data.message);
       setSuccessful(true);
     } catch (error) {
@@ -243,6 +238,12 @@ const Profile = (props) => {
           </Card>
         </Col>
       </Row>
+
+      {!currentUser && (
+        <Redirect to={{ pathname: '/' }} />
+      )
+      }
+
     </Container>
   );
 };

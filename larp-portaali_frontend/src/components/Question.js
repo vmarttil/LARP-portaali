@@ -63,6 +63,7 @@ const CheckQuestion = ({ question, value, onChange }) => {
         value={`${question.question_id}_${option.number}`}
         checked={question.question_type === "radio" ? value[question.question_id] == option.number : value[`${question.question_id}_${option.number}`]}
         onClick={onChange}
+        onChange={e => {}}
         label={option.text}
       />
     )

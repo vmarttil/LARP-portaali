@@ -45,21 +45,16 @@ module.exports = function(app) {
     controller.getForm
   );
 
-  // app.post(
-  //   "/api/form/question", 
-  //   [authJwt.verifyToken],
-  //   controller.createQuestion
-  // );
-
   app.get(
     "/api/form/question/:question_id", 
     [authJwt.verifyToken],
     controller.getQuestion
   );
 
-  // app.put(
-  //   "/api/form/question/:question_id", 
-  //   [authJwt.verifyToken],
-  //   controller.updateQuestion
-  // );
+  app.get(
+    "/api/form/:form_id/registrations", 
+    [authJwt.verifyToken],
+    controller.getFormRegistrations
+  ); 
+
 };

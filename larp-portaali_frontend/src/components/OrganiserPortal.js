@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
-
+import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import FormService from "../services/form.service";
 import { formatDateRange } from "../utils/formatters"
@@ -9,7 +9,7 @@ import { errorMessage } from "../utils/messages"
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
-const OrganiserPortal = (props) => {
+const OrganiserPortal = ({ currentUser }) => {
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
@@ -155,6 +155,12 @@ const OrganiserPortal = (props) => {
         <Redirect to={redirect} />
       )
       }
+
+      {!currentUser && (
+        <Redirect to={{ pathname: '/' }} />
+      )
+      }
+
     </Container>
   );
 };

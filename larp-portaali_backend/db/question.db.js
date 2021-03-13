@@ -20,7 +20,7 @@ createQuestion = async (questionData) => {
     newQuestion.options = questionData.options;
   }
   return rows.length > 0 ? newQuestion : null;
-}
+};
 
 getQuestion = async (questionId) => {
   let { rows } = await db.query(queries.getQuestion, [questionId]);
@@ -33,7 +33,7 @@ getQuestion = async (questionId) => {
   } else {
     return null;
   }
-}
+};
 
 getAvailableQuestions = async (personId, formId) => {
   let { rows } = await db.query(queries.getAvailableQuestions, [personId, formId]);
@@ -49,12 +49,12 @@ getAvailableQuestions = async (personId, formId) => {
   } else {
     return [];
   }
-}
+};
 
 getQuestionOptions = async (questionId) => {
   let { rows } = await db.query(queries.getOptions, [questionId]);
   return rows.length > 0 ? rows : null;
-}
+};
 
 updateQuestion = async (questionId, questionData) => {
   let parameters = [
@@ -88,12 +88,12 @@ updateQuestion = async (questionId, questionData) => {
     }
   }
   return await getQuestion(questionId);
-}
+};
 
 deleteQuestion = async (questionId) => {
   let { rowCount } = await db.query(queries.deleteQuestion, [questionId]);
   return rowCount > 0;
-}
+};
 
 isChanged = async (questionData) => {
   let oldQuestionData = await getQuestion(questionData.question_id);
@@ -115,34 +115,34 @@ isChanged = async (questionData) => {
     }
   }
   return false;
-}
+};
 
 isEditable = async (questionId) => {
   let formCount = await countForms(questionId);
   let is_default = await isDefault(questionId);
   return formCount < 2 && is_default === false;
-}
+};
 
 isRemovable = async (questionId) => {
   let formCount = await countForms(questionId);
   let is_default = await isDefault(questionId);
   return formCount < 1 && is_default === false;
-}
+};
 
 isOptional = async (questionId) => {
   let { rows } = await db.query(queries.checkOptional, [questionId]);
   return rows[0].is_optional;
-}
+};
 
 countForms = async (questionId) => {
   let { rows } = await db.query(queries.countForms, [questionId]);
   return rows[0].count;
-}
+};
 
 isDefault = async (questionId) => {
   let { rows } = await db.query(queries.checkDefault, [questionId]);
   return rows[0].is_default;
-}
+};
 
 module.exports = {
   createQuestion,

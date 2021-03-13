@@ -15,35 +15,35 @@ const getAdminPortal = async () => {
   return await axios.get(API_URL + "portal/admin", { headers: authHeader() });
 };
 
-const getCurrentUser = async () => {
-  return await JSON.parse(localStorage.getItem("user"));
+const getCurrentUser = () => {
+  return JSON.parse(localStorage.getItem("user"));
 };
 
 const updateCurrentUser = (newUser) => {
   localStorage.setItem("user", JSON.stringify(newUser));
 };
 
-const getUserProfile = async () => {
-  return await axios.get(API_URL + "user/profile/", { headers: authHeader() });
+const getPersonProfile = async () => {
+  return await axios.get(API_URL + "person/profile/", { headers: authHeader() });
 }
 
-const saveUserProfile = async (userProfileData) => {
-  return await axios.put(API_URL + "user/profile", { data: userProfileData }, { headers: authHeader() });
+const savePersonProfile = async (userProfileData) => {
+  return await axios.put(API_URL + "person/profile", { data: userProfileData }, { headers: authHeader() });
 };
 
 const findPerson = async (email) => {
-  return await axios.post(API_URL + "user", { data: {email: email} });
+  return await axios.post(API_URL + "person", { data: {email: email} });
 };
 
-let UserService = {
+let PersonService = {
   getPlayerPortal,
   getOrganiserPortal,
   getAdminPortal,
   getCurrentUser,
   updateCurrentUser,
-  getUserProfile,
-  saveUserProfile,
+  getPersonProfile,
+  savePersonProfile,
   findPerson
 };
 
-export default UserService;
+export default PersonService;

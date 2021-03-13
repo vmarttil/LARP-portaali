@@ -2,7 +2,6 @@ const logger = require("../utils/logger");
 var jwt = require("jsonwebtoken");
 const Game = require("../db/game.db");
 
-// Käyttäjäryhmäkohtaisten portaalien sisällöt
 
 exports.adminPortal = (req, res) => {
   res.status(200).send("Ylläpitosivun sisältö.");

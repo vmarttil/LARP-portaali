@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Modal, InputGroup } from 'react-bootstrap';
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Redirect } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormService from "../services/form.service";
+import PersonService from "../services/person.service";
 import { useTextField, useTextArea, useSelectField, useRadioField } from "../utils/hooks"
 import { TextField, TextArea, DummyField, SelectField, RadioField } from "./FormFields"
 import { validateRequired, noValidate } from "../utils/validate"
@@ -11,7 +12,7 @@ import { Trash, PencilSquare, PlusSquare, XSquare } from 'react-bootstrap-icons'
 import "../css/Button.css";
 
 
-const EditForm = (props) => {
+const EditForm = ({ currentUser }) => {
 
   const { game_id, form_id } = useParams();
 
@@ -459,6 +460,11 @@ const EditForm = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {!currentUser && (
+        <Redirect to={{ pathname: '/' }} />
+      )
+      }
 
     </Container>
   );

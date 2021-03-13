@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import UserService from "../services/user.service";
+import PersonService from "../services/person.service";
 
-const AdminPortal = () => {
+const AdminPortal = ({ currentUser }) => {
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    UserService.getAdminPortal().then(
+    PersonService.getAdminPortal().then(
       (response) => {
         setContent(response.data);
       },

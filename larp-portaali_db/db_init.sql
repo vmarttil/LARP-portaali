@@ -118,3 +118,51 @@ CREATE TABLE option (
     ON DELETE CASCADE
 );
 
+CREATE TABLE registration (
+  person_id int NOT NULL,
+  form_id int NOT NULL,
+  submitted timestamp NOT NULL,
+  PRIMARY KEY (person_id, form_id),
+  CONSTRAINT fk_form_registration
+    FOREIGN KEY (person_id) 
+	  REFERENCES person(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_registration_form
+    FOREIGN KEY (form_id) 
+	  REFERENCES form(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE answer (
+  person_id int NOT NULL,
+  form_id int NOT NULL,
+  question_id int NOT NULL,
+  answer_text text NOT NULL,
+  PRIMARY KEY (person_id, form_id, question_id),
+  CONSTRAINT fk_answer_registration
+    FOREIGN KEY (person_id, form_id) 
+	  REFERENCES registration(person_id_form_id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_answer_form_question
+    FOREIGN KEY (form_id, question_id) 
+	  REFERENCES form_question(form_id, question_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE answer_option (
+  person_id int NOT NULL,
+  form_id int NOT NULL,
+  question_id int NOT NULL,
+  option_number int NOT NULL,
+  PRIMARY KEY (person_id, form_id, question_id, option_number),
+  CONSTRAINT fk_answer_option_answer
+    FOREIGN KEY (person_id, form_id, question_id) 
+	  REFERENCES answer(person_id, form_id, question_id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_answer_option_option
+    FOREIGN KEY (question_id, option_number) 
+	  REFERENCES option(question_id, option_number)
+    ON DELETE CASCADE
+);
+
+

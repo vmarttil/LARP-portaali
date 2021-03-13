@@ -4,6 +4,7 @@ const Person = require("../db/person.db");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
+
 exports.signup = async (req, res) => {
   // Save the user as a person to the database
   try {
@@ -20,7 +21,7 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    let user = await Person.getByEmail(req.body.data.email)
+    let user = await Person.getByEmail(req.body.data.email);
     if (!user) {
       return res.status(404).send({ 
         message: "Käyttäjätunnusta ei löydy." 
@@ -51,6 +52,7 @@ exports.signin = async (req, res) => {
         name = user.personal_data.first_name.concat(" ", user.personal_data.last_name);
       }
     }
+
     // Return the user's data to the frontend
     res.status(200).send({
         id: user.id,
@@ -62,6 +64,6 @@ exports.signin = async (req, res) => {
         accessToken: token
     });
   } catch(err) {
-      res.status(500).send({ message: err.message });
+      res.status(500).send({ messsage: err.message });
   };
 };

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
 import { Link, useParams } from "react-router-dom";
 import GameService from "../services/game.service";
+import PersonService from "../services/person.service";
 import { errorMessage } from "../utils/messages";
 import { formatDateRange } from "../utils/formatters";
 
-const Game = (props) => {
-
+const Game = ({ currentUser }) => {
+  
   const [message, setMessage] = useState("");
   const [game, setGame] = useState(null);
 
@@ -30,7 +31,7 @@ const Game = (props) => {
       <>
         {openForms.map(form => {
           return (
-            <Link to={`/game/${id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
+            <Link key={form.id} to={`/game/${id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
               <Button key={form.id} variant="primary" type="button" size="sm">{form.button_text}</Button>
             </Link>
           )
@@ -76,7 +77,9 @@ const Game = (props) => {
                   </Col>
                 </Row>
                 <Row>
+                {currentUser &&
                   <RegistrationButtons />
+                }
                 </Row>
               </Card.Body>
             ) :

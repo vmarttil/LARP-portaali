@@ -23,7 +23,7 @@ createGame = async (organiserId, gameData) => {
   } else {
     return null;
   }
-}
+};
 
 getGame = async (gameId) => {
   let { rows } = await db.query(queries.getGame, [gameId]);
@@ -35,7 +35,7 @@ getGame = async (gameId) => {
   } else {
     return null;
   }
-}
+};
 
 updateGame = async (gameId, gameData) => {
   let parameters = [
@@ -49,7 +49,7 @@ updateGame = async (gameId, gameData) => {
   ];
   let { rows } = await db.query(queries.updateGame, parameters);
   return rows.length > 0;
-}
+};
 
 getFutureGames = async () => {
   let { rows } = await db.query(queries.getFutureGames, []);
@@ -58,26 +58,24 @@ getFutureGames = async () => {
     row.forms = await getGameForms(row.id);
   }
   return rows;
-}
+};
 
 getOrganiserGames = async (organiserId) => {
   let { rows } = await db.query(queries.getOrganiserGames, [organiserId]);
   let gameList = []
   for (row of rows) {
     let game = row;
-    // This will be implemented with registrations
-    game.registrations = 0;
     game.organisers = await getOrganisers(game.id);
     game.forms = await getGameForms(game.id);
     gameList.push(game);
   }
   return gameList;
-}
+};
 
 checkOrganiserStatus = async (gameId, personId) => {
   let { rows } = await db.query(queries.checkOrganiserStatus, [gameId, personId]);
   return rows.length > 0;
-}
+};
 
 getOrganisers = async (gameId) => {
   let { rows } = await db.query(queries.getOrganisers, [gameId]);
@@ -88,23 +86,23 @@ getOrganisers = async (gameId) => {
     organiserList.push(organiser);
   }
   return organiserList.length > 0 ? organiserList : null;
-}
+};
 
 addOrganiser = async (gameId, organiserId) => {
   let {rowCount} = await db.query(queries.addOrganiser, [gameId, organiserId]);  
   return rowCount > 0;
-}
+};
 
 removeOrganiser = async (gameId, organiserId) => {
   let { rowCount } = await db.query(queries.removeOrganiser, [gameId, organiserId])
   return rowCount > 0;
-}
+};
 
 getGameForms = async (gameId) => {
   let { rows } = await db.query(queries.getGameForms, [gameId]);
   console.log(rows)
   return rows.length > 0 ? rows : null;
-}
+};
 
 module.exports = {
   createGame, 

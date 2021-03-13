@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import UserService from "../services/user.service";
+import PersonService from "../services/person.service";
 
 const PlayerPortal = () => {
   
@@ -9,7 +9,7 @@ const PlayerPortal = () => {
 
 
   useEffect(() => {
-    UserService.getPlayerPortal().then(
+    PersonService.getPlayerPortal().then(
       (response) => {
         setContent(response.data);
       },
