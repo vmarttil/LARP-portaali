@@ -54,12 +54,8 @@ updateAdminData = async ( {id, admin} ) => {
 };
 
 getName = async (personId) => {
-  let person = await getById(personId);
-  let name = person.email;
-  if (person.personal_data.first_name && person.personal_data.last_name) {
-    name = person.personal_data.nickname !== '' ? person.personal_data.first_name + " '" + person.personal_data.nickname + "' " + person.personal_data.last_name : person.personal_data.first_name + " " + person.personal_data.last_name;
-  }
-  return name;
+  let personalData = (await getById(personId)).personal_data;
+  return personalData.nickname == "" ? personalData.first_name + " " + personalData.last_name : personalData.first_name + ' "' + personalData.nickname + '" ' + personalData.last_name;
 };
 
 getPersonRegistrations = async (personId) => {
@@ -75,5 +71,6 @@ module.exports = {
   updatePersonalData, 
   updateProfileData, 
   updateAdminData, 
-  getName
+  getName,
+  getPersonRegistrations
 };

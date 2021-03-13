@@ -17,6 +17,10 @@ export const formatDateRange = (start_date, end_date) => {
   return dateString;
 };
 
+export const formatDateTime = (timestamp) => {
+  let dateTime = new Date(timestamp);
+  return `${dateTime.getDate()}.${dateTime.getMonth()}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
+};
 
 export const formatName = (firstName, lastName, nickname) => {
   return nickname == "" ? firstName + " " + lastName : firstName + ' "' + nickname + '" ' + lastName;

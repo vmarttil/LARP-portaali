@@ -44,7 +44,7 @@ const MainPage = ({ currentUser }) => {
           </tr>
         </thead>
         <tbody>
-          {gameList.filter(row => row.is_open).map(row => {
+          {gameList.map(row => {
             return (
               <tr key={`game_${row.id}`} className="d-flex">
                 <td className="col-7">

@@ -31,18 +31,13 @@ const checkStatus = async (formId) => {
   return await axios.get(API_URL + "form/" + formId + "/status");
 };
 
-const getFormRegistrations = async (formId) => {
-  return await axios.get(API_URL + "form/" + formId + "/registrations");
-}
-
 let FormService = {
   getForm,
   createForm,
   editForm,
   updateForm,
   toggleRegistration,
-  checkStatus,
-  getFormRegistrations
+  checkStatus
 };
 
 export default FormService;

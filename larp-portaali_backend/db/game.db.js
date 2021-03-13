@@ -100,8 +100,22 @@ removeOrganiser = async (gameId, organiserId) => {
 
 getGameForms = async (gameId) => {
   let { rows } = await db.query(queries.getGameForms, [gameId]);
-  console.log(rows)
   return rows.length > 0 ? rows : null;
+};
+
+getGameRegistrations = async (gameId) => {
+  let { rows } = await db.query(queries.getGameRegistrations, [gameId]);
+  if (rows.length > 0) {
+    registrations = [];
+    for (row of rows) {
+      let name = await Person.getName(row.person_id);
+      let registration = {game_id: parseInt(gameId), form_id: row.form_id, form_class: row.form_class, person_id: row.person_id, name: name, submitted: row.submitted};
+      registrations.push(registration);
+    }
+    return registrations;
+  } else {
+    return [];
+  }
 };
 
 module.exports = {
@@ -114,5 +128,6 @@ module.exports = {
   getOrganisers, 
   addOrganiser,
   removeOrganiser,
-  getGameForms
+  getGameForms,
+  getGameRegistrations
 };

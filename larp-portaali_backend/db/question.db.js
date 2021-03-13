@@ -5,7 +5,6 @@ const queries = require("./question.queries.js")
 
 
 createQuestion = async (questionData) => {
-  console.log("New question data: ", questionData)
   let parameters = [
     questionData.question_type,
     questionData.question_text,

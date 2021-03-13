@@ -11,19 +11,19 @@ const Game = ({ currentUser }) => {
   const [message, setMessage] = useState("");
   const [game, setGame] = useState(null);
 
-  let { id } = useParams();
+  let { game_id } = useParams();
 
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        let response = await GameService.getGame(id);
+        let response = await GameService.getGame(game_id);
         setGame(response.data.game);
       } catch (error) {
         setMessage(errorMessage(error));
       };
     };
     fetchGame();
-  }, [id]);
+  }, [game_id]);
 
   const RegistrationButtons = () => {
     let openForms = game.forms.filter(form => form.is_open)
@@ -31,7 +31,7 @@ const Game = ({ currentUser }) => {
       <>
         {openForms.map(form => {
           return (
-            <Link key={form.id} to={`/game/${id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
+            <Link key={form.id} to={`/game/${game_id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
               <Button key={form.id} variant="primary" type="button" size="sm">{form.button_text}</Button>
             </Link>
           )

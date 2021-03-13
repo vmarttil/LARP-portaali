@@ -33,6 +33,10 @@ const removeOrganiser = async (gameId, organiserId) => {
   return await axios.post(API_URL + "game/" + gameId + "/removeOrganiser", { data: {id : organiserId} }, { headers: authHeader() });
 };
 
+const getGameRegistrations = async (gameId) => {
+  return await axios.get(API_URL + "game/" + gameId + "/registrations", { headers: authHeader() });
+};
+
 
 
 let GameService = {
@@ -42,7 +46,8 @@ let GameService = {
   saveNewGame,
   updateGame,
   addOrganiser,
-  removeOrganiser
+  removeOrganiser,
+  getGameRegistrations
 };
 
 export default GameService;

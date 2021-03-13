@@ -10,17 +10,13 @@ submitRegistration = async (personId, registrationData) => {
   let { rowCount } = await db.query(queries.createRegistration, [registrationData.form_id, personId]);
   let formId = registrationData.form_id;
   if (rowCount == 1) {
-    console.log("Registration saved")
     for (answer of registrationData.answers) {
-      console.log(answer)
       if (answer.hasOwnProperty("options")) {
-        console.log("Answer has options")
         await db.query(queries.insertAnswer, [personId, formId, answer.question_id, null]);
         for (option of answer.options) {
           await db.query(queries.insertAnswerOption, [personId, formId, answer.question_id, option]);
         }
       } else {
-        console.log("Answer does not have options")
         await db.query(queries.insertAnswer, [personId, formId, answer.question_id, answer.answer_text]);
       }
     }
@@ -31,13 +27,12 @@ submitRegistration = async (personId, registrationData) => {
 };
 
 getRegistration = async (personId, formId) => {
-  let { rows } = await db.query(queries.getRegistration, [personId, formId]);
-  if (rows.length > 0) {
-    let submitted = rows[0].submitted;
-    let { rows } = await db.query(queries.getAnswers, [personId, formId]);
-    if (rows.length > 0) {
+  let submitted = (await db.query(queries.getRegistration, [personId, formId])).rows[0].submitted;
+  if (submitted) {
+    let answers = (await db.query(queries.getAnswers, [personId, formId])).rows;
+    if (answers.length > 0) {
       let answerObject = {};
-      for (answer of rows) {
+      for (answer of answers) {
         if (answer.answer_text == null) {
           if (answerObject.hasOwnProperty(answer.question_id)) {
             answerObject[answer.question_id] = [...answerObject[answer.question_id], {option_number: answer.option_number, option_text: answer.option_text}];

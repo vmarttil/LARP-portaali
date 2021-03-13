@@ -14,6 +14,7 @@ import MainPage from "./components/MainPage";
 import Game from "./components/Game";
 import EditGame from "./components/EditGame";
 import NewGame from "./components/NewGame";
+import GameRegistrations from "./components/GameRegistrations";
 import EditForm from "./components/EditForm";
 import RegistrationForm from "./components/RegistrationForm";
 import Profile from "./components/Profile";
@@ -140,10 +141,13 @@ const App = () => {
             <Route path="/game/:game_id/form/:form_id/register">
               <RegistrationForm currentUser={currentUser}/>
             </Route>
-            <Route path="/game/:id/edit">
+            <Route path="/game/:game_id/edit">
               <EditGame currentUser={currentUser}/>  
             </Route>
-            <Route path="/game/:id">
+            <Route path="/game/:game_id/registrations">
+              <GameRegistrations currentUser={currentUser}/>  
+            </Route>
+            <Route path="/game/:game_id">
               <Game currentUser={currentUser}/>  
             </Route>
             <Route path="/portal/player">

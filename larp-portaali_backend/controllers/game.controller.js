@@ -21,7 +21,7 @@ exports.createGame = async (req, res) => {
   } catch(err) {
       res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.gameInfo = async (req, res) => {
   // Return the full information of the game
@@ -35,7 +35,7 @@ exports.gameInfo = async (req, res) => {
   } catch(err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.organiserGameList = async (req, res) => {
   // Return a list of the games organised by the current person
@@ -49,7 +49,7 @@ exports.organiserGameList = async (req, res) => {
   } catch(err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.updateGame = async (req, res) => {
   let gameId = req.params.game_id;
@@ -70,7 +70,7 @@ exports.updateGame = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.getOrganisers = async (req, res) => {
   let gameId = req.params.game_id;
@@ -90,7 +90,7 @@ exports.getOrganisers = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.addOrganiser = async (req, res) => {
   let gameId = req.params.game_id;
@@ -107,7 +107,7 @@ exports.addOrganiser = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.removeOrganiser = async (req, res) => {
   let gameId = req.params.game_id;
@@ -130,7 +130,7 @@ exports.removeOrganiser = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.getForms = async (req, res) => {
   // Return a list of the forms created for the game with their id, name description and status
@@ -144,4 +144,25 @@ exports.getForms = async (req, res) => {
   } catch(err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
+
+exports.getGameRegistrations = async (req, res) => {
+  let gameId = req.params.game_id;
+  let userId = req.userId;
+  try {
+    // Checks whether the logged in user is an organiser of the game
+    if (await Game.checkOrganiserStatus(gameId, userId)) {
+    // Return a list of the game's registrations form and person ids, submitter names and submission times
+      let registrations = await Game.getGameRegistrations(gameId);
+      if (registrations.length > 0) {
+        res.status(200).send({ registrations: registrations });
+      } else {
+        res.status(404).send({ message: "Ei ilmoittautumisia." });
+      }
+    } else {
+      res.status(403).send({ message: "Et ole pelin järjestäjä." });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};

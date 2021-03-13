@@ -71,13 +71,16 @@ const getPersonRegistrations = `
   SELECT 
     r.person_id,
     f.id AS form_id,
-    f.name AS form_name
+    fc.name AS form_class,
     g.id AS game_id,
     g.name AS game_name,
+    g.start_date,
+    g.end_date,
     r.submitted
   FROM registration AS r
   JOIN form AS f ON r.form_id = f.id
-  JOIN game AS g ON f.game_id ) g.id
+  JOIN game AS g ON f.game_id = g.id
+  JOIN form_class AS fc ON f.form_class_id = fc.id
   WHERE r.person_id = $1;
 `
 

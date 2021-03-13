@@ -10,7 +10,6 @@ exports.submitRegistration = async (req, res) => {
     if (await Form.isOpen(req.body.data.form_id)) {
       // Save the registration
       try {
-        console.log(registrationData);
         let result = await Registration.submitRegistration(userId, registrationData);
         if (result) {
           res.status(200).send({ message: "Ilmoittautuminen tallennettu." });
@@ -43,7 +42,7 @@ exports.getRegistration = async (req, res) => {
     try {
       let registration = await Registration.getRegistration(personId, formId);
       let form = await Form.getForm(formId);
-      if (registration & form) {
+      if (registration && form) {
         res.status(200).send({ registration: registration, form: form });
       } else {
         res.status(404).send({ message: "Lomaketta tai ilmoittautumista ei löytynyt." });

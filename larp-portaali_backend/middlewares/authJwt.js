@@ -5,7 +5,6 @@ const queries = require("../db/person.queries")
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
-  console.log(token)
   if (!token) {
     return res.status(403).send({
       message: "Tunniste puuttuu."
@@ -19,8 +18,6 @@ verifyToken = (req, res, next) => {
       });
     }
     req.userId = decoded.id;
-    console.log("Decoded user id: ", decoded.id)
-    console.log("Set request user id: ", req.userId)
     next();
   });
 };

@@ -51,10 +51,4 @@ module.exports = function(app) {
     controller.getQuestion
   );
 
-  app.get(
-    "/api/form/:form_id/registrations", 
-    [authJwt.verifyToken],
-    controller.getFormRegistrations
-  ); 
-
 };

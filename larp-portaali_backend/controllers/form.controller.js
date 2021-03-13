@@ -23,7 +23,7 @@ exports.createForm = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole kyseisen pelin järjestäjä." });
   }
-}
+};
 
 exports.getForm = async (req, res) => {
   // Return the form with its associated array of questions
@@ -37,7 +37,7 @@ exports.getForm = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.editForm = async (req, res) => {
   // Return the form for editing with its associated array of questions and a list of all questions available for the user
@@ -61,7 +61,7 @@ exports.editForm = async (req, res) => {
   } else {
     res.status(403).send({ message: "Lomaketta ei voi muokata, koska ilmoittautuminen on auki tai peliin on jo ilmoittautumisia." });
   }
-}
+};
 
 exports.updateForm = async (req, res) => {
   let formId = req.params.form_id;
@@ -73,7 +73,6 @@ exports.updateForm = async (req, res) => {
     if (await Form.isOpen(formId) === false && await Form.countFormRegistrations(formId) === 0) {
       // Updates the content and structure of the form
       try {
-        console.log(formData)
         let updatedForm = await Form.updateForm(formId, formData);
         let available = await Question.getAvailableQuestions(userId, formId);
         if (updatedForm) {
@@ -90,7 +89,7 @@ exports.updateForm = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.getAvailableQuestions = async (req, res) => {
   // Gets all questions available for the user
@@ -104,7 +103,7 @@ exports.getAvailableQuestions = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.getQuestion = async (req, res) => {
   // Gets a question by id
@@ -118,7 +117,7 @@ exports.getQuestion = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.toggleRegistration = async (req, res) => {
   let formId = req.params.form_id;
@@ -141,7 +140,7 @@ exports.toggleRegistration = async (req, res) => {
   } else {
     res.status(403).send({ message: "Et ole pelin järjestäjä." });
   }
-}
+};
 
 exports.checkStatus = async (req, res) => {
   // Checks whether the form is editable
@@ -151,23 +150,25 @@ exports.checkStatus = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 exports.getFormRegistrations = async (req, res) => {
   let formId = req.params.form_id;
   let userId = req.userId;
-  // Checks whether the logged in user is an organiser of the game associated with the form
-  if (await Form.checkOrganiserStatus(formId, userId)) {
+  try {
+    // Checks whether the logged in user is an organiser of the game associated with the form
+    if (await Form.checkOrganiserStatus(formId, userId)) {
     // Return a list of the form's registrations form and person ids, submitter names and submission times
-    try {
       let registrations = await Form.getFormRegistrations(formId);
       if (registrations.length > 0) {
         res.status(200).send({ registrations: registrations });
       } else {
         res.status(404).send({ message: "Ei ilmoittautumisia." });
       }
-    } catch (err) {
-      res.status(500).send({ message: err.message });
+    } else {
+      res.status(403).send({ message: "Et ole pelin järjestäjä." });
     }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
-}
+};

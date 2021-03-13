@@ -84,6 +84,11 @@ const OrganiserPortal = ({ currentUser }) => {
                     <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
                   </Link>
                   <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
+                  {game.forms.reduce((acc,form)=>acc + form.registrations, 0) > 0 &&
+                    <Link to={`/game/${game.id}/registrations`}>
+                      <Button variant="primary" role="button" size="sm" className="mr-1">Tarkastele ilmoittautumisia</Button>
+                    </Link>
+                  }
                 </Row>
                 <Table borderless size="sm" className="mt-3">
                   <thead>
@@ -98,15 +103,23 @@ const OrganiserPortal = ({ currentUser }) => {
                       return (
                         <tr key={form.id} className="d-flex align-items-center">
                           <td className="col-7">
-                            {form.is_open ? (<><CheckCircleFill className="text-success mb-1"/> {form.name}</>) : (<><XCircleFill className="text-danger mb-1"/> <span className="text-muted">{form.name}</span></>)}
+                            {form.is_open ? (<>
+                              <CheckCircleFill className="text-success mb-1"/> 
+                              {form.name}
+                            </>) : (<>
+                              <XCircleFill className="text-danger mb-1"/> 
+                              <span className="text-muted">
+                                {form.name}
+                              </span></>
+                            )}
                             </td>
                           <td className="d-flex col-1 justify-content-center">{form.registrations}</td>
                           <td className="d-flex col-4 justify-content-end">
                             <Link to={`/game/${game.id}/form/${form.id}/edit`} disabled={form.is_open}>
-                              <Button role="button" variant="primary" size="sm" className="mx-1" disabled={form.is_open}>Muokkaa</Button>
+                              <Button role="button" variant="primary" size="sm" className="mx-1" disabled={form.is_open || form.registrations > 0}>Muokkaa</Button>
                             </Link>
                             <Button role="button" variant="primary" size="sm" onClick={toggleRegistration} className="mx-1" value={form.id}>
-                              {form.is_open ? "Sulje ilmoittautuminen" : "Avaa ilmoittautuminen"}
+                              {form.is_open ? "Sulje" : "Avaa"}
                             </Button>
                           </td>
                         </tr>

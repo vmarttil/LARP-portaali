@@ -98,19 +98,11 @@ const isOpen = `
 `
 const countFormRegistrations = `
   SELECT COUNT(*)
-  FROM registrations
+  FROM registration
   WHERE form_id = $1;
 `
 const getFormGame = `
   SELECT game_id FROM form WHERE id = $1;
-`
-const getFormRegistrations = `
-  SELECT 
-    form_id,
-    person_id,
-    submitted
-  FROM registration
-  WHERE form_id = $1;
 `
 
 module.exports = {
@@ -129,7 +121,6 @@ module.exports = {
   checkOrganiserStatus,
   isOpen,
   countFormRegistrations,
-  getFormGame,
-  getFormRegistrations
+  getFormGame
 };
 

@@ -20,7 +20,7 @@ const EditGame = ({ currentUser }) => {
   const [newOrganiser, setNewOrganiser] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  let { id } = useParams();
+  let { game_id } = useParams();
 
   /* Fields for game data */
   const nameField = useTextField("name", "Pelin nimi:", "text", 128, validateRequired, "", ["horizontal_3-9"]);
@@ -33,7 +33,7 @@ const EditGame = ({ currentUser }) => {
   useEffect(() => {
     const fetchGame = async () => {
       try {
-        let response = await GameService.getGame(id);
+        let response = await GameService.getGame(game_id);
         let game = response.data.game;
         nameField.setValue(game.name);
         startDateField.setValue(new Date(game.start_date));
@@ -71,12 +71,12 @@ const EditGame = ({ currentUser }) => {
     setMessage("");
     setSuccessful(false);
     try {
-      let response = await GameService.removeOrganiser(id, organiserId);
+      let response = await GameService.removeOrganiser(game_id, organiserId);
       setOrganisers(organisers.filter(org => org.id !== parseInt(organiserId)));
       setSuccessful(true);
       setMessage(response.data.message);
 
-      if (parseInt(organiserId) === PersonService.getCurrentUser().id) {
+      if (parseInt(organiserId) === currentUser.id) {
         setTimeout(() => setRedirect(true), 1000)
       }
     } catch (error) {
@@ -115,7 +115,7 @@ const EditGame = ({ currentUser }) => {
   const addOrganiser = async (e) => {
     setMessage("");
     try {
-      let response = await GameService.addOrganiser(id, newOrganiser.id);
+      let response = await GameService.addOrganiser(game_id, newOrganiser.id);
       setShowModal(false);
       setSuccessful(true);
       setOrganisers([...organisers, newOrganiser]);
@@ -149,7 +149,7 @@ const EditGame = ({ currentUser }) => {
       priceField.validate() &&
       descriptionField.validate()) {
       try {
-        let response = await GameService.updateGame(id, gameData)
+        let response = await GameService.updateGame(game_id, gameData)
         setMessage(response.data.message);
         setSuccessful(true);
         setTimeout(() => setRedirect(true), 2000)

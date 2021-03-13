@@ -75,12 +75,26 @@ const getGameForms = `
     f.is_open,
     fc.name AS form_class,
     fc.button_text,
-    0 AS registrations
+    CAST(COUNT(r.person_id) AS int) AS registrations
   FROM form AS f
   JOIN form_class AS fc
     ON f.form_class_id = fc.id
-  WHERE game_id = $1
-  ORDER BY f.form_class_id, f.id; 
+  LEFT JOIN registration AS r
+    ON f.id = r.form_id
+  WHERE f.game_id = $1
+  GROUP BY f.id, f.name, f.description, f.is_open, fc.name, fc.button_text
+  ORDER BY f.form_class_id, f.id;
+`
+const getGameRegistrations = `
+  SELECT 
+    r.form_id,
+    fc.name AS form_class,
+    r.person_id,
+    r.submitted
+  FROM registration AS r
+  JOIN form AS f ON r.form_id = f.id
+  JOIN form_class AS fc ON f.form_class_id = fc.id
+  WHERE f.game_id = $1;
 `
 
 module.exports = {
@@ -93,5 +107,6 @@ module.exports = {
   getOrganisers,
   addOrganiser,
   removeOrganiser,
-  getGameForms
+  getGameForms,
+  getGameRegistrations
 };

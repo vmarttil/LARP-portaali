@@ -59,4 +59,10 @@ module.exports = function(app) {
     [authJwt.verifyToken],  
     controller.getForms
   );
+
+  app.get(
+    "/api/game/:game_id/registrations", 
+    [authJwt.verifyToken],
+    controller.getGameRegistrations
+  ); 
 };

@@ -91,14 +91,11 @@ const RegistrationForm = ({ currentUser }) => {
 
   const validateAnswers = () => {
     let answerKeys = Object.entries(answers).filter(e => !e[0].includes("_") || (e[0].includes("_") && e[1] == true)).map(e => parseInt(e[0].split("_")[0]));
-    console.log(answerKeys);
     for (const question of questions) {
-      console.log(question.question_id)
       if (!answerKeys.includes(question.question_id)) {
         return false;
       }
     }
-    console.log("Validation succeeded!")
     return true;
   };
 

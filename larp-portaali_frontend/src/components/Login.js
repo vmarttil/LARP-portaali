@@ -27,7 +27,6 @@ const Login = ({ setCurrentUser }) => {
     if (!emailField.error && !passwordField.error) {
       try {
         let response = await AuthService.login(emailField.value, passwordField.value)
-        console.log("Sisäänkirjautunut käyttäjä: ", response)
         setCurrentUser(response);
         setRedirect(true);
       } catch (error) {

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS game_organiser (
     ON DELETE CASCADE
 );
 
-CREATE TABLE form_class (
+CREATE TABLE IF NOT EXISTS form_class (
   id int GENERATED ALWAYS AS IDENTITY,
   name varchar(32) NOT NULL,
   button_text varchar(64) NOT NULL,
@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS form (
     ON DELETE CASCADE
 );
 
-CREATE TABLE question_type (
+CREATE TABLE IF NOT EXISTS question_type (
   id int GENERATED ALWAYS AS IDENTITY,
   name varchar(32) NOT NULL,
   display_text varchar(64) NOT NULL,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE question (
+CREATE TABLE IF NOT EXISTS question (
   id int GENERATED ALWAYS AS IDENTITY,
   question_type_id int NOT NULL,
   question_text text NOT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE question (
     ON DELETE CASCADE
 );
 
-CREATE TABLE form_question (
+CREATE TABLE IF NOT EXISTS form_question (
   form_id int NOT NULL,
   question_id int NOT NULL,
   position int NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE form_question (
     ON DELETE CASCADE
 );
 
-CREATE TABLE option (
+CREATE TABLE IF NOT EXISTS option (
   question_id int NOT NULL,
   option_number int NOT NULL,
   option_text text NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE option (
     ON DELETE CASCADE
 );
 
-CREATE TABLE registration (
+CREATE TABLE IF NOT EXISTS registration (
   person_id int NOT NULL,
   form_id int NOT NULL,
   submitted timestamp NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE registration (
     ON DELETE CASCADE
 );
 
-CREATE TABLE answer (
+CREATE TABLE IF NOT EXISTS answer (
   person_id int NOT NULL,
   form_id int NOT NULL,
   question_id int NOT NULL,
@@ -149,7 +149,7 @@ CREATE TABLE answer (
     ON DELETE CASCADE
 );
 
-CREATE TABLE answer_option (
+CREATE TABLE IF NOT EXISTS answer_option (
   person_id int NOT NULL,
   form_id int NOT NULL,
   question_id int NOT NULL,

@@ -74,19 +74,12 @@ updateForm = async (formId, formData) => {
     formData.description,
     formData.form_class
   ]
-  console.log(parameters)
   await db.query(queries.updateFormData, parameters);
   let newQuestions = formData.questions
-  console.log("New questions: ")
-  console.log(newQuestions)
   let oldQuestions = await getFormQuestionList(formId);
-  console.log("Old questions: ")
-  console.log(oldQuestions)
   for (const [index, question] of newQuestions.entries()) {
-    console.log("Index: ", index)
     if (question.question_id.toString().includes("new_")) {
       // If the id of a question contains 'new_', i.e. it is a new question, create it in the database, ignoring the temporary id
-      console.log("New question: ", question)
       let newQuestion = await Question.createQuestion(question);
       // Link the question to the form using the ID and setting the position
       await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
@@ -94,7 +87,6 @@ updateForm = async (formId, formData) => {
       if (await Question.isChanged(question)) {
         // If the question is an existing question that has been edited
         if (await Question.isEditable(question.question_id)) {
-          console.log("Changed editable question: ", question)
           // If the question is unique to this form, update the question in the database
           let updatedQuestion = await Question.updateQuestion(question.question_id, question);
           // Add the question to the form if it is not included
@@ -102,11 +94,9 @@ updateForm = async (formId, formData) => {
             await db.query(queries.addQuestion, [formId, question.question_id, (index + 1)]);
           } else if (oldQuestions.find(q => q.question_id == question.question_id).position != index + 1) {
             // Update the position of the question in the form if it has changed
-            console.log("Position has changed: ", question)
             await db.query(queries.updateQuestionPosition, [formId, updatedQuestion.question_id, (index + 1)]);
           }
         } else {
-          console.log("Changed non-editable question: ", question)
           // If the question is a default question or question used also elsewhere, create a new question in the database
           let newQuestion = await Question.createQuestion(formId, question);
           // Remove the old question from the form if it was included and link the new version to the form using the ID and setting the position
@@ -115,13 +105,11 @@ updateForm = async (formId, formData) => {
         }
         await db.query(queries.addQuestion, [formId, newQuestion.question_id, (index + 1)]);
       } else {
-        console.log("Identical question: ", question)
         // Add the question to the form if it is not included
         if (!oldQuestions.find(q => q.question_id == question.question_id)) {
           await db.query(queries.addQuestion, [formId, question.question_id, (index + 1)]);
         } else if (oldQuestions.find(q => q.question_id == question.question_id)?.position != index + 1) {
           // Or just update the position of the question in the form if it has changed
-          console.log("Position has changed: ", question)
           await db.query(queries.updateQuestionPosition, [formId, question.question_id, (index + 1)]);
         }
       }
@@ -130,7 +118,6 @@ updateForm = async (formId, formData) => {
     }
   }
   // Finally remove the old questions that were no longer in the new questions
-  console.log("Old questions left over: ", oldQuestions)
   for (question of oldQuestions) {
     await db.query(queries.removeQuestion, [formId, question.question_id]);
     // If they are not default questions and no longer used anywhere, remove them from the database
@@ -170,21 +157,6 @@ toggleRegistration = async (formId) => {
   }
 };
 
-getFormRegistrations = async (form_id) => {
-  let { rows } = await db.query(queries.getFormRegistrations, [formId]);
-  if (rows.length > 0) {
-    registrations = [];
-    for (row of rows) {
-      let name = Person.getName(row.person_id);
-      let registration = {form_id: row.form_id, person_id: row.person_id, name: name, submitted: submitted};
-      registrations.push(registration);
-    }
-    return registrations;
-  } else {
-    return [];
-  }
-};
-
 checkOrganiserStatus = async (formId, personId) => {
   let { rows } = await db.query(queries.checkOrganiserStatus, [formId, personId]);
   return rows.length > 0;
@@ -210,7 +182,6 @@ module.exports = {
   updateForm,
   getFormGameId,
   isOpen,
-  getFormRegistrations,
   toggleRegistration,
   checkOrganiserStatus,
   countFormRegistrations,
