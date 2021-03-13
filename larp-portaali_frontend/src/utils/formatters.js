@@ -25,3 +25,15 @@ export const formatDateTime = (timestamp) => {
 export const formatName = (firstName, lastName, nickname) => {
   return nickname == "" ? firstName + " " + lastName : firstName + ' "' + nickname + '" ' + lastName;
 };
+
+export const truncateString = (string, len) => {
+  if (string.length <= len) {
+    return string;
+  } else {
+    string = string.substring(0,len);
+    while (string.substring(string.length-1, string.length) != " ") {
+      string = string.substring(0, string.length-1);
+    }
+    return string + "...";
+  }
+};

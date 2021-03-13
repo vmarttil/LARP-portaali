@@ -26,7 +26,7 @@ submitRegistration = async (personId, registrationData) => {
   }
 };
 
-getRegistration = async (personId, formId) => {
+getRegistration = async (formId, personId) => {
   let submitted = (await db.query(queries.getRegistration, [personId, formId])).rows[0].submitted;
   if (submitted) {
     let answers = (await db.query(queries.getAnswers, [personId, formId])).rows;

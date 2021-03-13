@@ -17,6 +17,7 @@ import NewGame from "./components/NewGame";
 import GameRegistrations from "./components/GameRegistrations";
 import EditForm from "./components/EditForm";
 import RegistrationForm from "./components/RegistrationForm";
+import RegistrationView from "./components/RegistrationView";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
@@ -140,6 +141,9 @@ const App = () => {
             </Route>
             <Route path="/game/:game_id/form/:form_id/register">
               <RegistrationForm currentUser={currentUser}/>
+            </Route>
+            <Route path="/game/:game_id/registration/:form_id/:person_id">
+              <RegistrationView currentUser={currentUser}/>  
             </Route>
             <Route path="/game/:game_id/edit">
               <EditGame currentUser={currentUser}/>  

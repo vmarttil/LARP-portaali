@@ -64,9 +64,9 @@ exports.findPerson = async (req, res) => {
 exports.getPersonRegistrations = async (req, res) => {
   // Return a list of the user's registrations with person, form and game ids, game and form names and submission times
     try {
-      let registrations = await Person.getPersonRegistrations(req.userId);
-      if (registrations.length > 0) {
-        res.status(200).send({ registrations: registrations });
+      let games = await Person.getPersonRegistrations(req.userId);
+      if (games.length > 0) {
+        res.status(200).send({ games: games });
       } else {
         res.status(404).send({ message: "Ei ilmoittautumisia." });
       }

@@ -86,7 +86,7 @@ const OrganiserPortal = ({ currentUser }) => {
                   <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
                   {game.forms.reduce((acc,form)=>acc + form.registrations, 0) > 0 &&
                     <Link to={`/game/${game.id}/registrations`}>
-                      <Button variant="primary" role="button" size="sm" className="mr-1">Tarkastele ilmoittautumisia</Button>
+                      <Button variant="primary" role="button" size="sm" className="mx-1">Tarkastele ilmoittautumisia</Button>
                     </Link>
                   }
                 </Row>
@@ -104,13 +104,10 @@ const OrganiserPortal = ({ currentUser }) => {
                         <tr key={form.id} className="d-flex align-items-center">
                           <td className="col-7">
                             {form.is_open ? (<>
-                              <CheckCircleFill className="text-success mb-1"/> 
-                              {form.name}
+                              <CheckCircleFill className="text-success mb-1"/> {form.name}
                             </>) : (<>
-                              <XCircleFill className="text-danger mb-1"/> 
-                              <span className="text-muted">
-                                {form.name}
-                              </span></>
+                              <XCircleFill className="text-danger mb-1"/> <span className="text-muted">{form.name}</span>
+                            </>
                             )}
                             </td>
                           <td className="d-flex col-1 justify-content-center">{form.registrations}</td>

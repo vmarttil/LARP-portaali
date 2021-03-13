@@ -151,24 +151,3 @@ exports.checkStatus = async (req, res) => {
     res.status(500).send({ message: err.message });
   }
 };
-
-exports.getFormRegistrations = async (req, res) => {
-  let formId = req.params.form_id;
-  let userId = req.userId;
-  try {
-    // Checks whether the logged in user is an organiser of the game associated with the form
-    if (await Form.checkOrganiserStatus(formId, userId)) {
-    // Return a list of the form's registrations form and person ids, submitter names and submission times
-      let registrations = await Form.getFormRegistrations(formId);
-      if (registrations.length > 0) {
-        res.status(200).send({ registrations: registrations });
-      } else {
-        res.status(404).send({ message: "Ei ilmoittautumisia." });
-      }
-    } else {
-      res.status(403).send({ message: "Et ole pelin järjestäjä." });
-    }
-  } catch (err) {
-    res.status(500).send({ message: err.message });
-  }
-};

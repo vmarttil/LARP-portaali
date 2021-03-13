@@ -76,6 +76,9 @@ const getPersonRegistrations = `
     g.name AS game_name,
     g.start_date,
     g.end_date,
+    g.place,
+    g.price,
+    g.description,
     r.submitted
   FROM registration AS r
   JOIN form AS f ON r.form_id = f.id

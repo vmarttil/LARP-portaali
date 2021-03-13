@@ -40,7 +40,7 @@ exports.getRegistration = async (req, res) => {
   if (req.params.person_id == userId || await Registration.checkOrganiserStatus(formId, personId, userId)) {
     // Return the registration with its associated array of answers and the corresponding form with its array of questions
     try {
-      let registration = await Registration.getRegistration(personId, formId);
+      let registration = await Registration.getRegistration(formId, personId);
       let form = await Form.getForm(formId);
       if (registration && form) {
         res.status(200).send({ registration: registration, form: form });

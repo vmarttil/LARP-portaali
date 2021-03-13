@@ -59,9 +59,44 @@ getName = async (personId) => {
 };
 
 getPersonRegistrations = async (personId) => {
-  let { rows } = await db.query(queries.getPersonRegistrations, [personId]);
-  return rows.length > 0 ? rows : [];
+  let registrations = (await db.query(queries.getPersonRegistrations, [personId])).rows;
+  if (registrations.length > 0) {
+    let gameIds = [...new Set(registrations.map(r => r.game_id))]; 
+    let gameList = [];
+    for (r of registrations) {
+      if (gameIds.includes(r.game_id)) {
+        let game = {
+          id: r.game_id,
+          name: r.game_name,
+          start_date: r.start_date,
+          end_date: r.end_date,
+          place: r.place,
+          price: r.price,
+          description: r.description
+        };
+        filteredRegs = [...registrations.filter(f => f.game_id == r.game_id)];
+        let regList = [];
+        for (reg of filteredRegs) {
+          let registration = {
+            form_id: reg.form_id,
+            person_id: reg.person_id,
+            form_class: reg.form_class,
+            submitted: reg.submitted
+          };
+          regList.push(registration);
+        }
+        gameIds = gameIds.filter(g => g != r.game_id);
+        game.registrations = registrations;
+        gameList.push(game);
+      }
+    }
+
+    return gameList;
+  } else {
+    return [];
+  }
 };
+
 
 module.exports = {
   create, 
