@@ -10,13 +10,17 @@ submitRegistration = async (personId, registrationData) => {
   let { rowCount } = await db.query(queries.createRegistration, [registrationData.form_id, personId]);
   let formId = registrationData.form_id;
   if (rowCount == 1) {
+    console.log("Registration saved")
     for (answer of registrationData.answers) {
-      if (answer.hasOwnProperty(options)) {
-        await db.query(queries.insertAnswer, [personId, formId, answer_id, null]);
+      console.log(answer)
+      if (answer.hasOwnProperty("options")) {
+        console.log("Answer has options")
+        await db.query(queries.insertAnswer, [personId, formId, answer.question_id, null]);
         for (option of answer.options) {
           await db.query(queries.insertAnswerOption, [personId, formId, answer.question_id, option]);
         }
       } else {
+        console.log("Answer does not have options")
         await db.query(queries.insertAnswer, [personId, formId, answer.question_id, answer.answer_text]);
       }
     }

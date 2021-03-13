@@ -83,26 +83,22 @@ const RegistrationForm = ({ currentUser }) => {
 
   const onSelectionChange = (event) => {
     if (event.target.type === "radio") {
-      setAnswers({ ...answers, [event.target.value.split("_")[0].concat("?")]: event.target.value.split("_")[1] })
+      setAnswers({ ...answers, [event.target.value.split("_")[0]]: event.target.value.split("_")[1] })
     } else {
       setAnswers({ ...answers, [event.target.value]: event.currentTarget.checked });
     }
   };
 
   const validateAnswers = () => {
-    let answered = Object.entries(answers).filter(e => (!e[0].includes("_") && !e[0].includes("?") && e[1] != "")).map(e => e[0]);
-    let choices = Object.entries(answers).filter(e => (!e[0].includes("_") && e[0].includes("?") && e[1] != "")).map(e => e[0]);
-    let selected = [...new Set(Object.entries(answers).filter(e => (e[0].includes("_") && e[1] == true)).map(e => e[0].split("_")[0]))];
-    let valid = answered.concat(choices, selected).map(v => parseInt(v)).sort();
-    let questionIds = questions.map(q => q.question_id).sort();
-    if (valid.length !== questionIds.length) {
-      return false;
-    }
-    for (let i = 0; i < valid.length; i++) {
-      if (valid[i] !== questionIds[i]) {
+    let answerKeys = Object.entries(answers).filter(e => !e[0].includes("_") || (e[0].includes("_") && e[1] == true)).map(e => parseInt(e[0].split("_")[0]));
+    console.log(answerKeys);
+    for (const question of questions) {
+      console.log(question.question_id)
+      if (!answerKeys.includes(question.question_id)) {
         return false;
       }
     }
+    console.log("Validation succeeded!")
     return true;
   };
 
@@ -113,13 +109,13 @@ const RegistrationForm = ({ currentUser }) => {
         if (value == true) {
           let questionId = key.split("_")[0];
           let optionNumber = key.split("_")[1];
-          if (exportAnswers.hasOwnProperty(answerKey)) {
-            exportAnswers[answerKey] = [...exportAnswers[answerKey], answerValue];
+          if (exportAnswers.hasOwnProperty(questionId)) {
+            exportAnswers[questionId] = [...exportAnswers[questionId], optionNumber];
           } else {
-            exportAnswers[answerKey] = [answerValue];
+            exportAnswers[questionId] = [optionNumber];
           }
         }
-      } else if (key.includes("?")) {
+      } else if (questions.find(q => q.question_id == parseInt(key)).question_type == "radio") {
         exportAnswers[key] = [value];
       } else {
         exportAnswers[key] = value;

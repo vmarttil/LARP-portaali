@@ -137,7 +137,7 @@ CREATE TABLE answer (
   person_id int NOT NULL,
   form_id int NOT NULL,
   question_id int NOT NULL,
-  answer_text text NOT NULL,
+  answer_text text,
   PRIMARY KEY (person_id, form_id, question_id),
   CONSTRAINT fk_answer_registration
     FOREIGN KEY (person_id, form_id) 
