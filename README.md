@@ -16,7 +16,7 @@ Sovelluksen tämänhetkinen versio on perustoiinnot sisältävä MVP-versio, jot
 
 ## Projektin tuntikirjanpito
 
-
+Kirjanpito projektiin käytetystä ajasta ja sen työvaiheista löytyy [https://github.com/vmarttil/LARP-portaali/blob/master/dokumentaatio/tuntikirjanpito.md](erillisestä dokumentista).
 
 ## Sovelluksen käyttöhje
 
