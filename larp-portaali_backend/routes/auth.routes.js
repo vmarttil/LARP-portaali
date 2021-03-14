@@ -12,7 +12,6 @@ module.exports = function(app) {
 
   app.get(
     "/api/test",
-    [verifySignUp.checkDuplicateUsername],
     controller.test
   );
 

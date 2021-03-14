@@ -28,8 +28,10 @@ const Game = ({ currentUser }) => {
       try {
         let response = await GameService.getGame(game_id);
         setGame(response.data.game);
-        let statuses = await PersonService.checkPersonRegistrations(response.data.game.forms.map(f => f.id));
-        setRegistrationStatuses(statuses.data.registrations);
+        if (response.data.game.forms) {  
+          let statuses = await PersonService.checkPersonRegistrations(response.data.game.forms.map(f => f.id));
+          setRegistrationStatuses(statuses.data.registrations);
+        }
         setSuccessful(true);
 
       } catch (error) {
@@ -41,7 +43,7 @@ const Game = ({ currentUser }) => {
   }, [game_id]);
 
   const RegistrationButtons = ({ game }) => {
-    let openForms = game.forms.filter(form => form.is_open)
+    let openForms = game.forms.filter(form => form.is_open);
     return (
       <>
         {openForms.map(form => {
@@ -57,14 +59,15 @@ const Game = ({ currentUser }) => {
             )
           } else {
             return (
-            <Link key={form.id} to={`/game/${game_id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
-              <Button key={form.id} variant="primary" type="button" size="sm">
-                {form.form_class === "player" && "Ilmoittaudu pelaajaksi"}
-                {form.form_class === "npc" && "Ilmoittaudu NPC-rooliin"}
-                {form.form_class === "helper" && "Ilmoittaudu avustajaksi"}
-              </Button>
-            </Link>
-            )}
+              <Link key={form.id} to={`/game/${game_id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
+                <Button key={form.id} variant="primary" type="button" size="sm">
+                  {form.form_class === "player" && "Ilmoittaudu pelaajaksi"}
+                  {form.form_class === "npc" && "Ilmoittaudu NPC-rooliin"}
+                  {form.form_class === "helper" && "Ilmoittaudu avustajaksi"}
+                </Button>
+              </Link>
+            )
+          }
         })}
       </>
     )
@@ -107,7 +110,7 @@ const Game = ({ currentUser }) => {
                   </Col>
                 </Row>
                 <Row>
-                  {currentUser &&
+                  {(currentUser && game.hasOwnProperty("forms") && game.forms != null && game.forms.filter(form => form.is_open) != null) &&
                     <RegistrationButtons game={game} />
                   }
                 </Row>

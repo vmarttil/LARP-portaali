@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS answer (
   PRIMARY KEY (person_id, form_id, question_id),
   CONSTRAINT fk_answer_registration
     FOREIGN KEY (person_id, form_id) 
-	  REFERENCES registration(person_id_form_id)
+	  REFERENCES registration(person_id, form_id)
     ON DELETE CASCADE,
   CONSTRAINT fk_answer_form_question
     FOREIGN KEY (form_id, question_id) 

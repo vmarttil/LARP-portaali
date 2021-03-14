@@ -2,7 +2,7 @@ import axios from "axios";
 import authHeader from "./auth-header";
 import { formatName } from "../utils/formatters";
 
-const API_URL = "http://localhost:8080/api/";
+const API_URL = "/api/";
 
 const getPlayerPortal = async () => {
   return await axios.get(API_URL + "portal/player", { headers: authHeader() });
