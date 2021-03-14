@@ -5,6 +5,15 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 
+exports.test = async (req, res) => {
+  // Save the user as a person to the database
+  try {
+    res.status(200).send({ message: "Yhteys palvelimeen saatu." });
+  } catch(err) {
+    res.status(500).send({ message: err.message });
+  };
+};
+
 exports.signup = async (req, res) => {
   // Save the user as a person to the database
   try {

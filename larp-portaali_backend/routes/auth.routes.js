@@ -10,6 +10,12 @@ module.exports = function(app) {
     next();
   });
 
+  app.get(
+    "/api/test",
+    [verifySignUp.checkDuplicateUsername],
+    controller.test
+  );
+
   app.post(
     "/api/auth/signup",
     [verifySignUp.checkDuplicateUsername],
