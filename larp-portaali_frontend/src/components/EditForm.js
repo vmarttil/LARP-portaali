@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Modal, InputGroup } from 'react-bootstrap';
-import { useParams, Link, Redirect } from "react-router-dom";
+import { useParams, Link, Redirect, useHistory } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormService from "../services/form.service";
 import PersonService from "../services/person.service";
@@ -13,10 +13,11 @@ import "../css/Button.css";
 
 
 const EditForm = ({ currentUser }) => {
+  const history = useHistory();
 
   const { game_id, form_id } = useParams();
 
-  const [successful, setSuccessful] = useState(false);
+  const [status, setStatus] = useState("danger");
   const [message, setMessage] = useState("");
   const [hasChanged, setHasChanged] = useState(false);
   const [formId, setFormId] = useState(null);
@@ -92,6 +93,7 @@ const EditForm = ({ currentUser }) => {
       setHasChanged(false);
       setBusy(false);
     } catch (error) {
+      error.response.status == 404 ? setStatus("primary") : setStatus("danger");
       setMessage(errorMessage(error));
     };
   };
@@ -198,7 +200,7 @@ const EditForm = ({ currentUser }) => {
   };
 
   const saveQuestion = () => {
-    setSuccessful(false);
+    setStatus("danger");
     if (!questionTypeField.validate() ||
       !questionTextField.validate() ||
       !questionDescriptionField.validate()) {
@@ -227,7 +229,7 @@ const EditForm = ({ currentUser }) => {
         newQuestions.push(newQuestion);
       }
       setQuestions(newQuestions);
-      setSuccessful(true);
+      setStatus("success");
       closeModal();
     }
   };
@@ -235,7 +237,7 @@ const EditForm = ({ currentUser }) => {
   const saveFormData = async (e) => {
     e.preventDefault();
     setMessage("");
-    setSuccessful(false);
+    setStatus("danger");
 
     let formData = {
       game_id: game_id,
@@ -252,12 +254,12 @@ const EditForm = ({ currentUser }) => {
       try {
         let response = await FormService.updateForm(formData)
         setMessage(response.data.message);
-        setSuccessful(true);
+        setStatus("success");
         await fetchForm();
         setHasChanged(false);
       } catch (error) {
+        error.response.status == 404 ? setStatus("primary") : setStatus("danger");
         setMessage(errorMessage(error));
-        setSuccessful(false);
       }
     } else {
       setMessage("Täytä puuttuvat tiedot.")
@@ -360,7 +362,7 @@ const EditForm = ({ currentUser }) => {
                     </Button>
                   </Form.Group>
 
-                  <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+                  <Alert show={message !== ""} variant={status}>
                     {message}
                   </Alert>
 
@@ -374,9 +376,7 @@ const EditForm = ({ currentUser }) => {
       <Row>
         <Col sm="1"></Col>
         <Col sm="10">
-          <Link to={`/portal/organiser`}>
-            <Button variant="primary" type="button" size="sm">Takaisin omiin peleihin</Button>
-          </Link>
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
         </Col>
         <Col sm="1"></Col>
       </Row>
@@ -445,7 +445,7 @@ const EditForm = ({ currentUser }) => {
             }
           </Form>
 
-          <Alert show={message !== ""} variant={successful ? "success" : "danger"} className="mt-4">
+          <Alert show={message !== ""} variant={status} className="mt-4">
             {message}
           </Alert>
 
@@ -460,12 +460,7 @@ const EditForm = ({ currentUser }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
-
+      
     </Container>
   );
 };

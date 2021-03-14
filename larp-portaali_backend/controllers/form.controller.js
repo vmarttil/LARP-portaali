@@ -70,7 +70,7 @@ exports.updateForm = async (req, res) => {
   // Checks whether the logged in user is an organiser of the game
   if (await Game.checkOrganiserStatus(formData.game_id, userId)) {
     // Check whether the form is open and whether there are answers for it
-    if (await Form.isOpen(formId) === false && await Form.countFormRegistrations(formId) === 0) {
+    if (await Form.isOpen(formId) == false && await Form.countFormRegistrations(formId) == 0) {
       // Updates the content and structure of the form
       try {
         let updatedForm = await Form.updateForm(formId, formData);
@@ -78,7 +78,7 @@ exports.updateForm = async (req, res) => {
         if (updatedForm) {
           res.status(200).send({ message: "Lomakkeen tallennus onnistui.", form: updatedForm, available_questions: available });
         } else {
-          res.status(404).send({ message: "Lomakkeen tallennus ei onnistunut." });
+          res.status(403).send({ message: "Lomakkeen tallennus ei onnistunut." });
         }
       } catch (err) {
         res.status(500).send({ message: err.message });
@@ -128,11 +128,11 @@ exports.toggleRegistration = async (req, res) => {
     try {
       let formToggle = await Form.toggleRegistration(formId);
       if (formToggle.success == null) {
-        res.status(404).send({ message: "Ilmoittautumisen ".concat(formToggle.target ? "avaaminen" : "sulkeminen", " ei onnistunut.") });
+        res.status(403).send({ message: "Ilmoittautumisen ".concat(formToggle.target ? "avaaminen" : "sulkeminen", " ei onnistunut.") });
       } else if (formToggle.success) {
         res.status(200).send({ message: "Ilmoittautuminen ".concat(formToggle.target ? "avattu" : "suljettu", ".") });
       } else {
-        res.status(404).send({ message: "Pelille ei voi avata useampaa saman tyyppistä ilmoittautumista." });
+        res.status(403).send({ message: "Pelille ei voi avata useampaa saman tyyppistä ilmoittautumista." });
       }
     } catch (err) {
       res.status(500).send({ message: err.message });

@@ -28,7 +28,6 @@ require('dotenv').config()
 
 // reititykset
 require('./routes/auth.routes')(app);
-require('./routes/portal.routes')(app);
 require('./routes/person.routes')(app);
 require('./routes/game.routes')(app);
 require('./routes/form.routes')(app);

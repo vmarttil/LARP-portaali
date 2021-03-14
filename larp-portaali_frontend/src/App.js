@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useHistory, Redirect, useParams, useLocation } from "react-router-dom";
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import fi from 'date-fns/locale/fi';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,20 +21,19 @@ import RegistrationView from "./components/RegistrationView";
 import Profile from "./components/Profile";
 import PlayerPortal from "./components/PlayerPortal";
 import OrganiserPortal from "./components/OrganiserPortal";
-import AdminPortal from "./components/AdminPortal";
 
 registerLocale('fi', fi)
 setDefaultLocale('fi');
 
 const App = () => {
-  const [showAdminPortal, setShowAdminPortal] = useState(false);
+  const history = useHistory();
+  
   const [currentUser, setCurrentUser] = useState(undefined);
 
   useEffect(() => {
     const user = PersonService.getCurrentUser();
     if (user) {
       setCurrentUser(user);
-      setShowAdminPortal(user.admin);
     }
   }, []);
 
@@ -80,13 +79,6 @@ const App = () => {
               </li>
             )}
 
-            {showAdminPortal && (
-              <li className="nav-item">
-                <Link to={"/portal/admin"} className="nav-link">
-                  Hallintaportaali
-                </Link>
-              </li>
-            )}
           </div>
 
           {currentUser ? (
@@ -128,10 +120,10 @@ const App = () => {
               <Login setCurrentUser={setCurrentUser}/>
             </Route>
             <Route exact path="/register">
-              <Register />  
+              <Register setCurrentUser={setCurrentUser} />  
             </Route>
             <Route exact path="/profile">
-              <Profile currentUser={currentUser}/>  
+              <Profile currentUser={currentUser} setCurrentUser={setCurrentUser} />  
             </Route>
             <Route exact path="/game/new">
               <NewGame currentUser={currentUser}/>  
@@ -159,9 +151,6 @@ const App = () => {
             </Route>
             <Route path="/portal/organiser">
               <OrganiserPortal currentUser={currentUser}/>  
-            </Route>
-            <Route path="/portal/admin">
-              <AdminPortal currentUser={currentUser}/>
             </Route>
           </Switch>
         </div>

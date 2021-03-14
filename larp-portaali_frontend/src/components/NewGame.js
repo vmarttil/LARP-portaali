@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import { useTextField, useTextArea, useDateField } from "../utils/hooks"
@@ -9,6 +9,7 @@ import { validateRequired, validateDate } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 
 const NewGame = ({ currentUser }) => {
+  const history = useHistory();
 
   const [successful, setSuccessful] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -131,13 +132,16 @@ const NewGame = ({ currentUser }) => {
         <Col sm="1"></Col>
       </Row>
 
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+
       {redirect && (
         <Redirect to={{ pathname: '/portal/organiser' }} />
-      )
-      }
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
       )
       }
 

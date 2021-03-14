@@ -1,5 +1,6 @@
 import axios from "axios";
 import authHeader from "./auth-header";
+import { formatName } from "../utils/formatters";
 
 const API_URL = "http://localhost:8080/api/";
 
@@ -20,6 +21,11 @@ const getCurrentUser = () => {
 };
 
 const updateCurrentUser = (newUser) => {
+  let data = newUser.personal_data;
+  if (data.hasOwnProperty("first_name") && data.first_name != "" && data.last_name != "") {
+    let name = formatName(data.first_name, data.last_name, data.nickname);
+    newUser = {...newUser, name: name};
+  }
   localStorage.setItem("user", JSON.stringify(newUser));
 };
 

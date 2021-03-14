@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect, useParams } from "react-router-dom";
+import { Link, Redirect, useParams, useHistory } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
 import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
@@ -10,6 +10,7 @@ import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
 const GameRegistrations = ({ currentUser }) => {
+  const history = useHistory();
 
   const { game_id } = useParams();
 
@@ -134,11 +135,13 @@ const GameRegistrations = ({ currentUser }) => {
         <Col sm="1"></Col>
       </Row>
 
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
     </Container>
   );

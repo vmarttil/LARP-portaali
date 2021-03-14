@@ -22,7 +22,7 @@ export const formatDateTime = (timestamp) => {
   return `${dateTime.getDate()}.${dateTime.getMonth()}.${dateTime.getFullYear()} ${dateTime.getHours()}:${dateTime.getMinutes()}`;
 };
 
-export const formatName = (firstName, lastName, nickname) => {
+export const formatName = (firstName, lastName, nickname = "") => {
   return nickname == "" ? firstName + " " + lastName : firstName + ' "' + nickname + '" ' + lastName;
 };
 

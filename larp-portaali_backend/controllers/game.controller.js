@@ -44,7 +44,7 @@ exports.organiserGameList = async (req, res) => {
     if (organiserGameList) {
       res.status(200).send({ games: organiserGameList });
     } else {
-      res.status(404).send({ message: "Käyttäjän pelejä ei löytynyt." });
+      res.status(404).send({ message: "Käyttäjälle ei löytynyt pelejä." });
     }
   } catch(err) {
     res.status(500).send({ message: err.message });
@@ -139,7 +139,7 @@ exports.getForms = async (req, res) => {
     if (gameFormList) {
       res.status(200).send({ forms: gameFormList });
     } else {
-      res.status(404).send({ message: "Pelin lomakkeita ei löytynyt." });
+      res.status(404).send({ message: "Pelille ei löytynyt lomakkeita." });
     }
   } catch(err) {
     res.status(500).send({ message: err.message });

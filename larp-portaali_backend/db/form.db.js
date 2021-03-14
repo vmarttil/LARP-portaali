@@ -164,7 +164,7 @@ checkOrganiserStatus = async (formId, personId) => {
 
 countFormRegistrations = async (formId) => {
   let { rows } = await db.query(queries.countFormRegistrations, [formId]);
-  return rows[1].count;
+  return rows.length > 0 ? rows[0].count : 0;
 };
 
 isEditable = async (formId) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import PersonService from "../services/person.service";
 import { useTextField, useTextArea, useRadioField, useDateField } from "../utils/hooks"
@@ -11,7 +11,8 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const Profile = ({ currentUser }) => {
+const Profile = ({ currentUser, setCurrentUser }) => {
+  const history = useHistory();
 
   /* Fields for user profile data */
   const emailField = useTextField("email", "Sähköposti:", "email", 32, validateEmail, currentUser.email, ["horizontal_3-6"]);
@@ -58,7 +59,8 @@ const Profile = ({ currentUser }) => {
 
     if (emailField.validate() && passwordField.validate()) {
       currentUser.email = emailField.value;
-      PersonService.updatecurrentUser(currentUser);
+      PersonService.updateCurrentUser(currentUser);
+      setCurrentUser(PersonService.getCurrentUser());
       setSaveType("account");
       saveData(updateData);
     } else {
@@ -97,7 +99,9 @@ const Profile = ({ currentUser }) => {
       dietaryRestrictionsField.validate() &&
       healthInformationField.validate()) {
       currentUser.personal_data = updateData.personal_data;
-      PersonService.updatecurrentUser(currentUser);
+      PersonService.updateCurrentUser(currentUser);
+      setCurrentUser(PersonService.getCurrentUser());
+      console.log(currentUser);
       setSaveType("personal");
       saveData(updateData);
     } else {
@@ -121,7 +125,8 @@ const Profile = ({ currentUser }) => {
 
     if (playerProfileField.validate() && plotPreferencesField.validate()) {
       currentUser.profile_data = updateData.profile_data;
-      PersonService.updatecurrentUser(currentUser);
+      PersonService.updateCurrentUser(currentUser);
+      setCurrentUser(PersonService.getCurrentUser());
       setSaveType("profile");
       saveData(updateData);
     } else {
@@ -238,11 +243,13 @@ const Profile = ({ currentUser }) => {
           </Card>
         </Col>
       </Row>
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
     </Container>
   );

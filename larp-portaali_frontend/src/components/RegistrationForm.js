@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Spinner } from 'react-bootstrap';
-import { Redirect, useParams } from "react-router-dom";
+import { Redirect, useParams, useHistory } from "react-router-dom";
 import RegistrationService from "../services/registration.service";
 import FormService from "../services/form.service";
 import PersonService from "../services/person.service";
@@ -12,6 +12,7 @@ import { isEmpty } from "../utils/utilities";
 
 
 const RegistrationForm = ({ currentUser }) => {
+  const history = useHistory();
 
   const { game_id, form_id } = useParams();
 
@@ -250,15 +251,17 @@ const RegistrationForm = ({ currentUser }) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
       {redirect && (
         <Redirect to={{ pathname: '/portal/player' }} />
       )}
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
 
     </Container>
   );

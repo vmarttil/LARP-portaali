@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Container, Spinner, Button } from 'react-bootstrap';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import GameService from "../services/game.service";
 import PersonService from "../services/person.service";
 import { errorMessage } from "../utils/messages";
 import { formatDateRange } from "../utils/formatters";
 
 const Game = ({ currentUser }) => {
-  
+  const history = useHistory();
+
   const [message, setMessage] = useState("");
   const [game, setGame] = useState(null);
 

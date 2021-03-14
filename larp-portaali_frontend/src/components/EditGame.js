@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Card, Form, Button, Alert, Row, Col, Modal } from 'react-bootstrap';
-import { Redirect, useParams } from "react-router-dom";
+import { Redirect, useParams, useHistory } from "react-router-dom";
 import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import { useTextField, useTextArea, useDateField } from "../utils/hooks"
@@ -10,6 +10,7 @@ import { errorMessage } from "../utils/messages";
 import { XSquare, PlusSquare } from 'react-bootstrap-icons';
 
 const EditGame = ({ currentUser }) => {
+  const history = useHistory();
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
@@ -248,11 +249,6 @@ const EditGame = ({ currentUser }) => {
       {redirect && (
         <Redirect to={{ pathname: '/portal/organiser' }} />
       )}
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
 
     </Container>
   );

@@ -7,7 +7,7 @@ import { TextField } from "./FormFields"
 import { validateEmail, validatePassword } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
 
-const Register = (props) => {
+const Register = ({ setCurrentUser }) => {
 
   const emailField = useTextField("email", "Sähköposti:", "email", 32, validateEmail, "", []);
   const passwordField = useTextField("password", "Salasana:", "password", 32, validatePassword, "", []);
@@ -22,7 +22,8 @@ const Register = (props) => {
     const loginUser = async () => {
       if (login) {
         try {
-          await AuthService.login(emailField.value, passwordField.value);
+          let response = await AuthService.login(emailField.value, passwordField.value)
+          setCurrentUser(response);
           setRedirect(true);
         } catch (error) {
           setMessage(errorMessage(error));

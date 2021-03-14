@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
 import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
@@ -10,10 +10,11 @@ import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
 const PlayerPortal = ({ currentUser }) => {
+  const history = useHistory();
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
-  const [successful, setSuccessful] = useState(false);
+  const [status, setStatus] = useState("error");
   const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const PlayerPortal = ({ currentUser }) => {
       let response = await PersonService.getPersonRegistrations();
       setGameList(response.data.games);
     } catch (error) {
+      error.response.status == 404 ? setStatus("primary") : setStatus("danger");
       setMessage(errorMessage(error));
     };
   };
@@ -40,7 +42,6 @@ const PlayerPortal = ({ currentUser }) => {
     return (
       <>
         {gameList.map(game => {
-          console.log(game.registrations)
           return (
             <Card className="my-3" key={`game_${game.id}`} id={`game_${game.id}`}>
               <Card.Body>
@@ -95,20 +96,22 @@ const PlayerPortal = ({ currentUser }) => {
 
           <RegistrationList />
 
-          <Alert show={message !== ""} variant={successful ? "success" : "danger"}>
+          <Alert show={message !== ""} variant={status}>
             {message}
           </Alert>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
         </Col>
         <Col sm="1"></Col>
       </Row>
 
       {redirect && (
         <Redirect to={redirect} />
-      )
-      }
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
       )
       }
 

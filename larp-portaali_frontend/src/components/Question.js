@@ -12,11 +12,19 @@ const TextQuestion = ({ question, value, onChange }) => {
           <Form.Label className="mt-1">{question.question_text}</Form.Label>
         </Col>
         <Col sm={9} className="pl-1">
+        {onChange == null ? (
+          <Form.Control
+          size="sm"
+          type="text"
+          value={value}
+          readOnly />
+        ) : (  
           <Form.Control
             size="sm"
             type="text"
             value={value}
             onChange={onChange} />
+        )}
         </Col>
       </Form.Group>
       <Row className="mb-3">
@@ -36,11 +44,19 @@ const IntegerQuestion = ({ question, value, onChange }) => {
           <Form.Label className="mt-1">{question.question_text}</Form.Label>
         </Col>
         <Col sm={2} className="pl-1">
+        {onChange == null ? (
+          <Form.Control
+            size="sm"
+            type="number"
+            value={value}
+            readOnly />
+        ) : (
           <Form.Control
             size="sm"
             type="number"
             value={value}
             onChange={onChange} />
+            )}
         </Col>
       </Form.Group>
       <Row className="mb-3">
@@ -69,6 +85,20 @@ const CheckQuestion = ({ question, value, onChange }) => {
     )
   });
 
+  const readOnlyButtons = question.options.map((option, idx) => {
+    return (
+      <Form.Check
+        key={`${question.question_id}_${option.number}`}
+        type={question.question_type}
+        name={question.question_id}
+        value={`${question.question_id}_${option.number}`}
+        checked={question.question_type === "radio" ? value[question.question_id] == option.number : value[`${question.question_id}_${option.number}`]}
+        label={option.text}
+        readOnly
+      />
+    )
+  });
+
   return (
     <Form.Group controlId={question.question_id}>
       <Row className="mt-4">
@@ -79,7 +109,7 @@ const CheckQuestion = ({ question, value, onChange }) => {
       </Row>
       <Row>
         <Col sm={12}>
-          {optionButtons}
+          {onChange == null ? readOnlyButtons : optionButtons}
         </Col>
       </Row>
     </Form.Group>
@@ -97,11 +127,19 @@ const TextAreaQuestion = ({ question, value, onChange }) => {
       </Row>
       <Row>
         <Col>
+        {onChange == null ? (
+          <Form.Control
+            as="textarea"
+            rows={6}
+            value={value}
+            readOnly />
+        ) : (
           <Form.Control
             as="textarea"
             rows={6}
             value={value}
             onChange={onChange} />
+            )}
         </Col>
       </Row>
     </Form.Group>

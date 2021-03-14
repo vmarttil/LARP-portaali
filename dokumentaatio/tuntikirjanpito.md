@@ -54,6 +54,9 @@
 |          | 2,0 | Pelin ja henkilön ilmoittautumisluetteloiden haku backendistä ja lähetys frontendiin |
 |          | 2,0 | Ilmoittautumisen vastausten purku ja tallennus tietokantaan |
 | 13032021 | 1,5 | Ilmoittautumisen tietojen haku tietokannasta ja muotoilu objektiksi; rekisteröitymisobjektien refaktorointi front- ja backendissä |
+|          | 1,5 | Ilmoittautumisen hajonneen validoinnin ja tietokantaan tallennuksen debuggaus ja korjaus |
+|          | 1,0 | Pelin ja henkilön ilmoittautumisten keruu tietokannasta ja toimitus frontendiin |
+|          | 6,0 | Pelin ja henkilön ilmoittautumisten tarkastelusivujen ja ilmoittautumisen tarkastelusivun implementointi frontendissä |
 
-| **Yhteensä** | **182,5** | |
+| **Yhteensä** | **191,0** | |
 

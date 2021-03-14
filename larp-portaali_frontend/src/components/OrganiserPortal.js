@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
 import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
@@ -10,6 +10,7 @@ import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
 const OrganiserPortal = ({ currentUser }) => {
+  const history = useHistory();
 
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
@@ -84,7 +85,7 @@ const OrganiserPortal = ({ currentUser }) => {
                     <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
                   </Link>
                   <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
-                  {game.forms.reduce((acc,form)=>acc + form.registrations, 0) > 0 &&
+                  {game.forms.reduce((acc, form) => acc + form.registrations, 0) > 0 &&
                     <Link to={`/game/${game.id}/registrations`}>
                       <Button variant="primary" role="button" size="sm" className="mx-1">Tarkastele ilmoittautumisia</Button>
                     </Link>
@@ -97,19 +98,19 @@ const OrganiserPortal = ({ currentUser }) => {
                       <th className="d-flex col-1 justify-content-center">Ilm. #</th>
                       <th className="col-4"></th>
                     </tr>
-                    </thead>
-                    <tbody>
+                  </thead>
+                  <tbody>
                     {game.forms.map(form => {
                       return (
                         <tr key={form.id} className="d-flex align-items-center">
                           <td className="col-7">
                             {form.is_open ? (<>
-                              <CheckCircleFill className="text-success mb-1"/> {form.name}
+                              <CheckCircleFill className="text-success mb-1" /> {form.name}
                             </>) : (<>
-                              <XCircleFill className="text-danger mb-1"/> <span className="text-muted">{form.name}</span>
+                              <XCircleFill className="text-danger mb-1" /> <span className="text-muted">{form.name}</span>
                             </>
                             )}
-                            </td>
+                          </td>
                           <td className="d-flex col-1 justify-content-center">{form.registrations}</td>
                           <td className="d-flex col-4 justify-content-end">
                             <Link to={`/game/${game.id}/form/${form.id}/edit`} disabled={form.is_open}>
@@ -143,7 +144,7 @@ const OrganiserPortal = ({ currentUser }) => {
               <Card.Text>
                 Tällä sivulla näet luettelon peleistä, joissa olet järjestäjänä, ja voit muokata niiden tietoja, hallinnoida niiden
                 ilmoittautumislomakkeita ja muita asetuksia. Pääset tarkastelemaan pelin tietoja ja siihen tehtyjä ilmoittautumisia
-                valitsemalla pelin nimen luettelosta. Ilmoittautumakkeita on mahdollista muokata vain jos ne eivät ole avattuina 
+                valitsemalla pelin nimen luettelosta. Ilmoittautumakkeita on mahdollista muokata vain jos ne eivät ole avattuina
                 ilmoittautumiselle ja niihin ei vielä ole tehty ilmoittautumisia.
           </Card.Text>
             </Card.Body>
@@ -160,17 +161,19 @@ const OrganiserPortal = ({ currentUser }) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
       {redirect && (
         <Redirect to={redirect} />
       )
       }
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
-
+      
     </Container>
   );
 };

@@ -5,11 +5,16 @@ const API_URL = "http://localhost:8080/api/";
 
 const submitRegistration = async (registrationData) => {
   return await axios.post(API_URL + "registration/submit", { data: registrationData }, { headers: authHeader() });
-}
+};
+
+const getRegistration = async (formId, personId) => {
+  return await axios.get(API_URL + "form/" + formId + "/person/" + personId + "/registration", { headers: authHeader() });
+};
+
 
 let RegistrationService = {
-  submitRegistration
-  
+  submitRegistration,
+  getRegistration
 };
 
 export default RegistrationService;
