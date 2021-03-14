@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
-import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
+import { Link, useHistory } from "react-router-dom";
+import { Card, Button, Alert, Container, Row, Col} from 'react-bootstrap';
 import PersonService from "../services/person.service";
-import GameService from "../services/game.service";
-import FormService from "../services/form.service";
 import { formatDateRange, formatDateTime, truncateString } from "../utils/formatters"
 import { errorMessage } from "../utils/messages"
-import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 
 
 const PlayerPortal = ({ currentUser }) => {
@@ -15,7 +12,6 @@ const PlayerPortal = ({ currentUser }) => {
   const [gameList, setGameList] = useState([]);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("error");
-  const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
     fetchRegistrations();
@@ -33,7 +29,7 @@ const PlayerPortal = ({ currentUser }) => {
       let response = await PersonService.getPersonRegistrations();
       setGameList(response.data.games);
     } catch (error) {
-      error.response.status == 404 ? setStatus("primary") : setStatus("danger");
+      parseInt(error.response.status) === 404 ? setStatus("primary") : setStatus("danger");
       setMessage(errorMessage(error));
     };
   };
@@ -57,9 +53,9 @@ const PlayerPortal = ({ currentUser }) => {
                       <li key={`form_${reg.form_id}_person_${reg.person_id}`}>
                         <Link to={`/game/${game.id}/registration/${reg.form_id}/${reg.person_id}`}>
                           <span className="font-weight-bold">
-                            {reg.form_class == "player" && "Pelaajailmoittautuminen"}
-                            {reg.form_class == "npc" && "NPC-ilmoittautuminen"}
-                            {reg.form_class == "helper" && "Avustajailmoittautuminen"}
+                            {reg.form_class === "player" && "Pelaajailmoittautuminen"}
+                            {reg.form_class === "npc" && "NPC-ilmoittautuminen"}
+                            {reg.form_class === "helper" && "Avustajailmoittautuminen"}
                           </span>
                         </Link> lähetetty {formatDateTime(reg.submitted)}
                       </li>
@@ -109,11 +105,6 @@ const PlayerPortal = ({ currentUser }) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
-
-      {redirect && (
-        <Redirect to={redirect} />
-      )
-      }
 
     </Container>
   );

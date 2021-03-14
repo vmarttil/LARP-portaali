@@ -1,8 +1,6 @@
-const logger = require("../utils/logger");
 const Question = require("../db/question.db");
 const Form = require("../db/form.db");
 const Game = require("../db/game.db");
-const Person = require("../db/person.db");
 
 
 exports.createForm = async (req, res) => {

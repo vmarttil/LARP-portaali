@@ -1,6 +1,6 @@
 const createGame = `
-  INSERT INTO game (name, start_date, end_date, place, description)
-    VALUES ($1, $2, $3, $4, $5) RETURNING *;
+  INSERT INTO game (name, start_date, end_date, place, price, description)
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
 `
 const getGame = `
   SELECT *

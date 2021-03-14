@@ -5,7 +5,7 @@ import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import { useTextField, useTextArea, useDateField } from "../utils/hooks"
 import { TextField, TextArea, DateField } from "./FormFields"
-import { validateRequired, noValidate } from "../utils/validate"
+import { validateRequired } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 import { XSquare, PlusSquare } from 'react-bootstrap-icons';
 
@@ -197,9 +197,9 @@ const EditGame = ({ currentUser }) => {
                   <Col sm="2"><span>Järjestäjät: </span></Col>
                   <Col sm="10">
                     <ul className="list-unstyled">
-                      {organisers.map(org => <li key={org.id} id={org.id}>{org.name}&nbsp;&nbsp;<a href="#" onClick={removeOrganiser}><XSquare className="align-text-top" /></a></li>)}
+                      {organisers.map(org => <li key={org.id} id={org.id}>{org.name}&nbsp;&nbsp;<Button className="m-0 p-0" as="a" variant="link" onClick={removeOrganiser}><XSquare className="align-text-top" /></Button></li>)}
                       <li>
-                        <a href="#" onClick={openModal}><PlusSquare className="align-text-top" /></a>
+                        <Button className="m-0 p-0" as="a" variant="link" onClick={openModal}><PlusSquare className="align-text-top" /></Button>
                       </li>
                     </ul>
                   </Col>
@@ -215,6 +215,13 @@ const EditGame = ({ currentUser }) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
+      <Row>
+        <Col sm="1"></Col>
+        <Col sm="10">
+          <Button variant="primary" type="button" size="sm" onClick={() => { history.goBack() }}>Takaisin</Button>
+        </Col>
+        <Col sm="1"></Col>
+      </Row>
 
       <Modal show={showModal} onHide={closeModal} animation={false} centered>
         <Modal.Header closeButton>
@@ -222,13 +229,13 @@ const EditGame = ({ currentUser }) => {
         </Modal.Header>
         <Modal.Body>
           <p>Anna järjestäjäksi lisättävän henkilön sähköpostiosoite:</p>
-          <Form onSubmit={findPerson}>
+          <Form>
             <Row>
               <Col sm="10">
                 <Form.Control type="text" value={newOrganiserEmail} onChange={(e) => { setNewOrganiserEmail(e.target.value) }} />
               </Col>
               <Col sm="2">
-                <Button variant="secondary" type="submit">Hae</Button>
+                <Button variant="secondary" type="button" onClick={findPerson}>Hae</Button>
               </Col>
             </Row>
           </Form>
@@ -241,8 +248,8 @@ const EditGame = ({ currentUser }) => {
             </Alert>)}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>Peruuta</Button>
-          <Button variant="primary" onClick={addOrganiser} disabled={!newOrganiser}>Lisää järjestäjäksi</Button>
+          <Button variant="secondary" type="button" onClick={closeModal}>Peruuta</Button>
+          <Button variant="primary" type="button" onClick={addOrganiser} disabled={!newOrganiser}>Lisää järjestäjäksi</Button>
         </Modal.Footer>
       </Modal>
 

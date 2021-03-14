@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col, Modal, InputGroup } from 'react-bootstrap';
-import { useParams, Link, Redirect, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormService from "../services/form.service";
-import PersonService from "../services/person.service";
 import { useTextField, useTextArea, useSelectField, useRadioField } from "../utils/hooks"
 import { TextField, TextArea, DummyField, SelectField, RadioField } from "./FormFields"
 import { validateRequired, noValidate } from "../utils/validate"
@@ -20,6 +19,7 @@ const EditForm = ({ currentUser }) => {
   const [status, setStatus] = useState("danger");
   const [message, setMessage] = useState("");
   const [hasChanged, setHasChanged] = useState(false);
+  const [formSaved, setFormSaved] = useState(false);
   const [formId, setFormId] = useState(null);
   const [formClasses, setFormClasses] = useState({});
   const [questionTypes, setQuestionTypes] = useState({});
@@ -44,9 +44,38 @@ const EditForm = ({ currentUser }) => {
   const questionDescriptionField = useTextArea("question_description", "Kysymyksen tarkennus:", 0, noValidate, "", ["horizontal_3-9"], 4);
 
   useEffect(() => {
+    const fetchForm = async () => {
+      try {
+        let response = await FormService.editForm(form_id);
+        let formData = response.data;
+        let questions = formData.form.questions.sort((a, b) => a.position - b.position);
+        questions = questions.map(({ position, ...others }) => others)
+  
+        let questionTypeList = response.data.types.map(type => [type.name, type.display_text]);
+        let questionTypes = Object.fromEntries(questionTypeList);
+        setQuestionTypes(questionTypes);
+  
+        let formClassList = response.data.form_classes.map(c => [c.name, c.button_text]);
+        let formClasses = Object.fromEntries(formClassList);
+        setFormClasses(formClasses);
+  
+        nameField.setValue(formData.form.name);
+        descriptionField.setValue(formData.form.description);
+        formClassField.setValue(formData.form.form_class);
+        setFormId(formData.form.form_id);
+        setAvailableQuestions(formData.available_questions);
+        setQuestions(questions);
+        setOpen(formData.form.is_open);
+        setHasChanged(false);
+        setBusy(false);
+        setFormSaved(false);
+      } catch (error) {
+        error.response.status == 404 ? setStatus("primary") : setStatus("danger");
+        setMessage(errorMessage(error));
+      };
+    };
     fetchForm();
-    setBusy(false);
-  }, [form_id]);
+  }, [form_id, formSaved]);
 
   useEffect(() => {
     let selectItems = {};
@@ -54,7 +83,7 @@ const EditForm = ({ currentUser }) => {
       selectItems[question.question_id] = questionTypes[question.question_type] + ": " + question.question_text;
     }
     setAddableQuestions(selectItems);
-  }, [availableQuestions]);
+  }, [availableQuestions, questionTypes]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -67,36 +96,6 @@ const EditForm = ({ currentUser }) => {
     setHasChanged(true);
   }, [questions, nameField.value, descriptionField.value, formClassField.value]
   )
-
-  const fetchForm = async () => {
-    try {
-      let response = await FormService.editForm(form_id);
-      let formData = response.data;
-      let questions = formData.form.questions.sort((a, b) => a.position - b.position);
-      questions = questions.map(({ position, ...others }) => others)
-
-      let questionTypeList = response.data.types.map(type => [type.name, type.display_text]);
-      let questionTypes = Object.fromEntries(questionTypeList);
-      setQuestionTypes(questionTypes);
-
-      let formClassList = response.data.form_classes.map(c => [c.name, c.button_text]);
-      let formClasses = Object.fromEntries(formClassList);
-      setFormClasses(formClasses);
-
-      nameField.setValue(formData.form.name);
-      descriptionField.setValue(formData.form.description);
-      formClassField.setValue(formData.form.form_class);
-      setFormId(formData.form.form_id);
-      setAvailableQuestions(formData.available_questions);
-      setQuestions(questions);
-      setOpen(formData.form.is_open);
-      setHasChanged(false);
-      setBusy(false);
-    } catch (error) {
-      error.response.status == 404 ? setStatus("primary") : setStatus("danger");
-      setMessage(errorMessage(error));
-    };
-  };
 
   const handleOnQuestionDragEnd = (result) => {
     if (!result.destination) return;
@@ -255,7 +254,7 @@ const EditForm = ({ currentUser }) => {
         let response = await FormService.updateForm(formData)
         setMessage(response.data.message);
         setStatus("success");
-        await fetchForm();
+        setFormSaved(true);
         setHasChanged(false);
       } catch (error) {
         error.response.status == 404 ? setStatus("primary") : setStatus("danger");
@@ -406,8 +405,8 @@ const EditForm = ({ currentUser }) => {
                               <Draggable key={`${editQuestion.question_id}_${index}`} draggableId={`${editQuestion.question_id}_${index}`} index={index}>
                                 {(provided) => (
                                   <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <Form.Check type={editQuestion.question_type} id={`${editQuestion.id}_${index}`} disabled >
-                                      <Form.Check.Input type={editQuestion.question_type} disabled className="no-pointer-events" />
+                                    <Form.Check type={questionTypeField.value} id={`${editQuestion.id}_${index}`} disabled >
+                                      <Form.Check.Input type={questionTypeField.value} disabled className="no-pointer-events" />
                                       <Form.Check.Label className="text-dark no-pointer-events">{option}</Form.Check.Label>
                                       <Button variant="link" size="xs" type="button" value={index} onClick={removeOption} className="ml-2"><XSquare className="lead mx-1 mb-1" /></Button>
                                     </Form.Check>
@@ -460,6 +459,7 @@ const EditForm = ({ currentUser }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      
       
     </Container>
   );

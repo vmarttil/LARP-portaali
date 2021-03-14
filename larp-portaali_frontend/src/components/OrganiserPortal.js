@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
-import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import FormService from "../services/form.service";
 import { formatDateRange } from "../utils/formatters"
@@ -39,7 +38,7 @@ const OrganiserPortal = ({ currentUser }) => {
 
   const createNewForm = async (e) => {
     let game_id = e.currentTarget.parentNode.parentNode.parentNode.id.split("_")[1]
-    let form_game = gameList.find(game => game.id == game_id);
+    let form_game = gameList.find(game => game.id === parseInt(game_id));
     let formData = {
       game_id: form_game.id,
       name: form_game.name + ": Ilmoittautuminen",
@@ -85,7 +84,7 @@ const OrganiserPortal = ({ currentUser }) => {
                     <Button variant="primary" role="button" size="sm" className="mr-1">Muokkaa tietoja</Button>
                   </Link>
                   <Button variant="primary" role="button" size="sm" className="mx-1" onClick={createNewForm}>Luo uusi lomake</Button>
-                  {game.forms.reduce((acc, form) => acc + form.registrations, 0) > 0 &&
+                  {(game.forms != null ? game.forms.reduce((acc, form) => acc + form.registrations, 0) : 0) > 0 &&
                     <Link to={`/game/${game.id}/registrations`}>
                       <Button variant="primary" role="button" size="sm" className="mx-1">Tarkastele ilmoittautumisia</Button>
                     </Link>
@@ -100,7 +99,7 @@ const OrganiserPortal = ({ currentUser }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {game.forms.map(form => {
+                    {game.forms != null && game.forms.map(form => {
                       return (
                         <tr key={form.id} className="d-flex align-items-center">
                           <td className="col-7">
@@ -173,7 +172,7 @@ const OrganiserPortal = ({ currentUser }) => {
         <Redirect to={redirect} />
       )
       }
-      
+
     </Container>
   );
 };

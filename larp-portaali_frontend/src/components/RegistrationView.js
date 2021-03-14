@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Alert, Container, Row, Col, Button } from 'react-bootstrap';
-import { Redirect, useParams, Link, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import RegistrationService from "../services/registration.service";
 import { TextQuestion, IntegerQuestion, CheckQuestion, TextAreaQuestion } from "./Question";
 import { errorMessage } from "../utils/messages";
@@ -9,7 +9,7 @@ import { errorMessage } from "../utils/messages";
 const RegistrationView = ({ currentUser }) => {
   const history = useHistory();
 
-  const { game_id, form_id, person_id } = useParams();
+  const { form_id, person_id } = useParams();
 
   const [message, setMessage] = useState("");
   const [questions, setQuestions] = useState([]);
@@ -41,11 +41,11 @@ const RegistrationView = ({ currentUser }) => {
 
       let answerObject = {};
       for (const answer of answerList) {
-        if (questions.find(question => question.question_id == answer.question_id).question_type == "checkbox") {
+        if (questions.find(question => parseInt(question.question_id) === parseInt(answer.question_id)).question_type === "checkbox") {
           for (const option of answer.options) {
             answerObject[`${answer.question_id}_${option.option_number}`] = true;
           }
-        } else if (questions.find(question => question.question_id == answer.question_id).question_type == "radio") {
+        } else if (questions.find(question => parseInt(question.question_id) === parseInt(answer.question_id)).question_type === "radio") {
           answerObject[answer.question_id] = answer.options[0].option_number;
         } else {
           answerObject[answer.question_id] = answer.answer_text;
@@ -141,11 +141,6 @@ const RegistrationView = ({ currentUser }) => {
         </Col>
         <Col sm="1"></Col>
       </Row>
-
-      {!currentUser && (
-        <Redirect to={{ pathname: '/' }} />
-      )
-      }
 
     </Container>
   );

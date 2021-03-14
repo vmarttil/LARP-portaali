@@ -1,8 +1,4 @@
-const logger = require("../utils/logger");
 const Person = require("../db/person.db");
-
-var jwt = require("jsonwebtoken");
-
 
 exports.getProfile = async (req, res) => {
   let userId = req.userId;
@@ -48,11 +44,12 @@ exports.updateProfile = async (req, res) => {
 
 exports.findPerson = async (req, res) => {
   try {
-    let person = await Person.getByEmail(req.body.data.email);
-    if (person) {
-      let personName = await Person.getName(person.id);
-      let person = {id: person.id, name: personName};
-      res.status(200).send({ person: person });
+    let personId = await Person.getIdByEmail(req.body.data.email);
+    console.log(personId)
+    if (personId) {
+      let personName = await Person.getName(personId);
+      let personObject = {id: personId, name: personName};
+      res.status(200).send({ person: personObject });
     } else {
       res.status(404).send({ message: "Henkilöä ei löydy." });
     }
@@ -70,6 +67,17 @@ exports.getPersonRegistrations = async (req, res) => {
       } else {
         res.status(404).send({ message: "Ei ilmoittautumisia." });
       }
+    } catch (err) {
+      res.status(500).send({ message: err.message });
+    }
+}
+
+exports.checkPersonRegistrations = async (req, res) => {
+  // Takes an array of form IDs and returns an object with the IDs as keys and booleans as values, indicating whether 
+  // the person has a registration on the form
+    try {
+      let registrations = await Person.checkPersonRegistrations(req.userId, req.body.data.form_id_list); 
+      res.status(200).send({ registrations });
     } catch (err) {
       res.status(500).send({ message: err.message });
     }

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { Redirect, useHistory } from "react-router-dom";
-import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
 import { useTextField, useTextArea, useDateField } from "../utils/hooks"
 import { TextField, TextArea, DateField } from "./FormFields"
-import { validateRequired, validateDate } from "../utils/validate"
+import { validateRequired } from "../utils/validate"
 import { errorMessage } from "../utils/messages";
 
 const NewGame = ({ currentUser }) => {

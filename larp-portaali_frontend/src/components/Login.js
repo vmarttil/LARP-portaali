@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, Form, Button, Alert, Spinner, Col, Row, Container } from 'react-bootstrap';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useLocation } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { useTextField } from "../utils/hooks"
 import { TextField } from "./FormFields"

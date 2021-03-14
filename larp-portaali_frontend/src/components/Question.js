@@ -92,7 +92,7 @@ const CheckQuestion = ({ question, value, onChange }) => {
         type={question.question_type}
         name={question.question_id}
         value={`${question.question_id}_${option.number}`}
-        checked={question.question_type === "radio" ? value[question.question_id] == option.number : value[`${question.question_id}_${option.number}`]}
+        checked={question.question_type === "radio" ? value[question.question_id] == option.number : (value[`${question.question_id}_${option.number}`] ?? false )}
         label={option.text}
         readOnly
       />

@@ -1,11 +1,9 @@
 require('dotenv').config()
-var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./form.queries.js")
 const question_queries = require("./question.queries.js")
 const Game = require("./game.db.js")
 const Question = require("./question.db.js")
-const Person = require("./person.db.js")
 
 getQuestionTypes = async () => {
   let { rows } = await db.query(queries.getQuestionTypes, []);

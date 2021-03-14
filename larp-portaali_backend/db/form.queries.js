@@ -17,7 +17,7 @@ const createForm = `
     $3, 
     FALSE, 
     (SELECT id FROM form_class WHERE name = $4)
-    ) RETURNING game_id, name, description, is_open, $4;
+    ) RETURNING id, game_id, name, description, is_open, $4;
 `
 const addDefaultQuestions = `
   INSERT INTO form_question (form_id, question_id, position)

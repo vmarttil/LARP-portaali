@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { Card, Button, Alert, Container, Row, Col, Table } from 'react-bootstrap';
-import PersonService from "../services/person.service";
 import GameService from "../services/game.service";
-import FormService from "../services/form.service";
-import { formatDateTime } from "../utils/formatters"
-import { errorMessage } from "../utils/messages"
-import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
+import { formatDateTime } from "../utils/formatters";
+import { errorMessage } from "../utils/messages";
 
 
 const GameRegistrations = ({ currentUser }) => {
@@ -18,11 +15,23 @@ const GameRegistrations = ({ currentUser }) => {
   const [registrationList, setRegistrationList] = useState([]);
   const [message, setMessage] = useState("");
   const [successful, setSuccessful] = useState(false);
-  const [redirect, setRedirect] = useState(null);
 
   useEffect(() => {
+    const fetchRegistrations = async () => {
+      setSuccessful(false);
+      try {
+        let gameResult = await GameService.getGame(game_id);
+        setGame(gameResult.data.game);
+        let registrationResult = await GameService.getGameRegistrations(game_id);
+        setRegistrationList(registrationResult.data.registrations);
+        setSuccessful(true);
+      } catch (error) {
+        setSuccessful(false);
+        setMessage(errorMessage(error));
+      };
+    };
     fetchRegistrations();
-  }, []);
+  }, [game_id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,16 +40,7 @@ const GameRegistrations = ({ currentUser }) => {
     return () => clearTimeout(timer);
   }, [message]);
 
-  const fetchRegistrations = async () => {
-    try {
-      let gameResult = await GameService.getGame(game_id);
-      setGame(gameResult.data.game);
-      let registrationResult = await GameService.getGameRegistrations(game_id);
-      setRegistrationList(registrationResult.data.registrations);
-    } catch (error) {
-      setMessage(errorMessage(error));
-    };
-  };
+
 
   const RegistrationTable = ({ type }) => {
     return (
@@ -52,7 +52,7 @@ const GameRegistrations = ({ currentUser }) => {
           </tr>
         </thead>
         <tbody>
-          {registrationList.filter(reg => reg.form_class == type).map(reg => {
+          {registrationList.filter(reg => reg.form_class === type).map(reg => {
             return (
               <tr key={`form_${reg.form_id}_person_${reg.person_id}`} className="d-flex">
                 <td className="col-9">
@@ -89,7 +89,7 @@ const GameRegistrations = ({ currentUser }) => {
         <Col sm="1"></Col>
         <Col sm="10">
 
-          {(registrationList.filter(reg => reg.form_class == "player").length > 0) &&
+          {(registrationList.filter(reg => reg.form_class === "player").length > 0) &&
             <Card className="my-3">
               <Card.Body>
                 <Card.Title>
@@ -100,7 +100,7 @@ const GameRegistrations = ({ currentUser }) => {
             </Card>
           }
 
-          {(registrationList.filter(reg => reg.form_class == "npc").length > 0) &&
+          {(registrationList.filter(reg => reg.form_class === "npc").length > 0) &&
             <Card className="my-3">
               <Card.Body>
                 <Card.Title>
@@ -111,7 +111,7 @@ const GameRegistrations = ({ currentUser }) => {
             </Card>
           }
 
-          {(registrationList.filter(reg => reg.form_class == "helper").length > 0) &&
+          {(registrationList.filter(reg => reg.form_class === "helper").length > 0) &&
             <Card className="my-3">
               <Card.Body>
                 <Card.Title>

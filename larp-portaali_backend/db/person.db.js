@@ -1,4 +1,3 @@
-require('dotenv').config()
 var bcrypt = require("bcryptjs");
 const db = require("./index");
 const queries = require("./person.queries")
@@ -24,7 +23,15 @@ create = async (personData) => {
 getByEmail = async (email) => {
   let { rows } = await db.query(queries.getPersonByEmail, [email, process.env.DB_ENC_KEY]);
   let person = rows.length > 0 ? rows[0] : null;
+  console.log(person)
   return person;
+};
+
+getIdByEmail = async (email) => {
+  let { rows } = await db.query(queries.getIdByEmail, [email]);
+  let personId = rows.length > 0 ? rows[0].id : null;
+  console.log(personId)
+  return personId;
 };
 
 getById = async (id) => {
@@ -97,15 +104,26 @@ getPersonRegistrations = async (personId) => {
   }
 };
 
+checkPersonRegistrations = async (personId, formIdList) => {
+  let { rows } = await db.query(queries.getRegisteredForms, [personId]);
+  let registeredFormIds = rows.map(f => f.form_id);
+  let resultObject = {};
+  for (const id of formIdList) {
+    registeredFormIds.includes(id) ? resultObject[id] = true : resultObject[id] = false;
+  }
+  return resultObject;
+};
 
 module.exports = {
   create, 
   getByEmail, 
   getById, 
+  getIdByEmail,
   updateLoginData, 
   updatePersonalData, 
   updateProfileData, 
   updateAdminData, 
   getName,
-  getPersonRegistrations
+  getPersonRegistrations,
+  checkPersonRegistrations
 };

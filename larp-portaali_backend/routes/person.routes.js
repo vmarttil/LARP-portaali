@@ -33,4 +33,10 @@ module.exports = function(app) {
     controller.getPersonRegistrations
   );
 
+  app.post(
+    "/api/person/checkRegistrations",
+    [authJwt.verifyToken],
+    controller.checkPersonRegistrations
+  );
+
 };

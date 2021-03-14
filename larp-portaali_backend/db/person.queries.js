@@ -60,10 +60,9 @@ const updateAdminData = `
   SET admin = $2 
   WHERE id = $1;
 `
-const findPersonByEmail = `
+const getIdByEmail = `
   SELECT 
-    id, 
-    CAST(PGP_SYM_DECRYPT(personal_data, $2) AS json) AS personal_data,
+    id
   FROM person
   WHERE email = $1;
 `
@@ -86,6 +85,12 @@ const getPersonRegistrations = `
   JOIN form_class AS fc ON f.form_class_id = fc.id
   WHERE r.person_id = $1;
 `
+const getRegisteredForms = ` 
+  SELECT
+    form_id
+  FROM registration
+  WHERE person_id = $1;
+`
 
 module.exports = {
   checkAdminStatus,
@@ -97,6 +102,7 @@ module.exports = {
   updatePersonalData,
   updateProfileData,
   updateAdminData,
-  findPersonByEmail,
-  getPersonRegistrations
+  getIdByEmail,
+  getPersonRegistrations,
+  getRegisteredForms
 };

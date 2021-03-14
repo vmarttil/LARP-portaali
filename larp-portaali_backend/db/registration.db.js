@@ -1,10 +1,5 @@
-require('dotenv').config()
-var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./registration.queries.js")
-const Game = require("./game.db.js")
-const Form = require("./form.db.js")
-const Question = require("./question.db.js")
 
 submitRegistration = async (personId, registrationData) => {
   let { rowCount } = await db.query(queries.createRegistration, [registrationData.form_id, personId]);

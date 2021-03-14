@@ -1,10 +1,8 @@
-import { concat } from "lodash";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, Alert, Container, Row, Col, Table, Badge } from 'react-bootstrap';
 
 import GameService from "../services/game.service";
-import PersonService from "../services/person.service";
 import { formatDateRange } from "../utils/formatters"
 import { errorMessage } from "../utils/messages"
 

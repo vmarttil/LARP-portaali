@@ -34,6 +34,6 @@ export const truncateString = (string, len) => {
     while (string.substring(string.length-1, string.length) != " ") {
       string = string.substring(0, string.length-1);
     }
-    return string + "...";
+    return string.substring(0, string.length-1) + "... ";
   }
 };

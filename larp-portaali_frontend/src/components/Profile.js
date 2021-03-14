@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Card, Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import PersonService from "../services/person.service";
 import { useTextField, useTextArea, useRadioField, useDateField } from "../utils/hooks"
 import { TextField, TextArea, RadioField, DateField } from "./FormFields"
-import { noValidate, validateRequired, validateEmail, validatePassword, validatePhoneNumber, validateDate } from "../utils/validate"
+import { noValidate, validateRequired, validateEmail, validatePassword, validatePhoneNumber } from "../utils/validate"
 import { errorMessage } from "../utils/messages"
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 const Profile = ({ currentUser, setCurrentUser }) => {
   const history = useHistory();
@@ -101,7 +97,6 @@ const Profile = ({ currentUser, setCurrentUser }) => {
       currentUser.personal_data = updateData.personal_data;
       PersonService.updateCurrentUser(currentUser);
       setCurrentUser(PersonService.getCurrentUser());
-      console.log(currentUser);
       setSaveType("personal");
       saveData(updateData);
     } else {

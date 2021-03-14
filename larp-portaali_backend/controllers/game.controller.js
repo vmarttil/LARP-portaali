@@ -1,8 +1,4 @@
-const logger = require("../utils/logger");
 const Game = require("../db/game.db");
-const Form = require("../db/form.db");
-const Person = require("../db/person.db");
-
 
 exports.gameList = async (req, res) => {
   let gameList = await Game.getFutureGames();
@@ -28,7 +24,7 @@ exports.gameInfo = async (req, res) => {
   try {
     let game = await Game.getGame(req.params.game_id);
     if (game) {
-      res.status(200).send({ game: game });
+      res.status(200).send({ game });
     } else {
       res.status(404).send({ message: "Peliä ei löytynyt." });
     }

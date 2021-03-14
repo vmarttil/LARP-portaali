@@ -1,5 +1,3 @@
-require('dotenv').config()
-var bcrypt = require("bcryptjs");
 const db = require("./index.js");
 const queries = require("./question.queries.js")
 

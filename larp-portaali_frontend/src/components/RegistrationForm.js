@@ -28,7 +28,7 @@ const RegistrationForm = ({ currentUser }) => {
 
   useEffect(() => {
     fetchForm();
-  }, [form_id]);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,13 +36,6 @@ const RegistrationForm = ({ currentUser }) => {
     }, 3000);
     return () => clearTimeout(timer);
   }, [message]);
-
-  useEffect(() => {
-    if (!isEmpty(answers)) {
-      sessionStorage.setItem(`answers_${form_id}`, JSON.stringify(answers));
-    }
-  }, [answers]);
-
 
   const fetchForm = async () => {
     try {
@@ -53,12 +46,7 @@ const RegistrationForm = ({ currentUser }) => {
       setFormName(response.data.form.name);
       setFormDescription(response.data.form.description);
       setQuestions(questions);
-      if (sessionStorage.getItem(`answers_${form_id}`) == null || isEmpty(sessionStorage.getItem(`answers_${form_id}`))) {
-        prefillForm(questions);
-      } else {
-        let storedAnswers = JSON.parse(sessionStorage.getItem(`answers_${form_id}`));
-        setAnswers(storedAnswers);
-      }
+      prefillForm(questions);
       setHasChanged(false);
       
     } catch (error) {
@@ -148,7 +136,6 @@ const RegistrationForm = ({ currentUser }) => {
         setMessage(response.data.message);
         setSuccessful(true);
         setHasChanged(false);
-        sessionStorage.removeItem(`answers_${form_id}`);
         setTimeout(() => setRedirect(true), 3000)
       } catch (error) {
         setMessage(errorMessage(error));

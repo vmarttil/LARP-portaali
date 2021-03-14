@@ -45,6 +45,10 @@ const getPersonRegistrations = async () => {
   return await axios.get(API_URL + "person/registrations", { headers: authHeader() });
 };
 
+const checkPersonRegistrations = async (formIdList) => {
+  return await axios.post(API_URL + "person/checkRegistrations", { data: {form_id_list: formIdList} }, { headers: authHeader() });
+};
+
 
 let PersonService = {
   getPlayerPortal,
@@ -55,7 +59,8 @@ let PersonService = {
   getPersonProfile,
   savePersonProfile,
   findPerson,
-  getPersonRegistrations
+  getPersonRegistrations,
+  checkPersonRegistrations
 };
 
 export default PersonService;

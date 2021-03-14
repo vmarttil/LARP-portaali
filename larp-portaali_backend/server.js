@@ -20,26 +20,18 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 require('dotenv').config()
-// const db = require("./models");
 
-// (async () => {
-//   await db.sequelize.sync();
-// })();
-
-// reititykset
 require('./routes/auth.routes')(app);
 require('./routes/person.routes')(app);
 require('./routes/game.routes')(app);
 require('./routes/form.routes')(app);
 require('./routes/registration.routes')(app);
 
-// palautetaan virheilmoitus tuntemattomasta endpointista
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndpoint)
 
-// määritetään portti ja kuunnellaan pyyntöjä
 app.listen(config.PORT, () => {
   logger.info(`Server is running on port ${config.PORT}.`);
 });
