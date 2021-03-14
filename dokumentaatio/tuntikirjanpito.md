@@ -71,7 +71,5 @@
 | 14032021 | 6,0 | Testausta ja debuggausta |
 |          | 3,0 | Sovelluksen määritys Heroku-yhteensopivaksi ja tietokannan ja sovelluksen luonti Herokuun |
 |          | 2,0 | Sovelluksen käyttöohjeen kirjoitus ja kuvauksen päivitys |
-
-
 | **Yhteensä** | **202,0** | |
 
