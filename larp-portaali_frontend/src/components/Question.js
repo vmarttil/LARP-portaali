@@ -72,6 +72,7 @@ const CheckQuestion = ({ question, value, onChange }) => {
 
   const optionButtons = question.options.map((option, idx) => {
     return (
+      <Row>
       <Form.Check
         key={`${question.question_id}_${option.number}`}
         type={question.question_type}
@@ -80,8 +81,9 @@ const CheckQuestion = ({ question, value, onChange }) => {
         checked={question.question_type === "radio" ? value[question.question_id] == option.number : value[`${question.question_id}_${option.number}`]}
         onClick={onChange}
         onChange={e => {}}
-        label={option.text}
       />
+      <Form.Label className="no-pointer-events">{option.text}</Form.Label>
+      </Row>
     )
   });
 

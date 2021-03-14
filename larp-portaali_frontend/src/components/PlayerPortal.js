@@ -27,7 +27,8 @@ const PlayerPortal = ({ currentUser }) => {
   const fetchRegistrations = async () => {
     try {
       let response = await PersonService.getPersonRegistrations();
-      setGameList(response.data.games);
+      let games = response.data.games.sort((a, b) => a.start_date - b.start_date)
+      setGameList(games);
     } catch (error) {
       parseInt(error.response.status) === 404 ? setStatus("primary") : setStatus("danger");
       setMessage(errorMessage(error));

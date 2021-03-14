@@ -93,11 +93,11 @@ getPersonRegistrations = async (personId) => {
           regList.push(registration);
         }
         gameIds = gameIds.filter(g => g != r.game_id);
-        game.registrations = registrations;
+        game.registrations = regList;
         gameList.push(game);
       }
     }
-
+    console.log(gameList);
     return gameList;
   } else {
     return [];

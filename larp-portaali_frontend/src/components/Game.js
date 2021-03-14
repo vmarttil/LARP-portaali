@@ -43,10 +43,9 @@ const Game = ({ currentUser }) => {
   }, [game_id]);
 
   const RegistrationButtons = ({ game }) => {
-    let openForms = game.forms.filter(form => form.is_open);
     return (
       <>
-        {openForms.map(form => {
+        {game.forms.map(form => {
           if (registrationStatuses[form.id]) {
             return (
               <Link key={form.id} to={`/game/${game_id}/registration/${form.id}/${currentUser.id}`} className="mx-3 mt-3 mb-1">
@@ -57,7 +56,7 @@ const Game = ({ currentUser }) => {
                 </Button>
               </Link>
             )
-          } else {
+          } else if (form.is_open) {
             return (
               <Link key={form.id} to={`/game/${game_id}/form/${form.id}/register`} className="mx-3 mt-3 mb-1">
                 <Button key={form.id} variant="primary" type="button" size="sm">
