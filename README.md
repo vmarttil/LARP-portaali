@@ -115,4 +115,9 @@ kentät (toistaiseksi kaikki ilmoittautumislomakkeen kysymykset ovat pakollisia)
 on täytetty ja käyttäjä napsauttaa sivun alareunassa olevaa "Lähetä ilmoittautuminen" -painiketta, ilmoittautumisen tiedot tallennetaan 
 tietokantaan ja sovellus palauttaa käyttäjän omien ilmoittautumisten tarkastelusivulle. 
 
+## Tekninen toteutus 
 
+Sovelluksen backend on toteutettu käyttäen node.js:ää ja Express-palvelinta. Sovelluksen tietojen tallennukseen käytetään PostgreSQL-tietokantaa 
+ja tietokantayhteyksien hallintaan node-pg-kirjastoa. Frontend on toteutettu käyttäen Reactia. Backend-yhteyksien toteuttamiseen on käytetty 
+Axios-kirjastoa ja käyttöliittymä on muotoiltu React Bootstrap -käyttöliittymäkirjastolla. Lisäksi on käytetty muutamaa valmista käyttöliittymäkirjastoa 
+kuten React-datepicker ja React-beautiful-dnd.
