@@ -69,7 +69,7 @@
 |          | 1,0 | Pelin ja henkilön ilmoittautumisten keruu tietokannasta ja toimitus frontendiin |
 |          | 6,0 | Pelin ja henkilön ilmoittautumisten tarkastelusivujen ja ilmoittautumisen tarkastelusivun implementointi frontendissä |
 | 14032021 | 6,0 | Testausta ja debuggausta |
-|          | 3,0 | Sovelluksen määritys Heroku-yhteensopivaksi ja tietokannan ja sovelluksen luonti Herokuun |
+|          | 3,0 | Sovelluksen muokkaus Heroku-yhteensopivaksi ja sovelluksen sekä sen tietokannan luonti Herokuun |
 |          | 2,0 | Sovelluksen käyttöohjeen kirjoitus ja kuvauksen päivitys |
 | **Yhteensä** | **202,0** | |
 
