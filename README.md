@@ -14,6 +14,9 @@ Sovelluksen tämänhetkinen versio on perustoiinnot sisältävä MVP-versio, jot
 - mahdollisuus luoda omiin profiilitietoihin uusia kenttiä ja tuoda profiilikentän sisältö vastauksen pohjaksi ilmoittautumislomakkeessa
 - valintojen minimi- ja maksimimäärän määritys ilmoittautumislomakkeen valintaruutu-tyyppisille kysymyksille
 
+## Projektin tuntikirjanpito
+
+
 
 ## Sovelluksen käyttöhje
 
